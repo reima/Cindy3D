@@ -1,5 +1,6 @@
 package de.tum.in.jrealityplugin;
 
+import de.cinderella.api.cs.CindyScript;
 import de.cinderella.api.cs.CindyScriptPlugin;
 
 /**
@@ -21,6 +22,16 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	@Override
 	public String getName() {
 		return "jReality for Cinderella";
+	}
+
+	/**
+	 * Squares the given number
+	 * @param x
+	 * @return The square of x
+	 */
+	@CindyScript("square")
+	public double square(double x) {
+		return x*x;
 	}
 
 }
