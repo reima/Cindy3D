@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="jRealityPlugin" default="copy">
-	
+
     <property environment="env"/>
 
     <target name="init" description="setup paths">
@@ -14,7 +14,7 @@
 
     <!-- no changes necessary below this line -->
 
-    <target name="compile" depends="init" description="compile jReality Plugin for Cinderella">
+    <target name="compile" depends="init" description="Compile jReality Plugin for Cinderella">
         <javac encoding="iso-8859-1" debug="on" optimize="on"
                srcdir="src" destdir="bin" target="1.5"
                source="1.5">
@@ -26,7 +26,7 @@
         </javac>
     </target>
 
-    <target name="build" depends="compile" description="create the complete jReality Plugin for Cinderella">
+    <target name="build" depends="compile" description="Create the complete jReality Plugin for Cinderella">
 
         <delete file="${plugin}"/>
 
@@ -51,5 +51,12 @@
         <copy file="${jrealityjar}" todir="${pluginfolder}"/>
     </target>
 
+    <target name="doc" description="Generate Javadoc">
+        <javadoc packagenames="de.tum.in.jrealityplugin"
+                 sourcepath="src"
+                 classpath="lib/cindy2.jar;lib/jReality.jar"
+                 destdir="doc">
+        </javadoc>
+    </target>
 
 </project>
