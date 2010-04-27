@@ -6,6 +6,7 @@
     <target name="init" description="setup paths">
         <property name="cindy2jar" location="lib/cindy2.jar"/>
         <property name="jrealityjar" location="lib/jReality.jar"/>
+        <property name="jreality3rdpartydir" location="lib/jReality-3rd-party"/>
         <property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/jRealityPlugin"/>
         <property name="plugin" location="jRealityPlugin.jar"/>
     </target>
@@ -49,6 +50,9 @@
     <target name="copy" depends="build" description="Copy plugin to Plugins folder">
         <copy file="${plugin}" todir="${pluginfolder}"/>
         <copy file="${jrealityjar}" todir="${pluginfolder}"/>
+        <copy todir="${pluginfolder}">
+            <fileset dir="${jreality3rdpartydir}" includes="*.jar"/>
+        </copy>
     </target>
 
     <target name="doc" description="Generate Javadoc">
