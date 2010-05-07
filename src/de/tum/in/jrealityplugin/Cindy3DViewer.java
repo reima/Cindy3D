@@ -1,6 +1,8 @@
 package de.tum.in.jrealityplugin;
 
 public interface Cindy3DViewer {
-    void begin3d();
-    void end3d();
+    void begin();
+    void end();
+    void addPoint(double x, double y, double z);
+    void shutdown();
 }
