@@ -64,8 +64,10 @@ public class JRealityViewer implements Cindy3DViewer {
 	 * @see de.tum.in.jrealityplugin.Cindy3DViewer#addPoint(double, double, double)
 	 */
 	@Override
-	public void addPoint(double x, double y, double z) {
+	public void addPoint(double x, double y, double z,
+						 AppearanceState appearance) {
 		pointCoordinates.add(new double[] { x, y, z });
+		pointColors.add(appearance.getColor());
 	}
 
 	/* (non-Javadoc)
@@ -90,6 +92,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	protected void updatePoints() {
 		psf.setVertexCount(pointCoordinates.size());
 		psf.setVertexCoordinates(pointCoordinates.toArray(new double[0][0]));
+		psf.setVertexColors(pointColors.toArray(new Color[0]));
 		psf.update();
 	}
 

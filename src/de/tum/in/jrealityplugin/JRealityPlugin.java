@@ -1,6 +1,8 @@
 package de.tum.in.jrealityplugin;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import de.cinderella.api.cs.CindyScript;
 import de.cinderella.api.cs.CindyScriptPlugin;
@@ -10,8 +12,14 @@ import de.cinderella.api.cs.CindyScriptPlugin;
  */
 public class JRealityPlugin extends CindyScriptPlugin {
 	private Cindy3DViewer cindy3d = null;
+	
+	Stack<AppearanceState> pointAppearanceStack;
+	AppearanceState pointAppearance;
+	
 
 	public JRealityPlugin() {
+		pointAppearanceStack = new Stack<AppearanceState>();
+		pointAppearance = new AppearanceState(Color.RED, 1);
 	}
 
 	@Override
@@ -85,7 +93,32 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		if (vec.size() != 3)
 			return;
 
-		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2));
+		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2), pointAppearance);
 	}
-
+	
+	
+	/**
+	 * Set point color state
+	 * @param vec Color vector
+	 */
+	@CindyScript("pointcolor3d")
+	public void pointcolor3d(ArrayList<Double> vec) {
+		if (vec.size() != 3)
+			return;
+		pointAppearance.setColor(new Color(
+				(float)Math.max(0, Math.min(1, vec.get(0))),
+				(float)Math.max(0, Math.min(1, vec.get(1))),
+				(float)Math.max(0, Math.min(1, vec.get(2)))));
+	}
+	
+	/**
+	 * Set point size state
+	 * @param size Point size
+	 */
+	@CindyScript("pointsize3d")
+	public void pointsize3d(double size) {
+		if (size <= 0)
+			return;
+		pointAppearance.setSize(size);
+	}
 }
