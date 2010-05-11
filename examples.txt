@@ -1,0 +1,22 @@
+//
+// Color spiral
+//
+
+height = 2;
+radius = 1;
+segments = 100;
+rings = 20;
+
+begin3d();
+pointsize3d(1);
+forall(1..segments, segment,
+  frac = segment/segments;
+  pointcolor3d(hue(frac));
+  forall(1..rings, ring,
+    rad = ring/rings * radius;
+    draw3d((cos(frac*2*pi)*rad,
+            sin(frac*2*pi)*rad,
+            frac*height));
+  )
+);
+end3d()
