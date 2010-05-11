@@ -76,6 +76,10 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		cindy3d.end();
 	}
 
+	/**
+	 * Draws a point in 3D space
+	 * @param vec Euclidean coordinates of the point
+	 */
 	@CindyScript("draw3d")
 	public void draw3d(ArrayList<Double> vec) {
 		if (vec.size() != 3)
