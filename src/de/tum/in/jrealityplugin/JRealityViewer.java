@@ -25,9 +25,9 @@ public class JRealityViewer implements Cindy3DViewer {
 
 		psf = new PointSetFactory();
 
-		sceneRoot = new SceneGraphComponent();
+		sceneRoot = new SceneGraphComponent("root");
 
-		scenePoints = new SceneGraphComponent();
+		scenePoints = new SceneGraphComponent("points");
 		scenePoints.setGeometry(psf.getGeometry());
 
 		sceneRoot.addChild(scenePoints);
