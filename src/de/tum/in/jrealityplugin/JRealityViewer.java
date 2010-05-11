@@ -42,12 +42,17 @@ public class JRealityViewer implements Cindy3DViewer {
 		viewer.getFrame().setSize(600, 600);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.jrealityplugin.Cindy3DViewer#begin()
+	 */
 	@Override
 	public void begin() {
-		pointCoordinates.clear();
-		pointColors.clear();
+		clearPoints();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.jrealityplugin.Cindy3DViewer#end()
+	 */
 	@Override
 	public void end() {
 		updatePoints();
@@ -55,16 +60,33 @@ public class JRealityViewer implements Cindy3DViewer {
 		viewer.getFrame().setVisible(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.jrealityplugin.Cindy3DViewer#addPoint(double, double, double)
+	 */
 	@Override
 	public void addPoint(double x, double y, double z) {
 		pointCoordinates.add(new double[] { x, y, z });
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.jrealityplugin.Cindy3DViewer#shutdown()
+	 */
 	@Override
 	public void shutdown() {
 		viewer.getFrame().setVisible(false);
 	}
 
+	/**
+	 * Deletes all point primitives from the internal data structures
+	 */
+	protected void clearPoints() {
+		pointCoordinates.clear();
+		pointColors.clear();
+	}
+
+	/**
+	 * Transfers internal point data to jReality
+	 */
 	protected void updatePoints() {
 		psf.setVertexCount(pointCoordinates.size());
 		psf.setVertexCoordinates(pointCoordinates.toArray(new double[0][0]));
