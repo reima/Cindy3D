@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import de.jreality.geometry.PointSetFactory;
 import de.jreality.scene.SceneGraphComponent;
-import de.jreality.scene.data.Attribute;
-import de.jreality.scene.data.DataList;
 import de.jreality.ui.viewerapp.ViewerApp;
 
 @SuppressWarnings("deprecation")
