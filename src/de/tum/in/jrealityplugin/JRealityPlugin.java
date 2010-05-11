@@ -13,7 +13,15 @@ import de.cinderella.api.cs.CindyScriptPlugin;
 public class JRealityPlugin extends CindyScriptPlugin {
 	private Cindy3DViewer cindy3d = null;
 	
+	/**
+	 * Stack of saved point appearances
+	 * @see JRealityPlugin#gsave3d()
+	 * @see JRealityPlugin#grestore3d()
+	 */
 	Stack<AppearanceState> pointAppearanceStack;
+	/**
+	 * The current point appearance
+	 */
 	AppearanceState pointAppearance;
 	
 
@@ -95,8 +103,28 @@ public class JRealityPlugin extends CindyScriptPlugin {
 
 		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2), pointAppearance);
 	}
-	
-	
+
+	/**
+	 * Pushes the current appearance on the appearance stack
+	 * @see JRealityPlugin#grestore3d()
+	 */
+	@CindyScript("gsave3d")
+	public void gsave3d() {
+		pointAppearanceStack.push(new AppearanceState(pointAppearance));
+	}
+
+	/**
+	 * Removes the top element of the appearance stack and replaces the current
+	 * appearance with it
+	 * @see JRealityPlugin#gsave3d()
+	 */
+	@CindyScript("grestore3d")
+	public void grestore3d() {
+		if (pointAppearanceStack.isEmpty())
+			return;
+		pointAppearance = pointAppearanceStack.pop();
+	}
+
 	/**
 	 * Set point color state
 	 * @param vec Color vector
