@@ -50,10 +50,8 @@ public class JRealityViewer implements Cindy3DViewer {
 
     @Override
     public void end() {
-    	psf.setVertexCoordinates((double[][])pointCoordinates.toArray());
-    	
-    	psf.setVertexCount(pointCoordinates.size());
-    	psf.update();
+    	updatePoints();
+
         viewer.getFrame().setVisible(true);
     }
 
@@ -65,6 +63,12 @@ public class JRealityViewer implements Cindy3DViewer {
     @Override
     public void shutdown() {
         viewer.getFrame().setVisible(false);
+    }
+    
+    protected void updatePoints() {
+    	psf.setVertexCount(pointCoordinates.size());
+    	psf.setVertexCoordinates(pointCoordinates.toArray(new double[0][0]));
+    	psf.update();
     }
 
 }
