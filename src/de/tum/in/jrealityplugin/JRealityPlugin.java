@@ -18,16 +18,29 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 * @see JRealityPlugin#gsave3d()
 	 * @see JRealityPlugin#grestore3d()
 	 */
-	Stack<AppearanceState> pointAppearanceStack;
+	private Stack<AppearanceState> pointAppearanceStack;
 	/**
 	 * The current point appearance
 	 */
-	AppearanceState pointAppearance;
+	private AppearanceState pointAppearance;
+
+	/**
+	 * Stack of saved line appearances
+	 * @see JRealityPlugin#gsave3d()
+	 * @see JRealityPlugin#grestore3d()
+	 */
+	private Stack<AppearanceState> lineAppearanceStack;
+	/**
+	 * The current line appearance
+	 */
+	private AppearanceState lineAppearance;
 	
 
 	public JRealityPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
 		pointAppearance = new AppearanceState(Color.RED, 1);
+		lineAppearanceStack = new Stack<AppearanceState>();
+		lineAppearance = new AppearanceState(Color.BLUE, 1);
 	}
 
 	@Override
@@ -105,12 +118,28 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	}
 
 	/**
+	 * Draws a line in 3D space
+	 * @param vec1 Euclidean coordinates of the first endpoint
+	 * @param vec1 Euclidean coordinates of the second endpoint
+	 */
+	@CindyScript("draw3d")
+	public void draw3d(ArrayList<Double> vec1, ArrayList<Double> vec2) {
+		if (vec1.size() != 3 || vec2.size() != 3)
+			return;
+
+		cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2),
+						vec2.get(0), vec2.get(1), vec2.get(2),
+						lineAppearance);
+	}
+
+	/**
 	 * Pushes the current appearance on the appearance stack
 	 * @see JRealityPlugin#grestore3d()
 	 */
 	@CindyScript("gsave3d")
 	public void gsave3d() {
 		pointAppearanceStack.push(new AppearanceState(pointAppearance));
+		lineAppearanceStack.push(new AppearanceState(lineAppearance));
 	}
 
 	/**
@@ -120,9 +149,32 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("grestore3d")
 	public void grestore3d() {
-		if (pointAppearanceStack.isEmpty())
+		if (!pointAppearanceStack.isEmpty())
+			pointAppearance = pointAppearanceStack.pop();
+		if (!lineAppearanceStack.isEmpty())
+			lineAppearance = lineAppearanceStack.pop();
+	}
+
+	/**
+	 * Set color state
+	 * @param vec Color vector
+	 */
+	@CindyScript("color3d")
+	public void color3d(ArrayList<Double> vec) {
+		setColorState(pointAppearance, vec);
+		setColorState(lineAppearance, vec);
+	}
+
+	/**
+	 * Set size state
+	 * @param vec Color vector
+	 */
+	@CindyScript("size3d")
+	public void size3d(double size) {
+		if (size <= 0)
 			return;
-		pointAppearance = pointAppearanceStack.pop();
+		pointAppearance.setSize(size);
+		lineAppearance.setSize(size);
 	}
 
 	/**
@@ -131,14 +183,9 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("pointcolor3d")
 	public void pointcolor3d(ArrayList<Double> vec) {
-		if (vec.size() != 3)
-			return;
-		pointAppearance.setColor(new Color(
-				(float)Math.max(0, Math.min(1, vec.get(0))),
-				(float)Math.max(0, Math.min(1, vec.get(1))),
-				(float)Math.max(0, Math.min(1, vec.get(2)))));
+		setColorState(pointAppearance, vec);
 	}
-	
+
 	/**
 	 * Set point size state
 	 * @param size Point size
@@ -148,5 +195,35 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		if (size <= 0)
 			return;
 		pointAppearance.setSize(size);
+	}
+
+	/**
+	 * Set line color state
+	 * @param vec Color vector
+	 */
+	@CindyScript("linecolor3d")
+	public void linecolor3d(ArrayList<Double> vec) {
+		setColorState(lineAppearance, vec);
+	}
+
+	/**
+	 * Set line size state
+	 * @param size Line size
+	 */
+	@CindyScript("linesize3d")
+	public void linesize3d(double size) {
+		if (size <= 0)
+			return;
+		lineAppearance.setSize(size);
+	}
+
+	protected void setColorState(AppearanceState appearance,
+			ArrayList<Double> vec) {
+		if (vec.size() != 3)
+			return;
+		appearance.setColor(new Color(
+				(float)Math.max(0, Math.min(1, vec.get(0))),
+				(float)Math.max(0, Math.min(1, vec.get(1))),
+				(float)Math.max(0, Math.min(1, vec.get(2)))));
 	}
 }

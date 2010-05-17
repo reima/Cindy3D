@@ -20,3 +20,20 @@ forall(1..segments, segment,
   )
 );
 end3d()
+
+
+//
+// Color lines
+//
+
+n = 72;
+phase = pi/2; // also try = A.x with a point A
+height = 2;   //     "      A.y       "
+begin3d();
+forall(1..n, i,
+  rad = i/n*2*pi;
+  color3d(hue(i/n));
+  draw3d((cos(rad), 0, sin(rad)),
+         (cos(rad+phase), height, sin(rad+phase)));
+);
+end3d()
