@@ -2,6 +2,7 @@ package de.tum.in.jrealityplugin;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Stack;
 
 import de.cinderella.api.cs.CindyScript;
@@ -10,6 +11,7 @@ import de.cinderella.api.cs.CindyScriptPlugin;
 /**
  * Implementation of the plugin interface
  */
+@SuppressWarnings("unchecked")
 public class JRealityPlugin extends CindyScriptPlugin {
 	private Cindy3DViewer cindy3d = null;
 	
@@ -34,6 +36,11 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 * The current line appearance
 	 */
 	private AppearanceState lineAppearance;
+
+	/**
+	 * Modifiers for the current CindyScript function call
+	 */
+	private Hashtable modifiers;
 	
 
 	public JRealityPlugin() {
@@ -54,6 +61,16 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		if (cindy3d != null)
 			cindy3d.shutdown();
 		cindy3d = null;
+	}
+
+	@Override
+	public void setModifiers(Hashtable m) {
+		modifiers = m;
+	}
+
+	@Override
+	public Hashtable getModifiers() {
+		return modifiers;
 	}
 
 	/*
@@ -127,9 +144,14 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		if (vec1.size() != 3 || vec2.size() != 3)
 			return;
 
-		cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2),
-						vec2.get(0), vec2.get(1), vec2.get(2),
-						lineAppearance);
+		String type = (String)modifiers.get("type");
+		if (type == null) type = "Segment";
+		if (type != null && type.equals("Line")) {
+			// TODO: Implement addLine
+		} else {
+			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
+					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+		}
 	}
 
 	/**

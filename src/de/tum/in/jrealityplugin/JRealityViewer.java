@@ -96,7 +96,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	}
 
 	@Override
-	public void addLine(double x1, double y1, double z1, double x2, double y2,
+	public void addSegment(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
 		lineCoordinates.add(new double[] { x1, y1, z1 });
 		lineCoordinates.add(new double[] { x2, y2, z2 });
