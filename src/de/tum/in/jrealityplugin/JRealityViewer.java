@@ -28,7 +28,7 @@ public class JRealityViewer implements Cindy3DViewer {
 
 	private ArrayList<double[]> lineCoordinates;
 	private ArrayList<Integer> lineIndices;
-	private ArrayList<Color> linePointColors;
+	private ArrayList<Double> lineSizes;
 	private ArrayList<Color> lineColors;
 
 	public JRealityViewer() {
@@ -40,7 +40,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		ilsf = new IndexedLineSetFactory();
 		lineCoordinates = new ArrayList<double[]>();
 		lineIndices = new ArrayList<Integer>();
-		linePointColors = new ArrayList<Color>();
+		lineSizes = new ArrayList<Double>();
 		lineColors = new ArrayList<Color>();
 
 		sceneRoot = new SceneGraphComponent("root");
@@ -100,11 +100,10 @@ public class JRealityViewer implements Cindy3DViewer {
 			double z2, AppearanceState appearance) {
 		lineCoordinates.add(new double[] { x1, y1, z1 });
 		lineCoordinates.add(new double[] { x2, y2, z2 });
-		linePointColors.add(appearance.getColor());
-		linePointColors.add(appearance.getColor());
 		lineColors.add(appearance.getColor());
 		lineIndices.add(lineCoordinates.size() - 2);
 		lineIndices.add(lineCoordinates.size() - 1);
+		lineSizes.add(appearance.getSize());
 	}
 
 	/* (non-Javadoc)
@@ -148,7 +147,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	private void clearLines() {
 		lineCoordinates.clear();
 		lineIndices.clear();
-		linePointColors.clear();
+		lineSizes.clear();
 		lineColors.clear();
 	}
 
@@ -160,15 +159,34 @@ public class JRealityViewer implements Cindy3DViewer {
 			return;
 		ilsf.setVertexCount(lineCoordinates.size());
 		ilsf.setVertexCoordinates(lineCoordinates.toArray(new double[0][0]));
-		ilsf.setVertexColors(linePointColors.toArray(new Color[0]));
+
+		Color[] pointColorsArray = new Color[lineColors.size()*2];
+		for (int i = 0; i < lineColors.size(); i++) {
+			pointColorsArray[2*i] = lineColors.get(i);
+			pointColorsArray[2*i+1] = lineColors.get(i);
+		}
+		ilsf.setVertexColors(pointColorsArray);
+		pointColorsArray = null;
+
+		double[] pointSizesArray = new double[lineSizes.size()*2];
+		for (int i = 0; i < lineColors.size(); i++) {
+			pointSizesArray[2*i] = lineSizes.get(i);
+			pointSizesArray[2*i+1] = lineSizes.get(i);
+		}
+		ilsf.setVertexRelativeRadii(pointSizesArray);
+
 		ilsf.setEdgeCount(lineIndices.size() / 2);
 		ilsf.setEdgeColors(lineColors.toArray(new Color[0]));
 
 		int[] indicesArray = new int[lineIndices.size()];
 		for (int i = 0; i < lineIndices.size(); ++i)
 			indicesArray[i] = lineIndices.get(i);
-
 		ilsf.setEdgeIndices(indicesArray);
+
+		double[] sizesArray = new double[lineSizes.size()];
+		for (int i = 0; i < lineSizes.size(); ++i)
+			sizesArray[i] = lineSizes.get(i);
+		ilsf.setEdgeRelativeRadii(sizesArray);
 
 		ilsf.update();
 	}
