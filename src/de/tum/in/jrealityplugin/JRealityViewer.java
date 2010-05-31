@@ -2,15 +2,26 @@ package de.tum.in.jrealityplugin;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
+import de.jreality.math.Rn;
 import de.jreality.scene.SceneGraphComponent;
+import de.jreality.scene.Camera;
+import de.jreality.scene.tool.Tool;
+import de.jreality.tools.ClickWheelCameraZoomTool;
+import de.jreality.tools.DraggingTool;
+import de.jreality.tools.RotateTool;
 import de.jreality.ui.viewerapp.ViewerApp;
+import de.jreality.util.CameraUtility;
 
 @SuppressWarnings("deprecation")
 public class JRealityViewer implements Cindy3DViewer {
 	private ViewerApp viewer;
+	
+	private Camera camera;
 
 	private SceneGraphComponent sceneRoot;
 
@@ -59,8 +70,43 @@ public class JRealityViewer implements Cindy3DViewer {
 		viewer.setAttachNavigator(true);
 		viewer.setShowMenu(true);
 		viewer.setBackgroundColor(Color.BLACK);
-		viewer.update();
 
+		// Replace default tools with custom tools		
+		List<SceneGraphComponent> components =
+			new LinkedList<SceneGraphComponent>(
+					viewer.getSceneRoot().getChildComponents());
+		for (SceneGraphComponent component : components) {
+			if (component.getName().equals("scene")) {
+				List<Tool> tools = new LinkedList<Tool>(component.getTools());
+				for (Tool tool : tools) {
+					component.removeTool(tool);
+				}
+				// Rotation
+				RotateTool rotateTool = new RotateTool();
+				rotateTool.setFixOrigin(true);
+				component.addTool(rotateTool);
+				// Dragging
+				DraggingTool draggingTool = new DraggingTool();
+				component.addTool(draggingTool);
+				// Zooming
+				ClickWheelCameraZoomTool clickWheelCameraZoomTool =
+					new ClickWheelCameraZoomTool();
+				component.addTool(clickWheelCameraZoomTool);
+				break;				
+			}
+		}
+		
+		List<Tool> tools = new LinkedList<Tool>(viewer.getSceneRoot().getTools());
+		for (Tool tool : tools) {
+			viewer.getSceneRoot().removeTool(tool);
+		}
+		
+		// Set camera near and far plane
+		camera = CameraUtility.getCamera(viewer.getCurrentViewer());
+		camera.setNear(0.1);
+		camera.setFar(1000.0);
+		
+		viewer.update();
 		viewer.getFrame().setSize(600, 600);
 	}
 
@@ -104,6 +150,34 @@ public class JRealityViewer implements Cindy3DViewer {
 		lineIndices.add(lineCoordinates.size() - 2);
 		lineIndices.add(lineCoordinates.size() - 1);
 		lineSizes.add(appearance.getSize());
+	}
+	
+	@Override
+	public void addLine(double x1, double y1, double z1, double x2, double y2,
+			double z2, AppearanceState appearance) {
+		double direction[] = {
+				x2 - x1,
+				y2 - y1,
+				z2 - z1
+		};
+		Rn.setEuclideanNorm(direction, 1000, direction);
+		addSegment(x1 + direction[0], y1 + direction[1], z1 + direction[2],
+				x1 - direction[0], y1 - direction[1], z1 - direction[2],
+				appearance);
+	}
+
+	@Override
+	public void addRay(double x1, double y1, double z1, double x2, double y2,
+			double z2, AppearanceState appearance) {
+		double direction[] = {
+				x2 - x1,
+				y2 - y1,
+				z2 - z1
+		};
+		Rn.setEuclideanNorm(direction, 1000, direction);
+		addSegment(x1, y1, z1,
+				x1 + direction[0], y1 + direction[1], z1 + direction[2],
+				appearance);
 	}
 
 	/* (non-Javadoc)

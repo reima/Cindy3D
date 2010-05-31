@@ -6,3 +6,5 @@ Was mit der aktuellen Plugin-API nicht geht:
  * Objekte eigener Klassen zurückgeben (werden in interne Typen konvertiert?)
    - Deswegen können wir Vektoren keine "Tags" verpassen (vgl. geotype)
    - Also kein direktes Analogon zu meet, join etc. möglich
+   
+ * Rückkanal für Fehler-/Statusmeldungen?

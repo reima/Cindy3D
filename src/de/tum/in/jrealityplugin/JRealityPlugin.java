@@ -143,18 +143,24 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	public void draw3d(ArrayList<Double> vec1, ArrayList<Double> vec2) {
 		if (vec1.size() != 3 || vec2.size() != 3)
 			return;
-
-		Object o = modifiers.get("type");
-		String type;
-		if (o instanceof String) {
-			type = (String)o;
-		} else {
-			type = "Segment"; // Default value
-		}
-		if (type.equals("Line")) {
-			// TODO: Implement addLine
-		} else {
+		
+		// Fill in default modifiers
+		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
+		modifiers.put("type", "Segment");
+		
+		// Apply overrides
+		modifiers.putAll(this.modifiers);
+		
+		String type = modifiers.get("type").toString();
+		
+		if (type.equals("Segment")) {
 			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
+					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+		} else if (type.equals("Line")) {
+			cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2),
+					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+		} else if (type.equals("Ray")) {
+			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2),
 					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
 		}
 	}
