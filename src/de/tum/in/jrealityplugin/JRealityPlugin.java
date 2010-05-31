@@ -144,9 +144,14 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		if (vec1.size() != 3 || vec2.size() != 3)
 			return;
 
-		String type = (String)modifiers.get("type");
-		if (type == null) type = "Segment";
-		if (type != null && type.equals("Line")) {
+		Object o = modifiers.get("type");
+		String type;
+		if (o instanceof String) {
+			type = (String)o;
+		} else {
+			type = "Segment"; // Default value
+		}
+		if (type.equals("Line")) {
 			// TODO: Implement addLine
 		} else {
 			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
