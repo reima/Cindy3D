@@ -37,3 +37,20 @@ forall(1..n, i,
          (cos(rad+phase), height, sin(rad+phase)));
 );
 end3d()
+
+
+//
+// Butterfly
+//
+
+x = sin(A.x);
+
+begin3d();
+color3d((1,0,0));
+size3d(1);
+connect3d([(-1,-1,x),(0,0,0),(1,1,x),(1,-1,x),(0,0,0),(-1,1,x),(-1,-1,x)]);
+color3d((1,1,1));
+size3d(3);
+draw3d((0,-0.5,0),(0,0.5,0));
+end3d();
+
