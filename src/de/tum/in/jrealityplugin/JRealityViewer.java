@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.jreality.geometry.IndexedFaceSetFactory;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
 import de.jreality.math.Rn;
@@ -41,6 +42,14 @@ public class JRealityViewer implements Cindy3DViewer {
 	private ArrayList<Integer> lineIndices;
 	private ArrayList<Double> lineSizes;
 	private ArrayList<Color> lineColors;
+	
+	// Polygon resources
+	private SceneGraphComponent scenePolygons;
+	private IndexedFaceSetFactory ifsf;
+	
+	private ArrayList<double[][]> polygonVertices;
+	private ArrayList<Color> polygonColors;
+	private int polygonTotalVertexCount;
 
 	public JRealityViewer() {
 		psf = new PointSetFactory();
@@ -53,17 +62,27 @@ public class JRealityViewer implements Cindy3DViewer {
 		lineIndices = new ArrayList<Integer>();
 		lineSizes = new ArrayList<Double>();
 		lineColors = new ArrayList<Color>();
+		
+		ifsf = new IndexedFaceSetFactory();
+		polygonVertices = new ArrayList<double[][]>();
+		polygonColors = new ArrayList<Color>();
+		polygonTotalVertexCount = 0;
 
 		sceneRoot = new SceneGraphComponent("root");
-
+		
+		// TODO: Set custom appearances for these components
 		scenePoints = new SceneGraphComponent("points");
 		scenePoints.setGeometry(psf.getGeometry());
 
 		sceneLines = new SceneGraphComponent("lines");
 		sceneLines.setGeometry(ilsf.getGeometry());
+		
+		scenePolygons = new SceneGraphComponent("polygons");
+		scenePolygons.setGeometry(ifsf.getGeometry());
 
 		sceneRoot.addChild(scenePoints);
 		sceneRoot.addChild(sceneLines);
+		sceneRoot.addChild(scenePolygons);
 
 		viewer = new ViewerApp(sceneRoot);
 		viewer.setAttachBeanShell(false);
@@ -71,7 +90,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		viewer.setShowMenu(true);
 		viewer.setBackgroundColor(Color.BLACK);
 
-		// Replace default tools with custom tools		
+		// Replace default tools with custom tools
 		List<SceneGraphComponent> components =
 			new LinkedList<SceneGraphComponent>(
 					viewer.getSceneRoot().getChildComponents());
@@ -117,6 +136,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	public void begin() {
 		clearPoints();
 		clearLines();
+		clearPolygons();
 	}
 
 	/* (non-Javadoc)
@@ -126,6 +146,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	public void end() {
 		updatePoints();
 		updateLines();
+		updatePolygons();
 
 		viewer.getFrame().setVisible(true);
 	}
@@ -180,6 +201,13 @@ public class JRealityViewer implements Cindy3DViewer {
 				appearance);
 	}
 
+	@Override
+	public void addPolygon(double[][] vertices, AppearanceState appearance) {
+		polygonVertices.add(vertices);
+		polygonColors.add(appearance.getColor());
+		polygonTotalVertexCount += vertices.length;
+	}
+
 	/* (non-Javadoc)
 	 * @see de.tum.in.jrealityplugin.Cindy3DViewer#shutdown()
 	 */
@@ -191,7 +219,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	/**
 	 * Deletes all point primitives from the internal data structures
 	 */
-	protected void clearPoints() {
+	private void clearPoints() {
 		pointCoordinates.clear();
 		pointColors.clear();
 		pointSizes.clear();
@@ -200,7 +228,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	/**
 	 * Transfers internal point data to jReality
 	 */
-	protected void updatePoints() {
+	private void updatePoints() {
 		if (pointCoordinates.size() == 0)
 			return;
 		psf.setVertexCount(pointCoordinates.size());
@@ -263,6 +291,51 @@ public class JRealityViewer implements Cindy3DViewer {
 		ilsf.setEdgeRelativeRadii(sizesArray);
 
 		ilsf.update();
+	}
+
+	/**
+	 * Deletes all polygons form the interal data structures
+	 */
+	private void clearPolygons() {
+		polygonVertices.clear();
+		polygonColors.clear();
+		polygonTotalVertexCount = 0;
+	}
+
+	/**
+	 * Transfers internal polygon data to jReality
+	 */
+	private void updatePolygons() {
+		if (polygonTotalVertexCount == 0)
+			return;
+		
+		int faceCount = polygonVertices.size();
+		double[][] vertices = new double[polygonTotalVertexCount][3];
+		int[][] faceIndices = new int[faceCount][];
+		int vertexId = 0;
+		for (int faceId = 0; faceId < faceCount; ++faceId) {
+			int faceVertexId = 0;
+			double[][] faceVertices = polygonVertices.get(faceId);
+			int[] indices = new int[faceVertices.length]; 
+			for (double[] vertex : faceVertices) {
+				vertices[vertexId] = vertex;
+				indices[faceVertexId] = vertexId;
+				++vertexId;
+				++faceVertexId;
+			}
+			faceIndices[faceId] = indices;
+		}
+
+		ifsf.setVertexCount(polygonTotalVertexCount);
+		ifsf.setVertexCoordinates(vertices);
+		ifsf.setFaceCount(polygonVertices.size());
+		ifsf.setFaceIndices(faceIndices);
+		ifsf.setFaceColors(polygonColors.toArray(new Color[0]));
+		ifsf.setLineCount(0);
+		ifsf.setGenerateEdgesFromFaces(false);
+		ifsf.setGenerateFaceNormals(true);
+		
+		ifsf.update();
 	}
 
 }

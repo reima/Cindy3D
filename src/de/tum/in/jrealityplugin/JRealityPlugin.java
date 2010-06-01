@@ -166,6 +166,10 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		}
 	}
 	
+	/**
+	 * Connects the given list of points by line segments
+	 * @param points List of points
+	 */
 	@CindyScript("connect3d")
 	public void connect3d(ArrayList<Vec> points) {
 		Vec last = points.get(0);
@@ -177,7 +181,22 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			last = current;
 		}
 	}
-
+	
+	/**
+	 * Draws a polygon
+	 * @param points Vertices of the polygon
+	 */
+	@CindyScript("drawpoly3d")
+	public void drawpoly3d(ArrayList<Vec> points) {
+		double vertices[][] = new double[points.size()][3];
+		for (int i = 0; i < points.size(); ++i) {
+			vertices[i][0] = points.get(i).getXR();
+			vertices[i][1] = points.get(i).getYR();
+			vertices[i][2] = points.get(i).getZR();
+		}
+		cindy3d.addPolygon(vertices, lineAppearance);
+	}
+	
 	/**
 	 * Pushes the current appearance on the appearance stack
 	 * @see JRealityPlugin#grestore3d()

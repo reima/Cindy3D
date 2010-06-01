@@ -31,4 +31,5 @@ public interface Cindy3DViewer {
 	void addRay(double x1, double y1, double z1,
 				double x2, double y2, double z2,
 				AppearanceState appearance);
+	void addPolygon(double[][] vertices, AppearanceState appearance);
 }
