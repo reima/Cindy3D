@@ -92,7 +92,7 @@ public class JRealityViewer implements Cindy3DViewer {
 				ClickWheelCameraZoomTool clickWheelCameraZoomTool =
 					new ClickWheelCameraZoomTool();
 				component.addTool(clickWheelCameraZoomTool);
-				break;				
+				break;
 			}
 		}
 		

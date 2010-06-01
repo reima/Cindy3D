@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import de.cinderella.api.cs.CindyScript;
 import de.cinderella.api.cs.CindyScriptPlugin;
+import de.cinderella.math.Vec;
 
 /**
  * Implementation of the plugin interface
@@ -162,6 +163,18 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		} else if (type.equals("Ray")) {
 			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2),
 					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+		}
+	}
+	
+	@CindyScript("connect3d")
+	public void connect3d(ArrayList<Vec> points) {
+		Vec last = points.get(0);
+		for (int i = 1; i < points.size(); ++i) {
+			Vec current = points.get(i);
+			cindy3d.addSegment(last.getXR(), last.getYR(), last.getZR(),
+					current.getXR(), current.getYR(), current.getZR(),
+					lineAppearance);
+			last = current;
 		}
 	}
 
