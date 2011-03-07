@@ -138,7 +138,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	/**
 	 * Draws a line in 3D space
 	 * @param vec1 Euclidean coordinates of the first endpoint
-	 * @param vec1 Euclidean coordinates of the second endpoint
+	 * @param vec2 Euclidean coordinates of the second endpoint
 	 */
 	@CindyScript("draw3d")
 	public void draw3d(ArrayList<Double> vec1, ArrayList<Double> vec2) {
@@ -232,7 +232,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 
 	/**
 	 * Set size state
-	 * @param vec Color vector
+	 * @param size Size
 	 */
 	@CindyScript("size3d")
 	public void size3d(double size) {
