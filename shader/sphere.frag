@@ -1,15 +1,15 @@
-uniform vec3 center;
-uniform float radius;
+uniform vec3 sphereCenter;
+uniform float sphereRadius;
 
 varying vec3 pos;
 
 void main() {
-  vec3 camSpaceCenter = vec3(gl_ModelViewMatrix * vec4(center, 1));
+  vec3 camSpaceCenter = vec3(gl_ModelViewMatrix * vec4(sphereCenter, 1));
 
   vec3 dir = normalize(pos);
 
   float b = dot(camSpaceCenter, dir);
-  float c = dot(camSpaceCenter, camSpaceCenter) - radius*radius;
+  float c = dot(camSpaceCenter, camSpaceCenter) - sphereRadius*sphereRadius;
   float d = b*b - c;
   float lambda = 0.0;
   if (d < 0.0) {
