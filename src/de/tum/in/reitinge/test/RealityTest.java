@@ -3,16 +3,18 @@ package de.tum.in.reitinge.test;
 import java.io.File;
 import java.io.IOException;
 
-import de.jreality.geometry.IndexedFaceSetFactory;
+import de.jreality.geometry.FrameFieldType;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.Primitives;
+import de.jreality.geometry.TubeUtility;
 import de.jreality.plugin.JRViewer;
 import de.jreality.plugin.content.ContentTools;
 import de.jreality.scene.Appearance;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.shader.DefaultGeometryShader;
+import de.jreality.shader.DefaultLineShader;
 import de.jreality.shader.GlslProgram;
-import de.jreality.shader.RenderingHintsShader;
+import de.jreality.shader.LineShader;
 import de.jreality.shader.ShaderUtility;
 import de.jreality.tools.ClickWheelCameraZoomTool;
 import de.jreality.util.CameraUtility;
@@ -28,11 +30,15 @@ public class RealityTest {
 		SceneGraphComponent cmp = SceneGraphUtility.createFullSceneGraphComponent("root");
 		cmp.addTool(new ClickWheelCameraZoomTool());
 		
-		SceneGraphComponent box = SceneGraphUtility.createFullSceneGraphComponent("box");
-
-		box.setGeometry(Primitives.box(1, 1, 1, false));
+		SceneGraphComponent quad = SceneGraphUtility.createFullSceneGraphComponent("quad");
+		quad.setGeometry(Primitives.texturedQuadrilateral(new double[] {
+				-1, -1, 0,
+				 1, -1, 0,
+				 1,  1, 0,
+				-1,  1, 0
+		}));
 		
-		Appearance app = box.getAppearance();
+		Appearance app = quad.getAppearance();
 		DefaultGeometryShader dgs =
 			ShaderUtility.createDefaultGeometryShader(app, true);
 		dgs.setShowLines(false);
@@ -53,9 +59,9 @@ public class RealityTest {
 		sphereProg.setUniform("center", new double[]{0,0,0});
 		sphereProg.setUniform("radius", .5);
 		
-		cmp.addChild(box);
+		cmp.addChild(quad);
 		
-		SceneGraphComponent lines = new SceneGraphComponent();
+		SceneGraphComponent lines = SceneGraphUtility.createFullSceneGraphComponent("lines");
 		IndexedLineSetFactory ilsf = new IndexedLineSetFactory();
 		ilsf.setVertexCount(2);
 		ilsf.setVertexCoordinates(new double[] {-2,-2,0, 2,2,0});
@@ -64,6 +70,10 @@ public class RealityTest {
 		ilsf.setEdgeRelativeRadii(new double[] {10});
 		ilsf.update();
 		lines.setGeometry(ilsf.getGeometry());
+		
+		dgs = ShaderUtility.createDefaultGeometryShader(lines.getAppearance(), true);
+		DefaultLineShader ls = (DefaultLineShader) dgs.createLineShader("default");
+		ls.setCrossSection(TubeUtility.diamondCrossSection);
 		
 		cmp.addChild(lines);
 		
