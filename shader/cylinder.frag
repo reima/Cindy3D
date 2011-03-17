@@ -9,7 +9,7 @@ void main() {
 	
 	vec3 camSpaceDir = vec3(gl_ModelViewMatrix * vec4(cylinderPoint2,1))-camSpaceBase;
 	float cylinderLength = length(camSpaceDir);
-	camSpaceDir = normalize(camSpaceDir);
+	camSpaceDir = camSpaceDir / length;
 
 	vec3 dir = normalize(pos);
 	
@@ -50,8 +50,7 @@ void main() {
   
 	vec3 reflectVec = reflect(-lightDir, normal);
 	float spec = max(dot(reflectVec, -dir), 0.0);
-	float lol = 0.5;
-	spec = pow(spec, 16.0)*lol;
+	spec = pow(spec, 16.0)*0.5;
 
 	gl_FragColor = vec4(diffuse, 0.0, 0.0, 1.0) + spec*vec4(1.0, 1.0, 1.0, 0.0);
   
