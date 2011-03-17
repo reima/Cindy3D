@@ -18,8 +18,11 @@ import de.jreality.scene.Appearance;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.shader.DefaultGeometryShader;
 import de.jreality.shader.DefaultLineShader;
+import de.jreality.shader.GlslPolygonShader;
 import de.jreality.shader.GlslProgram;
+import de.jreality.shader.HatchPolygonShader;
 import de.jreality.shader.LineShader;
+import de.jreality.shader.MyPointShader;
 import de.jreality.shader.ShaderUtility;
 import de.jreality.tools.ClickWheelCameraZoomTool;
 import de.jreality.util.CameraUtility;
@@ -190,7 +193,10 @@ public class RealityTest {
 		ls.setCrossSection(TubeUtility.diamondCrossSection);
 		
 		//cmp.addChild(lines);
-		
+		//dgs = ShaderUtility.createDefaultGeometryShader(lines.getAppearance(), true);
+		//DefaultLineShader ls = (DefaultLineShader) dgs.createLineShader("default");
+		//MyPointShader mps = (MyPointShader)dgs.createPointShader("my");
+						
 		JRViewer v = new JRViewer();
 		v.setContent(cmp);
 		//v.registerPlugin(new DirectContent());
