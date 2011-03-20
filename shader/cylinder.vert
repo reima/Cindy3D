@@ -1,6 +1,9 @@
+uniform mat4 cylinderTransform;
+
 varying vec3 pos;
 
 void main() {
-	pos = vec3(gl_ModelViewMatrix * gl_Vertex);
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+	vec4 transformed = cylinderTransform * gl_Vertex;
+	pos = vec3(gl_ModelViewMatrix * transformed);
+	gl_Position = gl_ModelViewProjectionMatrix * transformed;
 }
