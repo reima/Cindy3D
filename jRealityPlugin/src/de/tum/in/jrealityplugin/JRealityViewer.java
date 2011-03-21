@@ -1,26 +1,28 @@
 package de.tum.in.jrealityplugin;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+
+import javax.swing.JFrame;
 
 import de.jreality.geometry.IndexedFaceSetFactory;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
 import de.jreality.math.Rn;
-import de.jreality.scene.SceneGraphComponent;
+import de.jreality.plugin.JRViewer;
+import de.jreality.plugin.content.ContentTools;
 import de.jreality.scene.Camera;
-import de.jreality.scene.tool.Tool;
-import de.jreality.tools.ClickWheelCameraZoomTool;
-import de.jreality.tools.DraggingTool;
-import de.jreality.tools.RotateTool;
-import de.jreality.ui.viewerapp.ViewerApp;
+import de.jreality.scene.SceneGraphComponent;
+import de.jreality.shader.DefaultGeometryShader;
+import de.jreality.shader.ShaderUtility;
 import de.jreality.util.CameraUtility;
+import de.jreality.util.SceneGraphUtility;
 
 @SuppressWarnings("deprecation")
 public class JRealityViewer implements Cindy3DViewer {
-	private ViewerApp viewer;
+	private JFrame frame;
+	private JRViewer viewer;
 	
 	private Camera camera;
 
@@ -83,50 +85,25 @@ public class JRealityViewer implements Cindy3DViewer {
 		sceneRoot.addChild(scenePoints);
 		sceneRoot.addChild(sceneLines);
 		sceneRoot.addChild(scenePolygons);
-
-		viewer = new ViewerApp(sceneRoot);
-		viewer.setAttachBeanShell(false);
-		viewer.setAttachNavigator(true);
-		viewer.setShowMenu(true);
-		viewer.setBackgroundColor(Color.BLACK);
-
-		// Replace default tools with custom tools
-		List<SceneGraphComponent> components =
-			new LinkedList<SceneGraphComponent>(
-					viewer.getSceneRoot().getChildComponents());
-		for (SceneGraphComponent component : components) {
-			if (component.getName().equals("scene")) {
-				List<Tool> tools = new LinkedList<Tool>(component.getTools());
-				for (Tool tool : tools) {
-					component.removeTool(tool);
-				}
-				// Rotation
-				RotateTool rotateTool = new RotateTool();
-				rotateTool.setFixOrigin(true);
-				component.addTool(rotateTool);
-				// Dragging
-				DraggingTool draggingTool = new DraggingTool();
-				component.addTool(draggingTool);
-				// Zooming
-				ClickWheelCameraZoomTool clickWheelCameraZoomTool =
-					new ClickWheelCameraZoomTool();
-				component.addTool(clickWheelCameraZoomTool);
-				break;
-			}
-		}
 		
-		List<Tool> tools = new LinkedList<Tool>(viewer.getSceneRoot().getTools());
-		for (Tool tool : tools) {
-			viewer.getSceneRoot().removeTool(tool);
-		}
+		viewer = new JRViewer();
+		viewer.setContent(sceneRoot);
+		//viewer.registerPlugin(new DirectContent());
+		viewer.registerPlugin(new ContentTools());
+		//viewer.registerPlugin(new ContentLoader());
+		viewer.addBasicUI();
+		viewer.setShowPanelSlots(false, true, false, false);
 		
+		frame = new JFrame("Cindy3D");
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
+		frame.add(viewer.startupLocal(), BorderLayout.CENTER);
+		frame.pack();
+
 		// Set camera near and far plane
-		camera = CameraUtility.getCamera(viewer.getCurrentViewer());
+		camera = CameraUtility.getCamera(viewer.getViewer());
 		camera.setNear(0.1);
 		camera.setFar(1000.0);
-		
-		viewer.update();
-		viewer.getFrame().setSize(600, 600);
 	}
 
 	/* (non-Javadoc)
@@ -148,7 +125,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		updateLines();
 		updatePolygons();
 
-		viewer.getFrame().setVisible(true);
+		frame.setVisible(true);
 	}
 
 	/* (non-Javadoc)
@@ -213,7 +190,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	 */
 	@Override
 	public void shutdown() {
-		viewer.getFrame().setVisible(false);
+		frame.dispose();
 	}
 
 	/**
