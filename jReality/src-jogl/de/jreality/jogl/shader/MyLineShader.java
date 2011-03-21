@@ -27,17 +27,19 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 	private GlslShaderProgram program = null;
 	private Color diffuseColor = java.awt.Color.BLUE;
 	private double[] diffuseColorAsDouble = new double[3];
+	private int lineType;
 	
 	public MyLineShader(de.jreality.shader.DefaultLineShader orig)	{
 		templateShader = orig;
 	}
 	
-	public MyLineShader()	{
+	public MyLineShader() {
 	}
 	
-	public void setFromEffectiveAppearance(EffectiveAppearance eap, String name)	{
+	public void setFromEffectiveAppearance(EffectiveAppearance eap, String name) {
 		super.setFromEffectiveAppearance(eap, name);
 		tubeRadius = eap.getAttribute(ShaderUtility.nameSpace(name,CommonAttributes.TUBE_RADIUS),CommonAttributes.TUBE_RADIUS_DEFAULT);
+		lineType = eap.getAttribute(ShaderUtility.nameSpace(name,"lineType"), de.jreality.shader.MyLineShader.LINE_TYPE_DEFAULT);
 		diffuseColor = (Color) eap.getAttribute(ShaderUtility.nameSpace(name,DIFFUSE_COLOR),CommonAttributes.LINE_DIFFUSE_COLOR_DEFAULT);
 		float[] diffuseColorAsFloat = diffuseColor.getRGBComponents(null);
 		for (int i = 0; i < 3; ++i) {
