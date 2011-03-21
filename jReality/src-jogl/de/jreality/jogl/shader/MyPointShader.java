@@ -25,7 +25,6 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 	de.jreality.shader.MyPointShader templateShader;
 	double pointRadius;
 	Color diffuseColor = java.awt.Color.RED;
-	PolygonShader polygonShader = null;
 	GlslShaderProgram program = null;
 	double[] diffuseColorAsDouble = new double[3];
 	
@@ -38,11 +37,6 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 
 	public void setFromEffectiveAppearance(EffectiveAppearance eap, String name) {
 		super.setFromEffectiveAppearance(eap, name);
-		if (templateShader != null)  {
-			polygonShader = DefaultGeometryShader.createFrom(templateShader.getPolygonShader());
-			polygonShader.setFromEffectiveAppearance(eap, name+".polygonShader");
-		}
-		else polygonShader = (PolygonShader) ShaderLookup.getShaderAttr(eap, name, "polygonShader");
 		pointRadius = eap.getAttribute(ShaderUtility.nameSpace(name,POINT_RADIUS),POINT_RADIUS_DEFAULT);
 		diffuseColor = (Color) eap.getAttribute(ShaderUtility.nameSpace(name,DIFFUSE_COLOR), POINT_DIFFUSE_COLOR_DEFAULT);
 		float[] diffuseColorAsFloat = diffuseColor.getRGBComponents(null);
@@ -110,6 +104,11 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 		if (vertices == null)
 			return;
 		
+		DataList radiiList = ps.getVertexAttributes(Attribute.RELATIVE_RADII);
+		DoubleArray radii = null;
+		if (radiiList != null)
+			radii = radiiList.toDoubleArray();
+		
 		int vertexLength = GeometryUtility.getVectorLength(vertices);
 		DataList colors = ps.getVertexAttributes(Attribute.COLORS);
 		
@@ -117,18 +116,18 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 //		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, diffuseColorAsFloat, 0);
 		
 		DoubleArray colorArray = new DoubleArray(diffuseColorAsDouble);
+		double radius = pointRadius;
 		
 		for (int i = 0; i < vertices.size(); ++i) {
 			DoubleArray coordArray = vertices.item(i).toDoubleArray();
-			if (colors != null) {
-				colorArray = colors.item(i).toDoubleArray();
-			}
+			if (colors != null) colorArray = colors.item(i).toDoubleArray();
+			if (radii != null) radius = radii.getValueAt(i) * pointRadius;
 			program.bind(gl);
 			gl.glUniform3f(program.getUniformLocation(gl, "sphereCenter"),
 					(float)coordArray.getValueAt(0), (float)coordArray.getValueAt(1), (float)coordArray.getValueAt(2));
 			gl.glUniform3f(program.getUniformLocation(gl, "sphereColor"),
 					(float)colorArray.getValueAt(0), (float)colorArray.getValueAt(1), (float)colorArray.getValueAt(2));
-			gl.glUniform1f(program.getUniformLocation(gl, "sphereRadius"), (float)pointRadius);
+			gl.glUniform1f(program.getUniformLocation(gl, "sphereRadius"), (float)radius);
 			gl.glBegin(GL.GL_QUADS);
 				gl.glVertex2d(-1, -1);
 				gl.glVertex2d( 1, -1);
