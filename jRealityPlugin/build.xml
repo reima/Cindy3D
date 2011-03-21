@@ -5,6 +5,7 @@
 
     <target name="init" description="setup paths">
         <property name="cindy2jar" location="lib/cindy2.jar"/>
+    	<property name="jrealitysrc" location="../jReality"/>
         <property name="jrealityjar" location="lib/jReality.jar"/>
         <property name="jreality3rdpartydir" location="lib/jReality-3rd-party"/>
         <property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/jRealityPlugin"/>
@@ -14,6 +15,11 @@
     </path>
 
     <!-- no changes necessary below this line -->
+	
+	<target name="jReality" depends="init" description="Update jReality JAR">
+		<ant inheritall="false" dir="${jrealitysrc}" antfile="build.xml" target="release-jar" />
+		<copy file="${jrealitysrc}/release/jReality.jar" tofile="${jrealityjar}" />
+	</target>
 
     <target name="compile" depends="init" description="Compile jReality Plugin for Cinderella">
         <javac encoding="iso-8859-1" debug="on" optimize="on"
@@ -34,6 +40,10 @@
         <!-- add compiled classes -->
         <jar basedir="bin" destfile="${plugin}" includes="**/*.class">
         </jar>
+    	
+        <!-- add resources -->
+        <jar basedir="src" destfile="${plugin}" excludes="**/*.java" update="true">
+        </jar>
 
         <!-- add class path -->
         <pathconvert property="mf.classpath" pathsep=" ">
@@ -47,7 +57,7 @@
         </jar>
     </target>
 
-    <target name="copy" depends="build" description="Copy plugin to Plugins folder">
+    <target name="copy" depends="build,jReality" description="Copy plugin to Plugins folder">
         <copy file="${plugin}" todir="${pluginfolder}"/>
         <copy file="${jrealityjar}" todir="${pluginfolder}"/>
         <copy todir="${pluginfolder}">
