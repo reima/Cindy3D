@@ -22,7 +22,6 @@ public class RealityTest {
 	 */
 	public static void main(String[] args) {
 		SceneGraphComponent cmp = SceneGraphUtility.createFullSceneGraphComponent("root");
-		cmp.addTool(new ClickWheelCameraZoomTool());
 		
 //		try {
 //			SceneGraphComponent content = Readers.read(Input.getInput("C:/Users/reima/Downloads/bunny.obj"));
