@@ -16,6 +16,8 @@ import de.jreality.scene.Geometry;
 import de.jreality.scene.IndexedLineSet;
 import de.jreality.scene.data.Attribute;
 import de.jreality.scene.data.DataList;
+import de.jreality.scene.data.DoubleArray;
+import de.jreality.scene.data.IntArray;
 import de.jreality.shader.CommonAttributes;
 import de.jreality.shader.DefaultLineShader;
 import de.jreality.shader.EffectiveAppearance;
@@ -94,6 +96,14 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		DataList indices = ls.getEdgeAttributes(Attribute.INDICES);
 		if (indices == null)
 			return;
+		
+		DataList typesList =
+			ls.getEdgeAttributes(Attribute.attributeForName("lineType"));
+		IntArray types = null;
+		if (typesList != null) {
+			types = typesList.toIntArray();
+		}
+
 		//DataList colors = ps.getVertexAttributes(Attribute.COLORS);
 		
 		//float[] diffuseColorAsFloat = diffuseColor.getRGBColorComponents(null);
@@ -147,6 +157,8 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 
 		for (int i = 0; i < indices.size(); ++i) {
 			int[] ind = indices.item(i).toIntArray(null);
+			int type = lineType;
+			if (types != null) type = types.getValueAt(i);
 			
 			for (int k = 1; k < ind.length; ++k) {
 				
@@ -157,7 +169,7 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				modelToWorld.transformVector(coord1);
 				modelToWorld.transformVector(coord2);
 				
-				if (lineType != 0) {
+				if (type != 0) {
 					double[] direction = new double[3];
 					Rn.subtract(direction, coord2, coord1);
 					double min = Double.MAX_VALUE;
@@ -174,7 +186,7 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 					
 					for (int j=0; j<3; ++j) {
 						coord2[j] = coord1[j] + max*direction[j];
-						if (lineType == 2)
+						if (type == 2)
 							coord1[j] = coord1[j] + min*direction[j];
 					}
 				}

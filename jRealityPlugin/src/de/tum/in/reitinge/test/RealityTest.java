@@ -8,6 +8,9 @@ import de.jreality.plugin.content.ContentLoader;
 import de.jreality.plugin.content.ContentTools;
 import de.jreality.plugin.content.DirectContent;
 import de.jreality.scene.SceneGraphComponent;
+import de.jreality.scene.data.Attribute;
+import de.jreality.scene.data.IntArray;
+import de.jreality.scene.data.IntArrayArray;
 import de.jreality.shader.DefaultGeometryShader;
 import de.jreality.shader.MyLineShader;
 import de.jreality.shader.MyPointShader;
@@ -55,6 +58,7 @@ public class RealityTest {
 		});
 		psf.setEdgeCount(4);
 		psf.setEdgeIndices(new int[]{0,1,1,2,2,3,3,0});
+		psf.setEdgeAttribute(Attribute.attributeForName("lineType"),new IntArray(new int[]{0,1,2,0}));
 		psf.update();
 		quad.setGeometry(psf.getGeometry());
 		DefaultGeometryShader dgs =
