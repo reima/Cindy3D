@@ -85,7 +85,7 @@ void shade(in vec3 normal, in vec3 ecPoint) {
  
   vec4 color = gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
-    Diffuse  * sphereColor;
+    Diffuse  * vec4(sphereColor,1);
   color += Specular * gl_FrontMaterial.specular;
   color = clamp( color, 0.0, 1.0 );
   gl_FragColor = vec4(color.rgb, 1.0);
