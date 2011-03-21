@@ -94,9 +94,11 @@ void shade(in vec3 normal, in vec3 ecPoint) {
 
 
 void main() {
-	vec3 camSpaceBase = vec3(gl_ModelViewMatrix * vec4(cylinderPoint1, 1));
+	//vec3 camSpaceBase = vec3(gl_ModelViewMatrix * vec4(cylinderPoint1, 1));
+	vec3 camSpaceBase = cylinderPoint1;
 	
-	vec3 camSpaceDir = vec3(gl_ModelViewMatrix * vec4(cylinderPoint2,1))-camSpaceBase;
+	//vec3 camSpaceDir = vec3(gl_ModelViewMatrix * vec4(cylinderPoint2,1))-camSpaceBase;
+	vec3 camSpaceDir = cylinderPoint2-camSpaceBase;
 	float cylinderLength = length(camSpaceDir);
 	camSpaceDir = camSpaceDir / cylinderLength;
 

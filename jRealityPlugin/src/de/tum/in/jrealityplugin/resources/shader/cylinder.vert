@@ -4,6 +4,6 @@ varying vec3 pos;
 
 void main() {
 	vec4 transformed = cylinderTransform * gl_Vertex;
-	pos = vec3(gl_ModelViewMatrix * transformed);
-	gl_Position = gl_ModelViewProjectionMatrix * transformed;
+	pos = vec3(transformed);
+	gl_Position = gl_ProjectionMatrix * transformed;
 }

@@ -10,6 +10,7 @@ import de.jreality.jogl.JOGLRenderer;
 import de.jreality.jogl.JOGLRenderingState;
 import de.jreality.math.Matrix;
 import de.jreality.math.MatrixBuilder;
+import de.jreality.math.Pn;
 import de.jreality.math.Rn;
 import de.jreality.scene.Geometry;
 import de.jreality.scene.IndexedLineSet;
@@ -47,6 +48,17 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 	public boolean providesProxyGeometry() {
 		//return true;
 		return false;
+	}
+	
+	private static double linePlaneIntersection(double[] origin,
+			double[] direction,
+			double[] plane) {
+		double denom = Rn.innerProduct(direction, plane);
+		if (Math.abs(denom) < 10E-8)
+			return Double.MAX_VALUE;
+		
+		double lambda = -(Rn.innerProduct(origin, plane)+plane[3])/ denom;
+		return lambda;
 	}
 	
 	public void render(JOGLRenderingState jrs) {
@@ -91,22 +103,81 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		//	colorArray = colors.item(i).toDoubleArray();
 		//}
 		
+		Matrix m = new Matrix(jrs.cameraToNDC);
+		m.invert();
+		
+		double[][] f = new double[][] {		
+				{-1, -1,  1, 1},
+				{-1, -1, -1, 1},
+				{-1,  1, -1, 1},
+				{ 1,  1, -1, 1},		
+				{ 1,  1,  1, 1},	
+				{ 1, -1,  1, 1},
+		};
+		
+		for (int i=0; i<6; ++i) {
+			m.transformVector(f[i]);
+			Pn.dehomogenize(f[i], f[i]);
+			
+			//System.out.println(f[i][0] + ", " + f[i][1] + ", " + f[i][2]);
+		}
+		
+
+		
+		double[][] planes = new double[6][4];
+		
+		for (int i=0; i<6; ++i) {
+			Rn.crossProduct(planes[i], 
+					Rn.subtract(null, f[(i+1)%6], f[i]),
+					Rn.subtract(null, f[(i+2)%6], f[i]));
+			planes[i][3] = 0;
+			planes[i][3] = -Rn.innerProduct(planes[i], f[i]);
+			
+			//System.out.println(Rn.toString(planes[i]));
+		}
+		
+		double[] mTmp = new double[16];
+		jrs.currentPath.getMatrix(mTmp);
+		Matrix modelToWorld = new Matrix(mTmp);
+		
+		Matrix worldToCamera = new Matrix(jrs.worldToCamera);
+		modelToWorld.multiplyOnLeft(worldToCamera);
+		
+		boolean ray = true;
+
 		for (int i = 0; i < indices.size(); ++i) {
 			int[] ind = indices.item(i).toIntArray(null);
 			
 			for (int k = 1; k < ind.length; ++k) {
+				
 				program.bind(gl);
 				double[] coord1 = vertices.item(ind[k-1]).toDoubleArray(null);
 				double[] coord2 = vertices.item(ind[k]).toDoubleArray(null);
-				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint1"),
-						(float)coord1[0], (float)coord1[1], (float)coord1[2]);
-				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint2"),
-						(float)coord2[0], (float)coord2[1], (float)coord2[2]);
-//				gl.glUniform3f(program.getUniformLocation(gl, "sphereColor"),
-//						(float)colorArray.getValueAt(0), (float)colorArray.getValueAt(1), (float)colorArray.getValueAt(2));
-				double radius = 0.05f;
-				gl.glUniform1f(program.getUniformLocation(gl, "cylinderRadius"), (float)radius);
+
+				modelToWorld.transformVector(coord1);
+				modelToWorld.transformVector(coord2);
 				
+				double[] direction = new double[3];
+				Rn.subtract(direction, coord2, coord1);
+				double min = Double.MAX_VALUE;
+				double max = Double.MIN_VALUE;
+				for (int j=0; j<6; ++j) {
+					double lambda = linePlaneIntersection(coord1, direction, planes[j]);
+					if (lambda == Double.MAX_VALUE)
+						continue;
+					else {
+						min = Math.min(min, lambda);
+						max = Math.max(max, lambda);
+					}
+				}
+				
+				for (int j=0; j<3; ++j) {
+					coord2[j] = coord1[j] + max*direction[j];
+					if (!ray)
+						coord1[j] = coord1[j] + min*direction[j];
+				}
+				
+				double radius = 0.025f;
 				double dist = Math.max(Rn.euclideanDistance(coord1, coord2), 2*radius)/2.0;
 				
 				double[] p = new double[]{0,0,0};
@@ -114,13 +185,23 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				double[] axis = new double[3];
 				Rn.average(avg, new double[][]{coord1,coord2});
 				Rn.subtract(axis, coord1, coord2);
-				Matrix m = new Matrix();
+				Matrix cylinder = new Matrix();
 				MatrixBuilder.euclidean().translate(p, avg).rotateFromTo(new double[]{1,0,0}, axis).
 				scale(new double[]{dist, radius, radius})
-										 .assignTo(m);
+										 .assignTo(cylinder);
+								
+				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint1"),
+						(float)coord1[0], (float)coord1[1], (float)coord1[2]);
+				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint2"),
+						(float)coord2[0], (float)coord2[1], (float)coord2[2]);
+				
+//				gl.glUniform3f(program.getUniformLocation(gl, "sphereColor"),
+//						(float)colorArray.getValueAt(0), (float)colorArray.getValueAt(1), (float)colorArray.getValueAt(2));
 
+				gl.glUniform1f(program.getUniformLocation(gl, "cylinderRadius"), (float)radius);
+				
 				gl.glUniformMatrix4fv(program.getUniformLocation(gl, "cylinderTransform"),
-						1, true, Rn.convertDoubleToFloatArray(m.getArray()), 0);
+						1, true, Rn.convertDoubleToFloatArray(cylinder.getArray()), 0);
 				
 				gl.glBegin(GL.GL_QUADS);
 					gl.glVertex3d(-1, -1, -1);
