@@ -144,8 +144,6 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		
 		Matrix worldToCamera = new Matrix(jrs.worldToCamera);
 		modelToWorld.multiplyOnLeft(worldToCamera);
-		
-		boolean ray = true;
 
 		for (int i = 0; i < indices.size(); ++i) {
 			int[] ind = indices.item(i).toIntArray(null);
@@ -159,24 +157,26 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				modelToWorld.transformVector(coord1);
 				modelToWorld.transformVector(coord2);
 				
-				double[] direction = new double[3];
-				Rn.subtract(direction, coord2, coord1);
-				double min = Double.MAX_VALUE;
-				double max = Double.MIN_VALUE;
-				for (int j=0; j<6; ++j) {
-					double lambda = linePlaneIntersection(coord1, direction, planes[j]);
-					if (lambda == Double.MAX_VALUE)
-						continue;
-					else {
-						min = Math.min(min, lambda);
-						max = Math.max(max, lambda);
+				if (lineType != 0) {
+					double[] direction = new double[3];
+					Rn.subtract(direction, coord2, coord1);
+					double min = Double.MAX_VALUE;
+					double max = Double.MIN_VALUE;
+					for (int j=0; j<6; ++j) {
+						double lambda = linePlaneIntersection(coord1, direction, planes[j]);
+						if (lambda == Double.MAX_VALUE)
+							continue;
+						else {
+							min = Math.min(min, lambda);
+							max = Math.max(max, lambda);
+						}
 					}
-				}
-				
-				for (int j=0; j<3; ++j) {
-					coord2[j] = coord1[j] + max*direction[j];
-					if (!ray)
-						coord1[j] = coord1[j] + min*direction[j];
+					
+					for (int j=0; j<3; ++j) {
+						coord2[j] = coord1[j] + max*direction[j];
+						if (lineType == 2)
+							coord1[j] = coord1[j] + min*direction[j];
+					}
 				}
 				
 				double radius = 0.025f;

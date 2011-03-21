@@ -9,6 +9,7 @@ import de.jreality.plugin.content.ContentTools;
 import de.jreality.plugin.content.DirectContent;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.shader.DefaultGeometryShader;
+import de.jreality.shader.MyLineShader;
 import de.jreality.shader.MyPointShader;
 import de.jreality.shader.ShaderUtility;
 import de.jreality.tools.ClickWheelCameraZoomTool;
@@ -63,7 +64,8 @@ public class RealityTest {
 		dgs.setShowFaces(true);
 		MyPointShader mps = (MyPointShader) dgs.createPointShader("my");
 		mps.setPointRadius(0.05);
-		dgs.createLineShader("my");
+		MyLineShader ls = (MyLineShader)dgs.createLineShader("my");
+		ls.setLineType(2);
 		cmp.addChild(quad);
 
 		JRViewer v = new JRViewer();
