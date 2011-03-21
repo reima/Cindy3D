@@ -1,31 +1,23 @@
 package de.jreality.jogl.shader;
 
 import static de.jreality.shader.CommonAttributes.DIFFUSE_COLOR;
-import static de.jreality.shader.CommonAttributes.POINT_DIFFUSE_COLOR_DEFAULT;
-import static de.jreality.shader.CommonAttributes.USE_GLSL;
 
 import java.awt.Color;
 
 import javax.media.opengl.GL;
 
-import de.jreality.geometry.FrameFieldType;
-import de.jreality.geometry.GeometryUtility;
 import de.jreality.jogl.JOGLRenderer;
 import de.jreality.jogl.JOGLRenderingState;
 import de.jreality.math.Matrix;
 import de.jreality.math.MatrixBuilder;
 import de.jreality.math.Rn;
-import de.jreality.scene.Appearance;
 import de.jreality.scene.Geometry;
 import de.jreality.scene.IndexedLineSet;
-import de.jreality.scene.PointSet;
 import de.jreality.scene.data.Attribute;
 import de.jreality.scene.data.DataList;
-import de.jreality.scene.data.DoubleArray;
 import de.jreality.shader.CommonAttributes;
 import de.jreality.shader.DefaultLineShader;
 import de.jreality.shader.EffectiveAppearance;
-import de.jreality.shader.GlslProgram;
 import de.jreality.shader.ShaderUtility;
 
 public class MyLineShader extends AbstractPrimitiveShader implements LineShader {
@@ -63,10 +55,14 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		
 		if (program == null) {
 			try {
-				program = new GlslShaderProgram(gl, "./shader/cylinder.vert", "./shader/cylinder.frag");
+				program = new GlslShaderProgram(gl,
+						getClass().getResourceAsStream("/de/tum/in/jrealityplugin/resources/shader/cylinder.vert"),
+						getClass().getResourceAsStream("/de/tum/in/jrealityplugin/resources/shader/cylinder.frag")
+				);				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 		}
 		
@@ -78,6 +74,9 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		
 		IndexedLineSet ls = (IndexedLineSet) original;
 		DataList vertices = ls.getVertexAttributes(Attribute.COORDINATES);
+		if (vertices == null)
+			return;
+		
 		DataList indices = ls.getEdgeAttributes(Attribute.INDICES);
 		if (indices == null)
 			return;

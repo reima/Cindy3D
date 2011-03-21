@@ -1,12 +1,11 @@
 package de.jreality.jogl.shader;
 
-import java.io.File;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
-
-import de.jreality.jogl.JOGLRenderingState;
 
 public class GlslShaderProgram {
 	private int program;
@@ -15,12 +14,23 @@ public class GlslShaderProgram {
 		program = gl.glCreateProgram();
 	}
 	
-	public GlslShaderProgram(GL gl, String vertexShaderPath, String fragmentShaderPath) throws Exception {
-		GlslShader vert = new GlslShader(GL.GL_VERTEX_SHADER, new File(vertexShaderPath));
+	public GlslShaderProgram(GL gl, InputStream vertexShader, InputStream fragmentShader) throws Exception {
+		prepareShaders(
+				gl,
+				new GlslShader(GL.GL_VERTEX_SHADER, vertexShader),
+				new GlslShader(GL.GL_FRAGMENT_SHADER, fragmentShader));
+	}
+	
+	public GlslShaderProgram(GL gl, String vertexShader, String fragmentShader) throws Exception {
+		prepareShaders(
+				gl,
+				new GlslShader(GL.GL_VERTEX_SHADER, vertexShader),
+				new GlslShader(GL.GL_FRAGMENT_SHADER, fragmentShader));
+	}
+	
+	private void prepareShaders(GL gl, GlslShader vert, GlslShader frag) throws Exception {
 		vert.compile(gl);
 		if (!vert.isValid(gl)) throw new Exception("vertex shader: " + vert.getInfoLog(gl));
-		
-		GlslShader frag = new GlslShader(GL.GL_FRAGMENT_SHADER, new File(fragmentShaderPath));
 		frag.compile(gl);
 		if (!frag.isValid(gl)) throw new Exception("fragment shader: " + frag.getInfoLog(gl));
 		

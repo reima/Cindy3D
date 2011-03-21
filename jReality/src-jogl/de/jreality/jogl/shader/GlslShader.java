@@ -1,15 +1,13 @@
 package de.jreality.jogl.shader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
-
-import de.jreality.util.Input;
 
 public class GlslShader {
 	private int shader;
@@ -21,16 +19,23 @@ public class GlslShader {
 		this.source = source;
 	}
 	
-	public GlslShader(int type, File file) throws IOException {
+	public GlslShader(int type, InputStream source) throws IOException {
 		this.type = type;
-		this.source = readFile(file);
+		this.source = readInput(source);
 	}
 	
-	private static String readFile(File file) throws IOException {
-		byte[] buffer = new byte[(int)file.length()];
-		FileInputStream fis = new FileInputStream(file);
-		fis.read(buffer);
-		return new String(buffer);
+	private static String readInput(InputStream in) throws IOException {
+		final char[] buffer = new char[4096];
+		Reader reader = new InputStreamReader(in);
+		StringBuilder builder = new StringBuilder();
+		int read;
+		do {
+			read = reader.read(buffer);
+			if (read > 0) {
+				builder.append(buffer, 0, read);
+			}
+		} while (read >= 0);
+		return builder.toString();
 	}
 	
 	public void compile(GL gl) {

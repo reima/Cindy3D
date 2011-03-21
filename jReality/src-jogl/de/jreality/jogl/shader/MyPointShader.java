@@ -6,10 +6,6 @@ import static de.jreality.shader.CommonAttributes.POINT_RADIUS;
 import static de.jreality.shader.CommonAttributes.POINT_RADIUS_DEFAULT;
 
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.media.opengl.GL;
 
@@ -92,10 +88,14 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 		
 		if (program == null) {
 			try {
-				program = new GlslShaderProgram(gl, "./shader/sphere.vert", "./shader/sphere.frag");
+				program = new GlslShaderProgram(gl,
+						getClass().getResourceAsStream("/de/tum/in/jrealityplugin/resources/shader/sphere.vert"),
+						getClass().getResourceAsStream("/de/tum/in/jrealityplugin/resources/shader/sphere.frag")
+				);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 		}
 		
@@ -107,11 +107,14 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 		
 		PointSet ps = (PointSet) original;
 		DataList vertices = ps.getVertexAttributes(Attribute.COORDINATES);
+		if (vertices == null)
+			return;
+		
 		int vertexLength = GeometryUtility.getVectorLength(vertices);
 		DataList colors = ps.getVertexAttributes(Attribute.COLORS);
 		
-		float[] diffuseColorAsFloat = diffuseColor.getRGBColorComponents(null);
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, diffuseColorAsFloat, 0);
+//		float[] diffuseColorAsFloat = diffuseColor.getRGBColorComponents(null);
+//		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, diffuseColorAsFloat, 0);
 		
 		DoubleArray colorArray = new DoubleArray(diffuseColorAsDouble);
 		
@@ -133,6 +136,10 @@ public class MyPointShader extends AbstractPrimitiveShader implements
 				gl.glVertex2d(-1,  1);
 			gl.glEnd();
 			program.unbind(gl);
+//			gl.glPointSize(5.0f);
+//			gl.glBegin(GL.GL_POINTS);
+//				gl.glVertex3dv(coordArray.toDoubleArray(null), 0);
+//			gl.glEnd();
 		}
 	}
 
