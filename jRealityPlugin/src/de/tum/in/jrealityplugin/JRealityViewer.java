@@ -158,7 +158,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		updateLines();
 		updatePolygons();
 
-		frame.setVisible(true);
+		if (!frame.isVisible())	frame.setVisible(true);
 	}
 
 	/* (non-Javadoc)
