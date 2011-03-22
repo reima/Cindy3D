@@ -9,11 +9,12 @@ import javax.swing.JFrame;
 import de.jreality.geometry.IndexedFaceSetFactory;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
-import de.jreality.math.Rn;
 import de.jreality.plugin.JRViewer;
 import de.jreality.plugin.content.ContentTools;
 import de.jreality.scene.Camera;
 import de.jreality.scene.SceneGraphComponent;
+import de.jreality.scene.data.Attribute;
+import de.jreality.scene.data.IntArray;
 import de.jreality.shader.DefaultGeometryShader;
 import de.jreality.shader.ShaderUtility;
 import de.jreality.util.CameraUtility;
@@ -44,6 +45,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	private ArrayList<Integer> lineIndices;
 	private ArrayList<Double> lineSizes;
 	private ArrayList<Color> lineColors;
+	private ArrayList<Integer> lineTypes;
 	
 	// Polygon resources
 	private SceneGraphComponent scenePolygons;
@@ -64,6 +66,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		lineIndices = new ArrayList<Integer>();
 		lineSizes = new ArrayList<Double>();
 		lineColors = new ArrayList<Color>();
+		lineTypes = new ArrayList<Integer>();
 		
 		ifsf = new IndexedFaceSetFactory();
 		polygonVertices = new ArrayList<double[][]>();
@@ -73,11 +76,17 @@ public class JRealityViewer implements Cindy3DViewer {
 		sceneRoot = new SceneGraphComponent("root");
 		
 		// TODO: Set custom appearances for these components
-		scenePoints = new SceneGraphComponent("points");
+		scenePoints = SceneGraphUtility.createFullSceneGraphComponent("points");
 		scenePoints.setGeometry(psf.getGeometry());
+		DefaultGeometryShader dgs =
+			ShaderUtility.createDefaultGeometryShader(scenePoints.getAppearance(), true);
+		dgs.createPointShader("my");
 
-		sceneLines = new SceneGraphComponent("lines");
+		sceneLines = SceneGraphUtility.createFullSceneGraphComponent("lines");
 		sceneLines.setGeometry(ilsf.getGeometry());
+		dgs = ShaderUtility.createDefaultGeometryShader(sceneLines.getAppearance(), true);
+		dgs.createPointShader("my");
+		dgs.createLineShader("my");
 		
 		scenePolygons = new SceneGraphComponent("polygons");
 		scenePolygons.setGeometry(ifsf.getGeometry());
@@ -138,44 +147,34 @@ public class JRealityViewer implements Cindy3DViewer {
 		pointColors.add(appearance.getColor());
 		pointSizes.add(appearance.getSize());
 	}
-
-	@Override
-	public void addSegment(double x1, double y1, double z1, double x2, double y2,
-			double z2, AppearanceState appearance) {
+	
+	private void addLineObject(double x1, double y1, double z1, double x2,
+			double y2, double z2, AppearanceState appearance, int type) {
 		lineCoordinates.add(new double[] { x1, y1, z1 });
 		lineCoordinates.add(new double[] { x2, y2, z2 });
 		lineColors.add(appearance.getColor());
 		lineIndices.add(lineCoordinates.size() - 2);
 		lineIndices.add(lineCoordinates.size() - 1);
 		lineSizes.add(appearance.getSize());
+		lineTypes.add(type);
+	}
+
+	@Override
+	public void addSegment(double x1, double y1, double z1, double x2, double y2,
+			double z2, AppearanceState appearance) {
+		addLineObject(x1, y1, z1, x2, y2, z2, appearance, 0);
+	}
+	
+	@Override
+	public void addRay(double x1, double y1, double z1, double x2, double y2,
+			double z2, AppearanceState appearance) {
+		addLineObject(x1, y1, z1, x2, y2, z2, appearance, 1);
 	}
 	
 	@Override
 	public void addLine(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		double direction[] = {
-				x2 - x1,
-				y2 - y1,
-				z2 - z1
-		};
-		Rn.setEuclideanNorm(direction, 1000, direction);
-		addSegment(x1 + direction[0], y1 + direction[1], z1 + direction[2],
-				x1 - direction[0], y1 - direction[1], z1 - direction[2],
-				appearance);
-	}
-
-	@Override
-	public void addRay(double x1, double y1, double z1, double x2, double y2,
-			double z2, AppearanceState appearance) {
-		double direction[] = {
-				x2 - x1,
-				y2 - y1,
-				z2 - z1
-		};
-		Rn.setEuclideanNorm(direction, 1000, direction);
-		addSegment(x1, y1, z1,
-				x1 + direction[0], y1 + direction[1], z1 + direction[2],
-				appearance);
+		addLineObject(x1, y1, z1, x2, y2, z2, appearance, 2);
 	}
 
 	@Override
@@ -228,6 +227,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		lineIndices.clear();
 		lineSizes.clear();
 		lineColors.clear();
+		lineTypes.clear();
 	}
 
 	/**
@@ -266,6 +266,12 @@ public class JRealityViewer implements Cindy3DViewer {
 		for (int i = 0; i < lineSizes.size(); ++i)
 			sizesArray[i] = lineSizes.get(i);
 		ilsf.setEdgeRelativeRadii(sizesArray);
+		
+		int[] typesArray = new int[lineTypes.size()];
+		for (int i = 0; i < lineTypes.size(); ++i)
+			typesArray[i] = lineTypes.get(i);
+		ilsf.setEdgeAttribute(Attribute.attributeForName("lineType"),
+				new IntArray(typesArray));
 
 		ilsf.update();
 	}
