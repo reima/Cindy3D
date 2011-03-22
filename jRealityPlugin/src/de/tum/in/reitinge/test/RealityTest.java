@@ -45,10 +45,10 @@ public class RealityTest {
 		IndexedLineSetFactory psf = new IndexedLineSetFactory();
 		psf.setVertexCount(2*2);
 		psf.setVertexCoordinates(new double[] {
-				-1, -1, 0,
-				 1, -1, 0,
-				 1,  1, 0,
-				-1,  1, 0
+				-2, -2, 0,
+				 2, -2, 0,
+				 2,  2, 0,
+				-2,  2, 0
 		});
 		//psf.setVertexRelativeRadii(new double[] {
 		//		1, 2, 4, 8

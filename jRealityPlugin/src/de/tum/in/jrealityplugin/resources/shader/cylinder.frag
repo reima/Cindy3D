@@ -1,7 +1,8 @@
-uniform vec3 cylinderPoint1;
-uniform vec3 cylinderPoint2;
+uniform vec3 cylinderPoint;
+uniform vec3 cylinderDirection;
 uniform float cylinderRadius;
 uniform vec3 cylinderColor;
+uniform float cylinderLength;
 
 varying vec3 pos;
 
@@ -94,18 +95,10 @@ void shade(in vec3 normal, in vec3 ecPoint) {
 
 
 void main() {
-	//vec3 camSpaceBase = vec3(gl_ModelViewMatrix * vec4(cylinderPoint1, 1));
-	vec3 camSpaceBase = cylinderPoint1;
-	
-	//vec3 camSpaceDir = vec3(gl_ModelViewMatrix * vec4(cylinderPoint2,1))-camSpaceBase;
-	vec3 camSpaceDir = cylinderPoint2-camSpaceBase;
-	float cylinderLength = length(camSpaceDir);
-	camSpaceDir = camSpaceDir / cylinderLength;
-
 	vec3 dir = normalize(pos);
 	
-	vec3 AOxAB = cross(-camSpaceBase, camSpaceDir);
-	vec3 VxAB = cross(dir, camSpaceDir);
+	vec3 AOxAB = cross(-cylinderPoint, cylinderDirection);
+	vec3 VxAB = cross(dir, cylinderDirection);
 	
 	float a = dot(VxAB, VxAB);
 	float b = 2.0 * dot(VxAB, AOxAB);
@@ -127,11 +120,14 @@ void main() {
 		
 	vec3 pointOnCylinder = lambda*dir;
   
-  	float dist = dot(camSpaceDir, pointOnCylinder-camSpaceBase);
-  	if (dist < 0.0 || dist > cylinderLength)
-  		discard;
+  	float dist = dot(cylinderDirection, pointOnCylinder-cylinderPoint);
+  	if (cylinderLength >= 0) {
+  		if (dist < 0.0 || (cylinderLength > 0.0 && dist > cylinderLength))
+  			discard;
+  	}
   
-	vec3 normal = normalize(cross(cross(camSpaceDir, pointOnCylinder-camSpaceBase), camSpaceDir));
+	vec3 normal = normalize(cross(cross(cylinderDirection,
+						pointOnCylinder-cylinderPoint), cylinderDirection));
 
 	shade(normal, pointOnCylinder);
   
