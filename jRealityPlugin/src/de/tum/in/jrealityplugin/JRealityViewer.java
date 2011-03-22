@@ -10,7 +10,16 @@ import de.jreality.geometry.IndexedFaceSetFactory;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
 import de.jreality.plugin.JRViewer;
+import de.jreality.plugin.basic.Inspector;
+import de.jreality.plugin.basic.PropertiesMenu;
+import de.jreality.plugin.basic.Shell;
+import de.jreality.plugin.basic.ViewMenuBar;
+import de.jreality.plugin.basic.ViewToolBar;
 import de.jreality.plugin.content.ContentTools;
+import de.jreality.plugin.menu.BackgroundColor;
+import de.jreality.plugin.menu.CameraMenu;
+import de.jreality.plugin.menu.DisplayOptions;
+import de.jreality.plugin.menu.ExportMenu;
 import de.jreality.scene.Camera;
 import de.jreality.scene.SceneGraphComponent;
 import de.jreality.scene.data.Attribute;
@@ -100,7 +109,22 @@ public class JRealityViewer implements Cindy3DViewer {
 		//viewer.registerPlugin(new DirectContent());
 		viewer.registerPlugin(new ContentTools());
 		//viewer.registerPlugin(new ContentLoader());
-		viewer.addBasicUI();
+		//viewer.addBasicUI();
+		
+		// All plugins from as in BasicUI except shell 
+		viewer.registerPlugin(new Inspector());
+		//viewer.registerPlugin(new Shell());
+		
+		viewer.registerPlugin(new BackgroundColor());
+		viewer.registerPlugin(new DisplayOptions());
+		viewer.registerPlugin(new ViewMenuBar());
+		viewer.registerPlugin(new ViewToolBar());
+		
+		viewer.registerPlugin(new ExportMenu());
+		viewer.registerPlugin(new CameraMenu());
+		viewer.registerPlugin(new PropertiesMenu());
+		//
+		
 		viewer.setShowPanelSlots(false, true, false, false);
 		
 		frame = new JFrame("Cindy3D");
