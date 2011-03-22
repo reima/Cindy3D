@@ -97,6 +97,11 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		if (indices == null)
 			return;
 		
+		DataList radiiList = ls.getEdgeAttributes(Attribute.RELATIVE_RADII);
+		DoubleArray radii = null;
+		if (radiiList != null)
+			radii = radiiList.toDoubleArray();
+		
 		DataList typesList =
 			ls.getEdgeAttributes(Attribute.attributeForName("lineType"));
 		IntArray types = null;
@@ -152,12 +157,11 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		for (int i = 0; i < indices.size(); ++i) {
 			int[] ind = indices.item(i).toIntArray(null);
 			if (colors != null) colorArray = colors.item(i).toDoubleArray();
-
 			if (types != null) type = types.getValueAt(i);
+			double radius = tubeRadius;
+			if (radii != null) radius *= radii.getValueAt(i); 
 			
 			for (int k = 1; k < ind.length; ++k) {
-				
-				program.bind(gl);
 				double[] coord1 = vertices.item(ind[k-1]).toDoubleArray(null);
 				double[] coord2 = vertices.item(ind[k]).toDoubleArray(null);
 
@@ -185,8 +189,7 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 							coord1[j] = coord1[j] + min*direction[j];
 					}
 				}
-				
-				double radius = 0.025f;
+
 				double dist = Math.max(Rn.euclideanDistance(coord1, coord2), 2*radius)/2.0;
 				
 				double[] p = new double[]{0,0,0};
@@ -198,7 +201,8 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				MatrixBuilder.euclidean().translate(p, avg).rotateFromTo(new double[]{1,0,0}, axis).
 				scale(new double[]{dist, radius, radius})
 										 .assignTo(cylinder);
-								
+				
+				program.bind(gl);								
 				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint1"),
 						(float)coord1[0], (float)coord1[1], (float)coord1[2]);
 				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint2"),
