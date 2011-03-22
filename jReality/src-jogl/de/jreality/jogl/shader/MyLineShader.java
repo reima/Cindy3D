@@ -83,11 +83,7 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		}
 		
 		Geometry original = jrs.currentGeometry;
-		
-//		jrs.currentGeometry = null;
-//		polygonShader.render(jrs);
-//		jrs.currentGeometry = original;
-		
+				
 		IndexedLineSet ls = (IndexedLineSet) original;
 		DataList vertices = ls.getVertexAttributes(Attribute.COORDINATES);
 		if (vertices == null)
@@ -112,9 +108,6 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 
 		DataList colors = ls.getEdgeAttributes(Attribute.COLORS);
 		DoubleArray colorArray = new DoubleArray(diffuseColorAsDouble);
-		
-		//float[] diffuseColorAsFloat = diffuseColor.getRGBColorComponents(null);
-		//gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, diffuseColorAsFloat, 0);
 				
 		Matrix m = new Matrix(jrs.cameraToNDC);
 		m.invert();
@@ -162,15 +155,29 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 			if (radii != null) radius *= radii.getValueAt(i); 
 			
 			for (int k = 1; k < ind.length; ++k) {
+				
+				double cylinderDistance;
+				program.bind(gl);
+
 				double[] coord1 = vertices.item(ind[k-1]).toDoubleArray(null);
 				double[] coord2 = vertices.item(ind[k]).toDoubleArray(null);
 
 				modelToWorld.transformVector(coord1);
 				modelToWorld.transformVector(coord2);
 				
+				double[] direction = new double[3];
+				Rn.subtract(direction, coord2, coord1);
+				
+				cylinderDistance = Rn.euclideanNorm(direction);
+				Rn.normalize(direction, direction);
+				
+				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint"),
+						(float)coord1[0], (float)coord1[1], (float)coord1[2]);
+				
+				gl.glUniform3f(program.getUniformLocation(gl, "cylinderDirection"),
+						(float)direction[0], (float)direction[1], (float)direction[2]);
+
 				if (type != 0) {
-					double[] direction = new double[3];
-					Rn.subtract(direction, coord2, coord1);
 					double min = Double.MAX_VALUE;
 					double max = Double.MIN_VALUE;
 					for (int j=0; j<6; ++j) {
@@ -183,10 +190,13 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 						}
 					}
 					
+					cylinderDistance = 0;
 					for (int j=0; j<3; ++j) {
 						coord2[j] = coord1[j] + max*direction[j];
-						if (type == 2)
+						if (type == 2) {
+							cylinderDistance = -1;
 							coord1[j] = coord1[j] + min*direction[j];
+						}
 					}
 				}
 
@@ -201,13 +211,8 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				MatrixBuilder.euclidean().translate(p, avg).rotateFromTo(new double[]{1,0,0}, axis).
 				scale(new double[]{dist, radius, radius})
 										 .assignTo(cylinder);
-				
-				program.bind(gl);								
-				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint1"),
-						(float)coord1[0], (float)coord1[1], (float)coord1[2]);
-				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint2"),
-						(float)coord2[0], (float)coord2[1], (float)coord2[2]);
-				
+
+
 				gl.glUniform3f(program.getUniformLocation(gl, "cylinderColor"),
 						(float)colorArray.getValueAt(0), (float)colorArray.getValueAt(1), (float)colorArray.getValueAt(2));
 
@@ -215,6 +220,9 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				
 				gl.glUniformMatrix4fv(program.getUniformLocation(gl, "cylinderTransform"),
 						1, true, Rn.convertDoubleToFloatArray(cylinder.getArray()), 0);
+				
+				gl.glUniform1f(program.getUniformLocation(gl, "cylinderLength"),
+						(float)cylinderDistance);
 				
 				gl.glBegin(GL.GL_QUADS);
 					gl.glVertex3d(-1, -1, -1);
