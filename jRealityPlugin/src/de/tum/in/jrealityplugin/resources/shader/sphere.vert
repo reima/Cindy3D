@@ -15,8 +15,8 @@ void main() {
                    
   vec3 camSpaceCenter = vec3(gl_ModelViewMatrix * vec4(sphereCenter, 1));
   vec3 dir = normalize(-camSpaceCenter);
-  vec3 right = cross(dir, vec3(0, 1, 0));
-  vec3 up = cross(right, dir);
+  vec3 right = normalize(cross(dir, vec3(0, 1, 0)));
+  vec3 up = normalize(cross(right, dir));
 
   pos = camSpaceCenter + sphereRadius*(right * gl_Vertex.x + up * gl_Vertex.y + dir);
   gl_Position = gl_ProjectionMatrix * vec4(pos, 1);
