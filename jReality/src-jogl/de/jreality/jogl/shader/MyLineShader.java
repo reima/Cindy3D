@@ -103,18 +103,14 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 		if (typesList != null) {
 			types = typesList.toIntArray();
 		}
+		int type = lineType;
 
-		//DataList colors = ps.getVertexAttributes(Attribute.COLORS);
+		DataList colors = ls.getEdgeAttributes(Attribute.COLORS);
+		DoubleArray colorArray = new DoubleArray(diffuseColorAsDouble);
 		
 		//float[] diffuseColorAsFloat = diffuseColor.getRGBColorComponents(null);
 		//gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, diffuseColorAsFloat, 0);
-		
-		//DoubleArray colorArray = new DoubleArray(diffuseColorAsDouble);
-		
-		//if (colors != null) {
-		//	colorArray = colors.item(i).toDoubleArray();
-		//}
-		
+				
 		Matrix m = new Matrix(jrs.cameraToNDC);
 		m.invert();
 		
@@ -133,9 +129,7 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 			
 			//System.out.println(f[i][0] + ", " + f[i][1] + ", " + f[i][2]);
 		}
-		
-
-		
+	
 		double[][] planes = new double[6][4];
 		
 		for (int i=0; i<6; ++i) {
@@ -157,7 +151,8 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 
 		for (int i = 0; i < indices.size(); ++i) {
 			int[] ind = indices.item(i).toIntArray(null);
-			int type = lineType;
+			if (colors != null) colorArray = colors.item(i).toDoubleArray();
+
 			if (types != null) type = types.getValueAt(i);
 			
 			for (int k = 1; k < ind.length; ++k) {
@@ -209,8 +204,8 @@ public class MyLineShader extends AbstractPrimitiveShader implements LineShader 
 				gl.glUniform3f(program.getUniformLocation(gl, "cylinderPoint2"),
 						(float)coord2[0], (float)coord2[1], (float)coord2[2]);
 				
-//				gl.glUniform3f(program.getUniformLocation(gl, "sphereColor"),
-//						(float)colorArray.getValueAt(0), (float)colorArray.getValueAt(1), (float)colorArray.getValueAt(2));
+				gl.glUniform3f(program.getUniformLocation(gl, "cylinderColor"),
+						(float)colorArray.getValueAt(0), (float)colorArray.getValueAt(1), (float)colorArray.getValueAt(2));
 
 				gl.glUniform1f(program.getUniformLocation(gl, "cylinderRadius"), (float)radius);
 				

@@ -1,7 +1,7 @@
 uniform vec3 cylinderPoint1;
 uniform vec3 cylinderPoint2;
 uniform float cylinderRadius;
-/*uniform*/ vec4 cylinderColor = vec4(1,0,0,1);
+uniform vec3 cylinderColor;
 
 varying vec3 pos;
 
@@ -86,7 +86,7 @@ void shade(in vec3 normal, in vec3 ecPoint) {
  
   vec4 color = gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
-    Diffuse  * cylinderColor;
+    Diffuse  * vec4(cylinderColor, 1);
   color += Specular * gl_FrontMaterial.specular;
   color = clamp( color, 0.0, 1.0 );
   gl_FragColor = vec4(color.rgb, 1.0);
