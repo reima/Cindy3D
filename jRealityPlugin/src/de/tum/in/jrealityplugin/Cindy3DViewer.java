@@ -18,6 +18,10 @@ public interface Cindy3DViewer {
 	 * @param appearance
 	 */
 	void addPoint(double x, double y, double z, AppearanceState appearance);
+	
+	void addCircle(double cx, double cy, double cz,
+			       double nx, double ny, double nz, double radius,
+			       AppearanceState appearance);
 	/**
 	 * Shuts down the viewer
 	 */

@@ -187,9 +187,11 @@ public class DefaultGeometryShader  implements Shader {
 	    public static PointShader createFrom(de.jreality.shader.PointShader ps) {
 	    	PointShader ret = null;
 	    	if (ps instanceof de.jreality.shader.MyPointShader)
-	    		 ret =  new MyPointShader((de.jreality.shader.MyPointShader) ps);
+	    		ret =  new MyPointShader((de.jreality.shader.MyPointShader) ps);
+	    	else if (ps instanceof de.jreality.shader.CirclePointShader)
+	    		ret = new CirclePointShader((de.jreality.shader.CirclePointShader) ps);
 	    	else if (ps instanceof de.jreality.shader.DefaultPointShader)
-	    		 ret =  new DefaultPointShader((de.jreality.shader.DefaultPointShader) ps);
+	    		ret =  new DefaultPointShader((de.jreality.shader.DefaultPointShader) ps);
 	    	else ret = new DefaultPointShader();
 //	        System.err.println("ret = "+ret.getClass().getName());
 	        return ret;

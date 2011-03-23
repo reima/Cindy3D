@@ -197,6 +197,15 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		cindy3d.addPolygon(vertices, lineAppearance);
 	}
 	
+	@CindyScript("drawcircle3d")
+	public void drawcircle3d(ArrayList<Double> center, ArrayList<Double> normal,
+			double radius) {
+		if (center.size() != 3 || normal.size() != 3) return;
+		cindy3d.addCircle(center.get(0), center.get(1), center.get(2),
+				normal.get(0), normal.get(1), normal.get(2),
+				radius, pointAppearance);
+	}
+	
 	/**
 	 * Pushes the current appearance on the appearance stack
 	 * @see JRealityPlugin#grestore3d()
