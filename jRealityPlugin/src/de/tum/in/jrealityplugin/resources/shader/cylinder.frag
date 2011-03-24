@@ -121,7 +121,7 @@ void main() {
 	vec3 pointOnCylinder = lambda*dir;
   
   	float dist = dot(cylinderDirection, pointOnCylinder-cylinderPoint);
-  	if (cylinderLength >= 0) {
+  	if (cylinderLength >= 0.0) {
   		if (dist < 0.0 || (cylinderLength > 0.0 && dist > cylinderLength))
   			discard;
   	}

@@ -12,7 +12,6 @@ import de.jreality.geometry.PointSetFactory;
 import de.jreality.plugin.JRViewer;
 import de.jreality.plugin.basic.Inspector;
 import de.jreality.plugin.basic.PropertiesMenu;
-import de.jreality.plugin.basic.Shell;
 import de.jreality.plugin.basic.ViewMenuBar;
 import de.jreality.plugin.basic.ViewToolBar;
 import de.jreality.plugin.content.ContentTools;
@@ -45,6 +44,14 @@ public class JRealityViewer implements Cindy3DViewer {
 	private ArrayList<double[]> pointCoordinates;
 	private ArrayList<Color> pointColors;
 	private ArrayList<Double> pointSizes;
+	
+	// Circle resources
+	private SceneGraphComponent sceneCircles;
+	private PointSetFactory psf2;
+	private ArrayList<double[]> circleCenters;
+	private ArrayList<double[]> circleNormals;
+	private ArrayList<Double> circleRadii;
+	private ArrayList<Color> circleColors;
 
 	// Line resources
 	private SceneGraphComponent sceneLines;
@@ -69,6 +76,12 @@ public class JRealityViewer implements Cindy3DViewer {
 		pointCoordinates = new ArrayList<double[]>();
 		pointColors = new ArrayList<Color>();
 		pointSizes = new ArrayList<Double>();
+		
+		psf2 = new PointSetFactory();
+		circleCenters = new ArrayList<double[]>();
+		circleNormals = new ArrayList<double[]>();
+		circleRadii = new ArrayList<Double>();
+		circleColors = new ArrayList<Color>();
 
 		ilsf = new IndexedLineSetFactory();
 		lineCoordinates = new ArrayList<double[]>();
@@ -90,6 +103,9 @@ public class JRealityViewer implements Cindy3DViewer {
 		DefaultGeometryShader dgs =
 			ShaderUtility.createDefaultGeometryShader(scenePoints.getAppearance(), true);
 		dgs.createPointShader("my");
+		
+		sceneCircles = SceneGraphUtility.createFullSceneGraphComponent("circles");
+		sceneCircles.setGeometry(psf2.getGeometry());
 
 		sceneLines = SceneGraphUtility.createFullSceneGraphComponent("lines");
 		sceneLines.setGeometry(ilsf.getGeometry());
@@ -101,6 +117,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		scenePolygons.setGeometry(ifsf.getGeometry());
 
 		sceneRoot.addChild(scenePoints);
+		sceneRoot.addChild(sceneCircles);
 		sceneRoot.addChild(sceneLines);
 		sceneRoot.addChild(scenePolygons);
 		
@@ -145,6 +162,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	@Override
 	public void begin() {
 		clearPoints();
+		clearCircles();
 		clearLines();
 		clearPolygons();
 	}
@@ -155,10 +173,11 @@ public class JRealityViewer implements Cindy3DViewer {
 	@Override
 	public void end() {
 		updatePoints();
+		updateCircles();
 		updateLines();
 		updatePolygons();
 
-		frame.setVisible(true);
+		if (!frame.isVisible())	frame.setVisible(true);
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +191,15 @@ public class JRealityViewer implements Cindy3DViewer {
 		pointSizes.add(appearance.getSize());
 	}
 	
+	@Override
+	public void addCircle(double cx, double cy, double cz, double nx,
+			double ny, double nz, double radius, AppearanceState appearance) {
+		circleCenters.add(new double[] { cx, cy, cz });
+		circleNormals.add(new double[] { nx, ny, nz });
+		circleColors.add(appearance.getColor());
+		circleRadii.add(radius);
+	}
+
 	private void addLineObject(double x1, double y1, double z1, double x2,
 			double y2, double z2, AppearanceState appearance, int type) {
 		lineCoordinates.add(new double[] { x1, y1, z1 });
@@ -224,7 +252,7 @@ public class JRealityViewer implements Cindy3DViewer {
 		pointColors.clear();
 		pointSizes.clear();
 	}
-
+	
 	/**
 	 * Transfers internal point data to jReality
 	 */
@@ -241,6 +269,29 @@ public class JRealityViewer implements Cindy3DViewer {
 
 		psf.setVertexRelativeRadii(sizesArray);
 		psf.update();
+	}
+
+	private void clearCircles() {
+		circleCenters.clear();
+		circleNormals.clear();
+		circleColors.clear();
+		circleRadii.clear();
+	}
+	
+	private void updateCircles() {
+		if (circleCenters.size() == 0)
+			return;
+		psf2.setVertexCount(circleCenters.size());
+		psf2.setVertexCoordinates(circleCenters.toArray(new double[0][0]));
+		psf2.setVertexColors(circleColors.toArray(new Color[0]));
+		psf2.setVertexNormals(circleNormals.toArray(new double[0][0]));
+
+		double[] radiiArray = new double[circleRadii.size()];
+		for (int i = 0; i < circleRadii.size(); ++i)
+			radiiArray[i] = circleRadii.get(i);
+
+		psf2.setVertexRelativeRadii(radiiArray);
+		psf2.update();
 	}
 
 	/**
@@ -344,5 +395,4 @@ public class JRealityViewer implements Cindy3DViewer {
 		
 		ifsf.update();
 	}
-
 }

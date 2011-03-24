@@ -3,6 +3,7 @@ package de.tum.in.reitinge.test;
 import java.awt.Color;
 
 import de.jreality.geometry.IndexedLineSetFactory;
+import de.jreality.geometry.PointSetFactory;
 import de.jreality.plugin.JRViewer;
 import de.jreality.plugin.content.ContentLoader;
 import de.jreality.plugin.content.ContentTools;
@@ -42,9 +43,9 @@ public class RealityTest {
 //		}
 		
 		SceneGraphComponent quad = SceneGraphUtility.createFullSceneGraphComponent("quad");
-		IndexedLineSetFactory psf = new IndexedLineSetFactory();
-		psf.setVertexCount(2*2);
-		psf.setVertexCoordinates(new double[] {
+		IndexedLineSetFactory ilsf = new IndexedLineSetFactory();
+		ilsf.setVertexCount(2*2);
+		ilsf.setVertexCoordinates(new double[] {
 				-2, -2, 0,
 				 2, -2, 0,
 				 2,  2, 0,
@@ -53,14 +54,14 @@ public class RealityTest {
 		//psf.setVertexRelativeRadii(new double[] {
 		//		1, 2, 4, 8
 		//});
-		psf.setVertexColors(new Color[] {
+		ilsf.setVertexColors(new Color[] {
 				Color.red, Color.green, Color.blue, Color.yellow
 		});
-		psf.setEdgeCount(4);
-		psf.setEdgeIndices(new int[]{0,1,1,2,2,3,3,0});
-		psf.setEdgeAttribute(Attribute.attributeForName("lineType"),new IntArray(new int[]{0,1,2,0}));
-		psf.update();
-		quad.setGeometry(psf.getGeometry());
+		ilsf.setEdgeCount(4);
+		ilsf.setEdgeIndices(new int[]{0,1,1,2,2,3,3,0});
+		ilsf.setEdgeAttribute(Attribute.attributeForName("lineType"),new IntArray(new int[]{0,1,2,0}));
+		ilsf.update();
+		quad.setGeometry(ilsf.getGeometry());
 		DefaultGeometryShader dgs =
 			ShaderUtility.createDefaultGeometryShader(quad.getAppearance(), true);
 		dgs.setShowLines(true);
@@ -71,6 +72,22 @@ public class RealityTest {
 		MyLineShader ls = (MyLineShader)dgs.createLineShader("my");
 		ls.setLineType(2);
 		cmp.addChild(quad);
+		
+		SceneGraphComponent circles = SceneGraphUtility.createFullSceneGraphComponent("circles");
+		PointSetFactory psf = new PointSetFactory();
+		psf.setVertexCount(2);
+		psf.setVertexCoordinates(new double[] { 0, 0, 0, 0, 2, 0 });
+		psf.setVertexNormals(new double[] { 0, 1, 0, 0, 0, 1 });
+		psf.setVertexRelativeRadii(new double[] { 1, 0.5 });
+		psf.setVertexColors(new Color[] { Color.red, Color.blue });
+		psf.update();
+		circles.setGeometry(psf.getGeometry());
+		dgs = ShaderUtility.createDefaultGeometryShader(circles.getAppearance(), true);
+		dgs.setShowLines(false);
+		dgs.setShowPoints(true);
+		dgs.setShowFaces(false);
+		dgs.createPointShader("circle");
+		cmp.addChild(circles);
 
 		JRViewer v = new JRViewer();
 		v.setContent(cmp);
