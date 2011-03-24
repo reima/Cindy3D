@@ -35,8 +35,8 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 
    halfVector = normalize(VP + eye);
 
-   nDotVP = max(0.0, dot(normal, VP));
-   nDotHV = max(0.0, dot(normal, halfVector));
+   nDotVP = abs(dot(normal, VP));
+   nDotHV = abs(dot(normal, halfVector));
 
    if (nDotVP == 0.0)
    {
@@ -58,8 +58,8 @@ void directionalLight(in int i, in vec3 normal)
    float nDotHV;         // normal . light half vector
    float pf;             // power factor
 
-   nDotVP = max(0.0, dot(normal, normalize(vec3 (gl_LightSource[i].position))));
-   nDotHV = max(0.0, dot(normal, vec3 (gl_LightSource[i].halfVector)));
+   nDotVP = abs(dot(normal, normalize(vec3 (gl_LightSource[i].position))));
+   nDotHV = abs(dot(normal, vec3 (gl_LightSource[i].halfVector)));
 
    if (nDotVP == 0.0)
    {
