@@ -1,0 +1,76 @@
+\documentclass[10pt,a4paper]{scrartcl}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage[nohead,nofoot,lmargin=2.5cm,rmargin=2.5cm,tmargin=3cm,bmargin=3cm,headsep=0.5cm,headheight=12.4pt, foot=0.75cm]{geometry}
+
+\linespread{1.3}
+\parindent 0cm
+%\parskip 2.5ex plus0.5ex minus0.5ex
+\parskip 2.5ex
+\setlength{\itemsep}{100pt}
+
+\author{MR & JS}
+\title{Würstchenfabrik}
+\begin{document}
+\includegraphics[height=1.5cm]{tum-info-logo}
+\parbox[b]{11.7cm}{
+\begin{Large}
+\textsc{\centering Fakultät für Informatik\vspace{-0.5cm}\begin{center}der Technischen Universität München\end{center}}
+\end{Large}}
+\includegraphics[height=1.5cm]{tum-logo}
+\begin{center}
+\textsf{\begin{large}Interdisziplinäres Projekt im Anwendungsfach Mathematik\end{large}\\[1ex]
+\begin{Large}
+\textsf{\textbf{Anbindung von dynamischer Geometriesoftware an jReality}}\\[1ex]
+\textsf{\textbf{Interfacing dynamic geometry software and jReality}}
+\end{Large}
+}
+\vspace{0.5cm}
+\end{center}
+\hrule
+\section{Motivation und Inhalt}
+Interaktive Geometriesoftware besitzt vielfältige Einsatzgebiete. Dazu zählen unter anderem die interaktive Exploration von mathematischen und physikalischen Beziehungen durch den Benutzer und die Visualisierung von geometrischen Zusammenhängen.
+
+Das von Jürgen Richter-Gebert und Ullrich Kortenkamp konzipierte, geschriebene und entwickelte Cinderella 2 stellt eine solche Geometriesoftware dar. Sie wird nicht nur in der Lehre an Universitäten eingesetzt, sondern findet auch im Schulunterricht Anwendung. Eine der Stärken von Cinderella ist die integrierte funktionale Programmiersprache CindyScript, über die sich das Verhalten von Cinderella erweitern und anpassen lässt. Unter anderem ist es mit CindyScript möglich, programmgesteuert zweidimensionale Zeichnungen zu erzeugen. Die Darstellung dreidimensionaler Zusammenhänge lässt sich allerdings aufgrund der fehlenden Standardschnittstelle zur 3D-Unterstützung bisher nur mit erheblichem Aufwand und in beschränktem Maße realisieren.
+
+Ziel dieses interdisziplinären Projektes ist es, CindyScript um die Möglichkeit zur Darstellung dreidimensionaler Objekte zu erweitern. Dazu soll ausschließlich die in Cinderella enthaltene Plugin-Schnittstelle genutzt werden. Mit dieser können in der Programmiersprache Java geschriebene Methoden CindyScript zur Verfügung gestellt werden, die dann transparent für Cinderella das eigentliche Rendering der dreidimensionalen Objekte übernehmen sollen.
+
+Dabei soll auf jReality zurückgegriffen werden. Diese auf mathematische und wissenschaftliche Inhalte spezialisierte 3D-Visualisierungsbibliothek stellt ein umfangreiches API zur Verfügung. Eine der Herausforderungen des Projektes besteht darin, die reichhaltige Funktionalität von jReality auf einen reduzierten Satz von Methoden abzubilden, welche dann über die Plugin-Schnittstelle von Cinderella aus CindyScript heraus angesprochen werden können. Hierbei sollen keine jReality-spezifischen Eigenschaften mit einfließen. Auf diese Weise soll garantiert werden, dass jReality sich später auch durch eine andere Bibliothek austauschen ließe.
+
+Darüber hinaus soll im Rahmen des Projektes auch die Praxis-Tauglichkeit der Plugin-Schnittstelle von Cinderella ausgelotet werden. Dadurch soll gegebenenfalls ein indirekter Beitrag zur sinnvollen Erweiterung dieses sich noch in der Beta-Phase befindlichen Features geleistet werden.
+
+\parskip 0.5ex
+\section{Anforderungen}
+\begin{enumerate}[$\triangleright$]
+\item \textit{Entwurf einer benutzerfreundlichen Schnittstelle zur Verwendung einer 3D-Visualisierungsbibliothek}
+\begin{enumerate}[-]
+\item Festlegung eines sinnvollen Satzes von CindyScript-Funktionen die dem Benutzer zur Verfügung gestellt werden
+\item Dabei Anlehnung an die bereits existierenden CindyScript-Funktionen zur 2D-Darstellung (Principle of Least Surprise)
+\item Festlegung sinnvoller Standardparameter, die bei Bedarf angepasst werden können
+\item Erstellen einer vollständigen Benutzerdokumentation
+\end{enumerate}
+\vspace{0.5cm}
+\end{enumerate}
+\begin{enumerate}[$\triangleright$]
+\item \textit{jReality als primäre Implementierung der oben genannten Schnittstelle}
+\begin{enumerate}[-]
+\item Unterstützung von Grundobjekten:\\Punkte, Strecken, Halbgeraden, Geraden, Polygone, Kreise, Sphären und Quadmeshes
+\item Freie Positionierung von Objekten im dreidimensionalen Raum
+\item Modifikation der Materialparameter der Objekte
+\item Darstellung von 3D-Plots von Funktionen
+\item Anpassung der Szenenparameter: Kamera, Licht und Hintergrund
+\item Erstellen einer vollständigen Entwicklerdokumentation
+\end{enumerate}
+\end{enumerate}
+\section{Weiterführende Informationen}
+\begin{enumerate}
+\item Cinderella\\\url{http://www.cinderella.de}
+\item CindyScript\\\url{http://doc.cinderella.de/tiki-index.php?page=CindyScript}
+\item jReality\\\url{http://www3.math.tu-berlin.de/jreality}
+\end{enumerate}
+\end{document}
