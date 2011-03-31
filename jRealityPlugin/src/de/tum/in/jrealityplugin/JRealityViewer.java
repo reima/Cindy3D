@@ -106,6 +106,8 @@ public class JRealityViewer implements Cindy3DViewer {
 		
 		sceneCircles = SceneGraphUtility.createFullSceneGraphComponent("circles");
 		sceneCircles.setGeometry(psf2.getGeometry());
+		dgs = ShaderUtility.createDefaultGeometryShader(sceneCircles.getAppearance(), true);
+		dgs.createPointShader("circle");
 
 		sceneLines = SceneGraphUtility.createFullSceneGraphComponent("lines");
 		sceneLines.setGeometry(ilsf.getGeometry());

@@ -70,3 +70,17 @@ color3d((1,1,1));
 size3d(3);
 draw3d((0,-0.5,0),(0,0.5,0));
 end3d();
+
+
+//
+// Circles
+//
+
+begin3d();
+pointcolor3d((1,0,0));
+drawcircle3d((0,0,0),(1,0,0),3);
+pointcolor3d((0,1,0));
+drawcircle3d((0,0,0),(0,1,0),3);
+pointcolor3d((0,0,1));
+drawcircle3d((0,0,0),(0,0,1),3);
+end3d();
