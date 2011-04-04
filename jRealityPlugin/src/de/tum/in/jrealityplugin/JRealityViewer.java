@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import de.jreality.geometry.IndexedFaceSetFactory;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
+import de.jreality.geometry.QuadMeshFactory;
 import de.jreality.plugin.JRViewer;
 import de.jreality.plugin.basic.Inspector;
 import de.jreality.plugin.basic.PropertiesMenu;
@@ -70,6 +71,9 @@ public class JRealityViewer implements Cindy3DViewer {
 	private ArrayList<double[][]> polygonVertices;
 	private ArrayList<Color> polygonColors;
 	private int polygonTotalVertexCount;
+	
+	// Quad mesh resources
+	private SceneGraphComponent sceneMeshes;
 
 	public JRealityViewer() {
 		psf = new PointSetFactory();
@@ -117,11 +121,18 @@ public class JRealityViewer implements Cindy3DViewer {
 		
 		scenePolygons = new SceneGraphComponent("polygons");
 		scenePolygons.setGeometry(ifsf.getGeometry());
+		
+		sceneMeshes = SceneGraphUtility.createFullSceneGraphComponent("meshes");
+		dgs = ShaderUtility.createDefaultGeometryShader(sceneMeshes.getAppearance(), true);
+		dgs.createPointShader("my");
+		dgs.createLineShader("my");
+		
 
 		sceneRoot.addChild(scenePoints);
 		sceneRoot.addChild(sceneCircles);
 		sceneRoot.addChild(sceneLines);
 		sceneRoot.addChild(scenePolygons);
+		sceneRoot.addChild(sceneMeshes);
 		
 		viewer = new JRViewer();
 		viewer.setContent(sceneRoot);
@@ -236,6 +247,55 @@ public class JRealityViewer implements Cindy3DViewer {
 		polygonVertices.add(vertices);
 		polygonColors.add(appearance.getColor());
 		polygonTotalVertexCount += vertices.length;
+	}
+	
+	@Override
+	public void addMesh(double[][][] vertices, AppearanceState appearance) {
+		if (vertices.length == 0)
+			return;
+		int l = vertices[0].length;
+		for (int i=0; i<vertices.length; ++i)
+			if (vertices[i].length == 0 || vertices[i].length != l)
+				return;
+			
+		QuadMeshFactory qmf = new QuadMeshFactory();
+		qmf.setVLineCount(vertices.length);
+		qmf.setULineCount(l);
+		
+		qmf.setClosedInUDirection(false);
+		qmf.setClosedInVDirection(false);
+		qmf.setVertexCoordinates(vertices);
+		qmf.setGenerateFaceNormals(true);
+		qmf.setGenerateTextureCoordinates(false);
+		qmf.setGenerateEdgesFromFaces(true);
+		qmf.setEdgeFromQuadMesh(true);
+		
+		double[][] colors = new double[vertices.length * l][3];
+		
+		for (int i=0; i<vertices.length * l; ++i) {
+			colors[i][0] = 255;
+			colors[i][1] = 255;
+			colors[i][2] = 255;
+		}
+		
+		qmf.setVertexColors(colors);
+		qmf.update();
+		
+		SceneGraphComponent sgc = new SceneGraphComponent();
+		sgc.setGeometry(qmf.getGeometry());
+		sceneMeshes.addChild(sgc);
+		
+		/*
+		 * 
+		
+		begin3d();
+linecolor3d([255,255,255]);
+draw3d([-2,0,0], [-2,0,10]);
+drawmesh3d(2,2,[[0,0,0],[10,0,0],[0,0,10],[10,0,10]]);
+end3d()
+		
+		 * 
+		 */
 	}
 
 	/* (non-Javadoc)

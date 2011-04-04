@@ -206,6 +206,25 @@ public class JRealityPlugin extends CindyScriptPlugin {
 				radius, pointAppearance);
 	}
 	
+	@CindyScript("drawmesh3d")
+	public void drawmesh3d(int n, int m, ArrayList<Vec> points) {
+		if (n <= 1 || m <= 1 || points.size() < n*m)
+			return;
+		
+		double vertices[][][] = new double[n][m][3];
+		
+		Vec position;
+		for (int i=0; i<n; ++i) {
+			for (int j=0; j<m; ++j) {
+				position = points.get(i*m+j);
+				vertices[i][j][0] = position.getXR();
+				vertices[i][j][1] = position.getYR();
+				vertices[i][j][2] = position.getZR();
+			}
+		}
+		cindy3d.addMesh(vertices, pointAppearance);
+	}
+	
 	/**
 	 * Pushes the current appearance on the appearance stack
 	 * @see JRealityPlugin#grestore3d()
