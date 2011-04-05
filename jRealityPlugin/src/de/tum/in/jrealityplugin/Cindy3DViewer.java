@@ -37,5 +37,7 @@ public interface Cindy3DViewer {
 				AppearanceState appearance);
 	void addPolygon(double[][] vertices, AppearanceState appearance);
 	
-	void addMesh(double[][][] vertices, AppearanceState appearance);
+	//void addMesh(double[][][] vertices, AppearanceState appearance);
+	void addMesh(double[][][] vertices, double[][][] normals,
+			AppearanceState appearance);
 }

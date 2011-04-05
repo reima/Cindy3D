@@ -208,21 +208,57 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	
 	@CindyScript("drawmesh3d")
 	public void drawmesh3d(int n, int m, ArrayList<Vec> points) {
+		
+		drawmesh3d(n, m, points, null);
+//		if (n <= 1 || m <= 1 || points.size() < n*m)
+//			return;
+//		
+//		double vertices[][][] = new double[n][m][3];
+//		
+//		Vec position;
+//		for (int i=0; i<n; ++i) {
+//			for (int j=0; j<m; ++j) {
+//				position = points.get(i*m+j);
+//				vertices[i][j][0] = position.getXR();
+//				vertices[i][j][1] = position.getYR();
+//				vertices[i][j][2] = position.getZR();
+//			}
+//		}
+//		cindy3d.addMesh(vertices, lineAppearance);
+	}
+	
+	@CindyScript("drawmesh3d")
+	public void drawmesh3d(int n, int m, ArrayList<Vec> points,
+			ArrayList<Vec> normals) {
 		if (n <= 1 || m <= 1 || points.size() < n*m)
+			return;
+		if (normals != null && points.size() != normals.size())
 			return;
 		
 		double vertices[][][] = new double[n][m][3];
 		
-		Vec position;
+		double vertexNormals[][][] = null;
+		if (normals != null)
+			vertexNormals = new double[n][m][3];
+		
+		Vec position, normal;
 		for (int i=0; i<n; ++i) {
 			for (int j=0; j<m; ++j) {
 				position = points.get(i*m+j);
 				vertices[i][j][0] = position.getXR();
 				vertices[i][j][1] = position.getYR();
 				vertices[i][j][2] = position.getZR();
+				
+				if (normals != null) {
+					normal = normals.get(i*m+j);
+					vertexNormals[i][j][0] = normal.getXR();
+					vertexNormals[i][j][1] = normal.getYR();
+					vertexNormals[i][j][2] = normal.getZR();
+				}
 			}
 		}
-		cindy3d.addMesh(vertices, pointAppearance);
+		
+		cindy3d.addMesh(vertices, vertexNormals, lineAppearance);
 	}
 	
 	/**

@@ -5,6 +5,7 @@ import java.awt.Color;
 import de.jreality.geometry.IndexedLineSetFactory;
 import de.jreality.geometry.PointSetFactory;
 import de.jreality.geometry.QuadMeshFactory;
+import de.jreality.jogl.shader.LineShader;
 import de.jreality.plugin.JRViewer;
 import de.jreality.plugin.content.ContentLoader;
 import de.jreality.plugin.content.ContentTools;
@@ -90,14 +91,15 @@ public class RealityTest {
 		dgs.createPointShader("circle");
 		cmp.addChild(circles);
 		
-		
-		double[][][] vertices = new double[][][] {{{0,0,0},{10,0,0}},{{0,0,10},{10,0,10}}};
+		double[][][] vertices = new double[][][] {
+			{{0,0,0},{10,5,0},{20,0,0}},
+		    {{0,0,10},{10,5,10},{20,0,10}}};
 		
 		SceneGraphComponent mesh = SceneGraphUtility.createFullSceneGraphComponent("mesh");
 		QuadMeshFactory qmf = new QuadMeshFactory();
 
 		qmf.setVLineCount(2);
-		qmf.setULineCount(2);
+		qmf.setULineCount(3);
 		
 		qmf.setClosedInUDirection(false);
 		qmf.setClosedInVDirection(false);
@@ -116,7 +118,8 @@ public class RealityTest {
 		dgs.setShowPoints(true);
 		dgs.setShowFaces(true);
 		dgs.createPointShader("my");
-		dgs.createLineShader("my");
+		MyLineShader ls2 = (MyLineShader)dgs.createLineShader("my");
+		ls2.setDiffuseColor(Color.GREEN);
 		
 		cmp.addChild(mesh);
 
