@@ -12,7 +12,7 @@ void main() {
     normalize(vec3(gl_ModelViewMatrix[0][1],
                    gl_ModelViewMatrix[1][1],
                    gl_ModelViewMatrix[2][1]));*/
-                   
+
   vec3 camSpaceCenter = vec3(gl_ModelViewMatrix * vec4(sphereCenter, 1));
   vec3 dir = normalize(-camSpaceCenter);
   vec3 right = normalize(cross(dir, vec3(0, 1, 0)));

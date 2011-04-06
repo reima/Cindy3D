@@ -81,7 +81,7 @@ void shade(in vec3 normal, in vec3 ecPoint) {
   
   pointLight(0, normal, -ecPoint, ecPoint);
   pointLight(1, normal, -ecPoint, ecPoint);
-  directionalLight(2, normal);
+  //directionalLight(2, normal);
  
   vec4 color = gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
@@ -115,6 +115,8 @@ void main() {
 
   vec3 pointOnSphere = lambda*dir;
   vec3 normal = normalize(pointOnSphere - camSpaceCenter);
+  
+  gl_FragColor = vec4(sphereColor, 1.0);
   
   shade(normal, pointOnSphere);
    

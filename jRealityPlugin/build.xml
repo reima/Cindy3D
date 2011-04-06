@@ -57,7 +57,7 @@
         </jar>
     </target>
 
-    <target name="copy" depends="build,jReality" description="Copy plugin to Plugins folder">
+    <target name="copy" depends="build" description="Copy plugin to Plugins folder">
         <copy file="${plugin}" todir="${pluginfolder}"/>
         <copy file="${jrealityjar}" todir="${pluginfolder}"/>
         <copy todir="${pluginfolder}">

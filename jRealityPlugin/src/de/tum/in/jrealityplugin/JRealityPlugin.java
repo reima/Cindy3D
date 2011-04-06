@@ -54,7 +54,8 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	@Override
 	public void register() {
 		if (cindy3d == null)
-			cindy3d = new JRealityViewer();
+			//cindy3d = new JRealityViewer();
+			cindy3d = new JOGLViewer();
 	}
 
 	@Override
