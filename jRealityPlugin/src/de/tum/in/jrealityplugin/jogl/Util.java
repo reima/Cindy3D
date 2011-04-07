@@ -7,10 +7,10 @@ import javax.vecmath.Vector3d;
 public class Util {
 	public static AxisAngle4d rotateFromTo(Vector3d from, Vector3d to) {
 		double angle = from.angle(to);
-		if (angle == 0)
-			return new AxisAngle4d(new Vector3d(), 0);
 		Vector3d axis = new Vector3d();
 		axis.cross(from, to);
+		if (axis.epsilonEquals(new Vector3d(), 1E-8))
+			return new AxisAngle4d(new Vector3d(1,0,0), 0);
 		axis.normalize();
 		return new AxisAngle4d(axis, angle);
 	}
