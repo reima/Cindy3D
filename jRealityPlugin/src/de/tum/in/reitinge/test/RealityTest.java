@@ -17,6 +17,7 @@ import de.jreality.scene.data.IntArrayArray;
 import de.jreality.shader.DefaultGeometryShader;
 import de.jreality.shader.MyLineShader;
 import de.jreality.shader.MyPointShader;
+import de.jreality.shader.RenderingHintsShader;
 import de.jreality.shader.ShaderUtility;
 import de.jreality.tools.ClickWheelCameraZoomTool;
 import de.jreality.util.CameraUtility;
@@ -131,6 +132,9 @@ public class RealityTest {
 		v.addBasicUI();
 		v.setShowPanelSlots(false, true, false, false);
 		v.startup();
+		
+		RenderingHintsShader rhs = ShaderUtility.createDefaultRenderingHintsShader(v.getViewer().getSceneRoot().getAppearance(), true);
+		rhs.setTransparencyEnabled(true);
 		
 		CameraUtility.getCamera(v.getViewer()).setFar(1000.0);
 	}

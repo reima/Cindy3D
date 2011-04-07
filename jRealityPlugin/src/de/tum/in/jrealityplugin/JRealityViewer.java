@@ -25,7 +25,10 @@ import de.jreality.scene.SceneGraphComponent;
 import de.jreality.scene.data.Attribute;
 import de.jreality.scene.data.IntArray;
 import de.jreality.shader.DefaultGeometryShader;
+import de.jreality.shader.DefaultPolygonShader;
 import de.jreality.shader.MyLineShader;
+import de.jreality.shader.PolygonShader;
+import de.jreality.shader.RenderingHintsShader;
 import de.jreality.shader.ShaderUtility;
 import de.jreality.util.CameraUtility;
 import de.jreality.util.SceneGraphUtility;
@@ -159,6 +162,9 @@ public class JRealityViewer implements Cindy3DViewer {
 		frame.setLayout(new BorderLayout());
 		frame.add(viewer.startupLocal(), BorderLayout.CENTER);
 		frame.pack();
+		
+		RenderingHintsShader rhs = ShaderUtility.createDefaultRenderingHintsShader(viewer.getViewer().getSceneRoot().getAppearance(), true);
+		rhs.setTransparencyEnabled(true);
 
 		// Set camera near and far plane
 		camera = CameraUtility.getCamera(viewer.getViewer());
@@ -245,74 +251,6 @@ public class JRealityViewer implements Cindy3DViewer {
 		polygonColors.add(appearance.getColor());
 		polygonTotalVertexCount += vertices.length;
 	}
-	
-//	@Override
-//	public void addMesh(double[][][] vertices, AppearanceState appearance) {
-//		if (vertices.length == 0)
-//			return;
-//		int l = vertices[0].length;
-//		for (int i=0; i<vertices.length; ++i)
-//			if (vertices[i].length == 0 || vertices[i].length != l)
-//				return;
-//		
-//		
-//		/*
-//		qmf.update();
-//		
-//		mesh.setGeometry(qmf.getGeometry());
-//		
-//		dgs = ShaderUtility.createDefaultGeometryShader(mesh.getAppearance(), true);
-//		dgs.setShowLines(true);
-//		dgs.setShowPoints(true);
-//		dgs.setShowFaces(true);
-//		dgs.createPointShader("my");
-//		MyLineShader ls2 = (MyLineShader)dgs.createLineShader("my");
-//		ls2.setDiffuseColor(Color.GREEN);
-//		
-//		cmp.addChild(mesh);
-//		
-//		*/
-//		
-//		SceneGraphComponent sgc = SceneGraphUtility.createFullSceneGraphComponent();
-//		QuadMeshFactory qmf = new QuadMeshFactory();
-//		
-//		qmf.setVLineCount(vertices.length);
-//		qmf.setULineCount(l);
-//		
-//		qmf.setClosedInUDirection(false);
-//		qmf.setClosedInVDirection(false);
-//		qmf.setVertexCoordinates(vertices);
-//		//qmf.setGenerateFaceNormals(true);
-//		qmf.setGenerateVertexNormals(true);
-//		qmf.setGenerateTextureCoordinates(false);
-//		qmf.setGenerateEdgesFromFaces(true);
-//		qmf.setEdgeFromQuadMesh(true);
-//		
-//		Color[] colors = new Color[vertices.length*l];
-//		for (int i=0; i<vertices.length * l; ++i) {
-//			colors[i] = appearance.getColor();
-//		}
-//
-//		qmf.setVertexColors(colors);
-//		
-//		qmf.update();
-//		sgc.setGeometry(qmf.getGeometry());
-//		
-//		DefaultGeometryShader dgs = ShaderUtility.createDefaultGeometryShader(sgc.getAppearance(), true);
-//		
-//		dgs.setShowLines(true);
-//		dgs.setShowPoints(true);
-//		dgs.setShowFaces(true);
-//		
-//		dgs.createPointShader("my");
-//		
-//		MyLineShader ls = (MyLineShader)dgs.createLineShader("my");
-//		ls.setDiffuseColor(appearance.getColor());
-//		ls.setLineType(0);
-//		
-//		
-//		sceneMeshes.addChild(sgc);
-//		
 		/*
 		 * 
 		
@@ -333,7 +271,6 @@ drawpoly3d([[0,0,11],[10,5,11],[10,5,20],[0,0,20]]);
 end3d()
 		 * 
 		 */
-//	}
 	
 	@Override
 	public void addMesh(double[][][] vertices, double[][][] normals,
@@ -382,12 +319,16 @@ end3d()
 		dgs.setShowPoints(true);
 		dgs.setShowFaces(true);
 		
+		
 		dgs.createPointShader("my");
 		
 		MyLineShader ls = (MyLineShader)dgs.createLineShader("my");
 		ls.setDiffuseColor(appearance.getColor());
 		ls.setLineType(0);
 		
+		DefaultPolygonShader dps = (DefaultPolygonShader)dgs.getPolygonShader();
+
+		dps.setTransparency(1-appearance.getOpacity());
 		
 		sceneMeshes.addChild(sgc);
 	}

@@ -33,10 +33,25 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 * @see JRealityPlugin#grestore3d()
 	 */
 	private Stack<AppearanceState> lineAppearanceStack;
+	
 	/**
 	 * The current line appearance
 	 */
 	private AppearanceState lineAppearance;
+	
+	/**
+	 * Stack of saved face appearances
+	 * @see JRealityPlugin#gsave3d()
+	 * @see JRealityPlugin#grestore3d()
+	 */
+	private Stack<AppearanceState> faceAppearanceStack;
+	
+	/**
+	 * The current face appearance
+	 */
+	private AppearanceState faceAppearance;
+	
+
 
 	/**
 	 * Modifiers for the current CindyScript function call
@@ -46,9 +61,11 @@ public class JRealityPlugin extends CindyScriptPlugin {
 
 	public JRealityPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
-		pointAppearance = new AppearanceState(Color.RED, 1);
+		pointAppearance = new AppearanceState(Color.RED, 1,1);
 		lineAppearanceStack = new Stack<AppearanceState>();
-		lineAppearance = new AppearanceState(Color.BLUE, 1);
+		lineAppearance = new AppearanceState(Color.BLUE, 1,1);
+		faceAppearanceStack = new Stack<AppearanceState>();
+		faceAppearance = new AppearanceState(Color.GREEN, 1,1);
 	}
 
 	@Override
@@ -206,33 +223,22 @@ public class JRealityPlugin extends CindyScriptPlugin {
 				radius, pointAppearance);
 	}
 	
+	/**
+	 * Draws a quad mesh based on a grid
+	 * @param n Rows of vertices in the grid
+	 * @param m Columns of vertices in the grid
+	 * @param points 1-dimensional array of all mesh vertices
+	 */
 	@CindyScript("drawmesh3d")
 	public void drawmesh3d(int n, int m, ArrayList<Vec> points) {
-		
 		drawmesh3d(n, m, points, null);
-//		if (n <= 1 || m <= 1 || points.size() < n*m)
-//			return;
-//		
-//		double vertices[][][] = new double[n][m][3];
-//		
-//		Vec position;
-//		for (int i=0; i<n; ++i) {
-//			for (int j=0; j<m; ++j) {
-//				position = points.get(i*m+j);
-//				vertices[i][j][0] = position.getXR();
-//				vertices[i][j][1] = position.getYR();
-//				vertices[i][j][2] = position.getZR();
-//			}
-//		}
-//		cindy3d.addMesh(vertices, lineAppearance);
 	}
 	
 	@CindyScript("drawmesh3d")
 	public void drawmesh3d(int n, int m, ArrayList<Vec> points,
 			ArrayList<Vec> normals) {
-		if (n <= 1 || m <= 1 || points.size() < n*m)
-			return;
-		if (normals != null && points.size() != normals.size())
+		if (n <= 1 || m <= 1 || points.size() < n*m ||
+				(normals != null && points.size() != normals.size()))
 			return;
 		
 		double vertices[][][] = new double[n][m][3];
@@ -258,7 +264,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			}
 		}
 		
-		cindy3d.addMesh(vertices, vertexNormals, lineAppearance);
+		cindy3d.addMesh(vertices, vertexNormals, faceAppearance);
 	}
 	
 	/**
@@ -292,6 +298,20 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	public void color3d(ArrayList<Double> vec) {
 		setColorState(pointAppearance, vec);
 		setColorState(lineAppearance, vec);
+		setColorState(faceAppearance, vec);
+	}
+	
+	/**
+	 * Set opacity state
+	 * @param opacity Opacity
+	 */
+	@CindyScript("opacity3d")
+	public void opacity3d(double opacity) {
+		if (opacity < 0 || opacity > 1)
+			return;
+		pointAppearance.setOpacity(opacity);
+		lineAppearance.setOpacity(opacity);
+		faceAppearance.setOpacity(opacity);
 	}
 
 	/**
@@ -333,6 +353,15 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	@CindyScript("linecolor3d")
 	public void linecolor3d(ArrayList<Double> vec) {
 		setColorState(lineAppearance, vec);
+	}
+	
+	/**
+	 * Set face color state
+	 * @param vec Color vector
+	 */
+	@CindyScript("facecolor3d")
+	public void facecolor3d(ArrayList<Double> vec) {
+		setColorState(faceAppearance, vec);
 	}
 
 	/**
