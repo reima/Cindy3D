@@ -8,7 +8,6 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-
 class PointRenderer extends Renderer<Point> {
 	private ShaderProgram program = null;
 	private int centerLoc;
@@ -45,12 +44,9 @@ class PointRenderer extends Renderer<Point> {
 		if (!program.link(gl.getGL2(), null))
 			return false;
 
-		centerLoc = gl2.glGetUniformLocation(program.program(),
-				"sphereCenter");
-		colorLoc = gl2.glGetUniformLocation(program.program(),
-				"sphereColor");
-		radiusLoc = gl2.glGetUniformLocation(program.program(),
-				"sphereRadius");
+		centerLoc = gl2.glGetUniformLocation(program.program(), "sphereCenter");
+		colorLoc = gl2.glGetUniformLocation(program.program(), "sphereColor");
+		radiusLoc = gl2.glGetUniformLocation(program.program(), "sphereRadius");
 
 		return true;
 	}
@@ -64,10 +60,8 @@ class PointRenderer extends Renderer<Point> {
 
 		gl2.glUseProgram(program.program());
 		for (Point p : points) {
-			gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y,
-					(float) p.z);
-			gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null),
-					0);
+			gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y, (float) p.z);
+			gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null), 0);
 			gl2.glUniform1f(radiusLoc, (float) p.size * 0.025f);
 			// gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
