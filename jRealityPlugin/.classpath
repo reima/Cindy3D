@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="lib/jReality-3rd-party/jterm.jar"/>
 	<classpathentry kind="lib" path="lib/jReality-3rd-party/beans.jar"/>
 	<classpathentry kind="lib" path="lib/jReality-3rd-party/bsh.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jreality"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JOGL2"/>
+	<classpathentry kind="lib" path="/jreality/release/jReality.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
