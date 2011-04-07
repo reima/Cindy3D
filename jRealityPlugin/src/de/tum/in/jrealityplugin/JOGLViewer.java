@@ -94,14 +94,21 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 			GL2 gl2 = gl.getGL2();
 
+			int centerLoc = gl2.glGetUniformLocation(program.program(),
+					"sphereCenter");
+			int colorLoc = gl2.glGetUniformLocation(program.program(),
+					"sphereColor");
+			int radiusLoc = gl2.glGetUniformLocation(program.program(),
+					"sphereRadius");
+			
 			gl2.glUseProgram(program.program());
 			for (Point p : points) {
-				gl2.glUniform3f(gl2.glGetUniformLocation(program.program(),
-						"sphereCenter"), (float) p.x, (float) p.y, (float) p.z);
-				gl2.glUniform3fv(gl2.glGetUniformLocation(program.program(),
-						"sphereColor"), 1, p.color.getColorComponents(null), 0);
-				gl2.glUniform1f(gl2.glGetUniformLocation(program.program(),
-						"sphereRadius"), 0.1f);
+				gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y,
+						(float) p.z);
+				gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null),
+						0);
+				gl2.glUniform1f(radiusLoc, 0.025f);
+				//gl2.glFlush();
 				gl2.glBegin(GL2.GL_QUADS);
 				gl2.glVertex2f(-1, -1);
 				gl2.glVertex2f(1, -1);
@@ -130,7 +137,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private PointRenderer pointRenderer = new PointRenderer();
 	private double camDistance = 5.0;
 
-	JOGLViewer() {
+	public JOGLViewer() {
 		try {
 			fh = new FileHandler("C:\\tmp\\cindy.log", false);
 			log = Logger.getLogger("log");
@@ -147,39 +154,23 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			e.printStackTrace();
 		}
 
-		log.info("Hier");
-
 		frame = new JFrame("Cindy3D (JOGL)");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 
-		log.info("Da");
-
 		try {
-			log.info("1");
 			GLProfile.initSingleton(true);
-			log.info("2");
 			GLProfile profile = GLProfile.getDefault();
-			log.info("3");
 			GLCapabilities caps = new GLCapabilities(profile);
-			log.info("4");
 			canvas = new GLCanvas(caps);
-			log.info("5");
 			canvas.addGLEventListener(this);
-			log.info("6");
 			canvas.addMouseListener(this);
-			log.info("7");
 			canvas.addMouseMotionListener(this);
-			log.info("8");
 			canvas.addMouseWheelListener(this);
-			log.info("9");
 			canvas.setSize(640, 480);
-			log.info("10");
 
 			frame.add(canvas, BorderLayout.CENTER);
-			log.info("11");
-			// frame.pack();
-			log.info("12");
+			frame.pack();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
@@ -274,7 +265,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
-		log.info("display()");
+		// log.info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
@@ -287,8 +278,8 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 		pointRenderer.render(gl, points);
 
-		gl.glFlush();
-		drawable.swapBuffers();
+		// gl.glFlush();
+		// drawable.swapBuffers();
 	}
 
 	@Override
@@ -308,6 +299,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			gl.glMatrixMode(GL2.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glClearColor(0.65625f, 0.6875f, 0.75f, 0.0f);
+			
 			gl.glEnable(GL2.GL_DEPTH_TEST);
 
 			gl.glEnable(GL2.GL_LIGHTING);
