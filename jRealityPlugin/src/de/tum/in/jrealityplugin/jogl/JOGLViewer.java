@@ -7,7 +7,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -24,8 +23,6 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
-import com.jogamp.opengl.util.glsl.ShaderCode;
-
 import de.tum.in.jrealityplugin.AppearanceState;
 import de.tum.in.jrealityplugin.Cindy3DViewer;
 
@@ -38,6 +35,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	// private static final int FLOAT_SIZE = 4;
 
 	private ArrayList<Point> points = new ArrayList<Point>();
+	private ArrayList<Circle> circles = new ArrayList<Circle>();
 	// private FloatBuffer pointBuffer;
 
 	private Logger log;
@@ -47,6 +45,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private double[] rotation = new double[2];
 
 	private PointRenderer pointRenderer = new PointRenderer();
+	private CircleRenderer circleRenderer = new CircleRenderer();
 	private double camDistance = 5.0;
 
 	public JOGLViewer() {
@@ -93,6 +92,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	public void begin() {
 		log.info("begin()");
 		points.clear();
+		circles.clear();
 	}
 
 	@Override
@@ -138,8 +138,10 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void addCircle(double cx, double cy, double cz, double nx,
 			double ny, double nz, double radius, AppearanceState appearance) {
-		// TODO Auto-generated method stub
-
+		log.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
+				+ "," + nz + "," + radius + ")");
+		circles.add(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
+				.getColor()));
 	}
 
 	@Override
@@ -190,6 +192,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		gl.glRotated(rotation[1], 1.0, 0.0, 0.0);
 
 		pointRenderer.render(gl, points);
+		circleRenderer.render(gl, circles);
 
 		// gl.glFlush();
 		// drawable.swapBuffers();
@@ -198,6 +201,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		pointRenderer.dispose(drawable.getGL());
+		circleRenderer.dispose(drawable.getGL());
 	}
 
 	@Override
@@ -226,6 +230,8 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 			if (!pointRenderer.init(gl))
 				log.severe("Point renderer initialization failed");
+			if (!circleRenderer.init(gl))
+				log.severe("Circle renderer initialization failed");
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
