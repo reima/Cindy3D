@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 
 import de.tum.in.jrealityplugin.AppearanceState;
 import de.tum.in.jrealityplugin.Cindy3DViewer;
+import de.tum.in.jrealityplugin.jogl.Line.LineType;
 
 public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		MouseListener, MouseMotionListener, MouseWheelListener {
@@ -36,6 +37,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 	private ArrayList<Point> points = new ArrayList<Point>();
 	private ArrayList<Circle> circles = new ArrayList<Circle>();
+	private ArrayList<Line> lines = new ArrayList<Line>();
 	// private FloatBuffer pointBuffer;
 
 	private Logger log;
@@ -46,6 +48,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 	private PointRenderer pointRenderer = new PointRenderer();
 	private CircleRenderer circleRenderer = new CircleRenderer();
+	private LineRenderer lineRenderer = new LineRenderer();
 	private double camDistance = 5.0;
 
 	public JOGLViewer() {
@@ -93,6 +96,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		log.info("begin()");
 		points.clear();
 		circles.clear();
+		lines.clear();
 	}
 
 	@Override
@@ -154,22 +158,35 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void addSegment(double x1, double y1, double z1, double x2,
 			double y2, double z2, AppearanceState appearance) {
-		// TODO Auto-generated method stub
-
+		log.info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+				+ "," + z2 + ")");
+		
+		addPoint(x1, y1, z1, appearance);
+		addPoint(x2, y2, z2, appearance);
+		
+		lines.add(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
+				appearance.getColor(), LineType.SEGMENT));
 	}
 
 	@Override
 	public void addLine(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		// TODO Auto-generated method stub
-
+		log.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+				+ "," + z2 + ")");
+		lines.add(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
+				appearance.getColor(), LineType.LINE));
 	}
 
 	@Override
 	public void addRay(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		// TODO Auto-generated method stub
-
+		log.info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+				+ "," + z2 + ")");
+		
+		addPoint(x1, y1, z1, appearance);
+		
+		lines.add(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
+				appearance.getColor(), LineType.RAY));
 	}
 
 	@Override
@@ -193,6 +210,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 		pointRenderer.render(gl, points);
 		circleRenderer.render(gl, circles);
+		lineRenderer.render(gl, lines);
 
 		// gl.glFlush();
 		// drawable.swapBuffers();
@@ -202,6 +220,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	public void dispose(GLAutoDrawable drawable) {
 		pointRenderer.dispose(drawable.getGL());
 		circleRenderer.dispose(drawable.getGL());
+		lineRenderer.dispose(drawable.getGL());
 	}
 
 	@Override
@@ -232,6 +251,8 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 				log.severe("Point renderer initialization failed");
 			if (!circleRenderer.init(gl))
 				log.severe("Circle renderer initialization failed");
+			if (!lineRenderer.init(gl))
+				log.severe("Line renderer initialization failed");
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
@@ -248,7 +269,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		if (height <= 0)
 			height = 1;
 		double aspect = (double) width / height;
-		glu.gluPerspective(60.0, aspect, 0.01, 100.0);
+		glu.gluPerspective(60.0, aspect, 0.01, 1000.0);
 		display(drawable);
 	}
 

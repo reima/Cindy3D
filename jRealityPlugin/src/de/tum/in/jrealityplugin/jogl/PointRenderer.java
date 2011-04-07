@@ -62,7 +62,7 @@ class PointRenderer extends Renderer<Point> {
 		for (Point p : points) {
 			gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y, (float) p.z);
 			gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null), 0);
-			gl2.glUniform1f(radiusLoc, (float) p.size * 0.025f);
+			gl2.glUniform1f(radiusLoc, (float) p.size * 0.05f);
 			// gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
 			gl2.glVertex2f(-1, -1);

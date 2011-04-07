@@ -25,17 +25,21 @@ public class JOGLViewerTest {
 //						appearance);
 //			}
 //		}
-		for (int i = -5; i <= 5; ++i) {
-			for (int j = -5; j <= 5; ++j) {
-			appearance.setColor(Color.red);
-			viewer.addCircle(i*2, j*2, 0, 1, 0, 0, 1, appearance);
-			appearance.setColor(Color.green);
-			viewer.addCircle(i*2, j*2, 0, 0, 1, 0, 1, appearance);
-			appearance.setColor(Color.blue);
-			viewer.addCircle(i*2, j*2, 0, 0, 0, 1, 1, appearance);
-			}
-		}
+//		for (int i = -5; i <= 5; ++i) {
+//			for (int j = -5; j <= 5; ++j) {
+//				appearance.setColor(Color.red);
+//				viewer.addCircle(i * 2, j * 2, 0, 1, 0, 0, 1, appearance);
+//				appearance.setColor(Color.green);
+//				viewer.addCircle(i * 2, j * 2, 0, 0, 1, 0, 1, appearance);
+//				appearance.setColor(Color.blue);
+//				viewer.addCircle(i * 2, j * 2, 0, 0, 0, 1, 1, appearance);
+//			}
+//		}
 		
+		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
+		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
+		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
+
 		viewer.end();
 	}
 }
