@@ -3,7 +3,7 @@ package de.tum.in.reitinge.test;
 import java.awt.Color;
 
 import de.tum.in.jrealityplugin.AppearanceState;
-import de.tum.in.jrealityplugin.JOGLViewer;
+import de.tum.in.jrealityplugin.jogl.JOGLViewer;
 
 public class JOGLViewerTest {
 	public static void main(String[] args) {

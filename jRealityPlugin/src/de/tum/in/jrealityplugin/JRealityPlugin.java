@@ -8,6 +8,7 @@ import java.util.Stack;
 import de.cinderella.api.cs.CindyScript;
 import de.cinderella.api.cs.CindyScriptPlugin;
 import de.cinderella.math.Vec;
+import de.tum.in.jrealityplugin.jogl.JOGLViewer;
 
 /**
  * Implementation of the plugin interface

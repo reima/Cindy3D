@@ -1,7 +1,6 @@
-package de.tum.in.jrealityplugin;
+package de.tum.in.jrealityplugin.jogl;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -10,13 +9,11 @@ import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
@@ -28,7 +25,9 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
-import com.jogamp.opengl.util.glsl.ShaderProgram;
+
+import de.tum.in.jrealityplugin.AppearanceState;
+import de.tum.in.jrealityplugin.Cindy3DViewer;
 
 public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		MouseListener, MouseMotionListener, MouseWheelListener {
@@ -37,95 +36,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private GLU glu = new GLU();
 
 	// private static final int FLOAT_SIZE = 4;
-
-	private class Point {
-		double x, y, z;
-		double size;
-		Color color;
-
-		public Point(double x, double y, double z, double size, Color color) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.size = size;
-			this.color = color;
-		}
-
-		@Override
-		public String toString() {
-			return "[" + x + "," + y + "," + z + "]";
-		}
-	}
-
-	private class PointRenderer {
-		private ShaderProgram program = null;
-
-		public PointRenderer() {
-		}
-
-		public boolean init(GL gl) {
-			program = new ShaderProgram();
-			ShaderCode vertexShader = loadShader(
-					GL2.GL_VERTEX_SHADER,
-					getClass()
-							.getResource(
-									"/de/tum/in/jrealityplugin/resources/shader/sphere.vert"));
-			if (!vertexShader.compile(gl.getGL2()))
-				return false;
-			ShaderCode fragmentShader = loadShader(
-					GL2.GL_FRAGMENT_SHADER,
-					getClass()
-							.getResource(
-									"/de/tum/in/jrealityplugin/resources/shader/sphere.frag"));
-			if (!fragmentShader.compile(gl.getGL2()))
-				return false;
-
-			if (!program.add(vertexShader))
-				return false;
-			if (!program.add(fragmentShader))
-				return false;
-			if (!program.link(gl.getGL2(), null))
-				return false;
-
-			return true;
-		}
-
-		public void render(GL gl, Collection<Point> points) {
-			if (points.isEmpty())
-				return;
-
-			GL2 gl2 = gl.getGL2();
-
-			int centerLoc = gl2.glGetUniformLocation(program.program(),
-					"sphereCenter");
-			int colorLoc = gl2.glGetUniformLocation(program.program(),
-					"sphereColor");
-			int radiusLoc = gl2.glGetUniformLocation(program.program(),
-					"sphereRadius");
-
-			gl2.glUseProgram(program.program());
-			for (Point p : points) {
-				gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y,
-						(float) p.z);
-				gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null),
-						0);
-				gl2.glUniform1f(radiusLoc, (float) p.size * 0.025f);
-				// gl2.glFlush();
-				gl2.glBegin(GL2.GL_QUADS);
-				gl2.glVertex2f(-1, -1);
-				gl2.glVertex2f(1, -1);
-				gl2.glVertex2f(1, 1);
-				gl2.glVertex2f(-1, 1);
-				gl2.glEnd();
-			}
-			gl2.glUseProgram(0);
-		}
-
-		public void dispose(GL gl) {
-			if (program != null)
-				program.destroy(gl.getGL2());
-		}
-	}
 
 	private ArrayList<Point> points = new ArrayList<Point>();
 	// private FloatBuffer pointBuffer;
@@ -320,15 +230,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
 		}
-	}
-
-	private ShaderCode loadShader(int type, URL path) {
-		StringBuffer buffer = new StringBuffer();
-		ShaderCode.readShaderSource(getClass().getClassLoader(), "", path,
-				buffer);
-		ShaderCode shader = new ShaderCode(type, 1,
-				new String[][] { { buffer.toString() } });
-		return shader;
 	}
 
 	@Override
