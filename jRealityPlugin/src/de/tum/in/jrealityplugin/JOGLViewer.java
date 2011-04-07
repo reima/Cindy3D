@@ -40,12 +40,14 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 	private class Point {
 		double x, y, z;
+		double size;
 		Color color;
 
-		public Point(double x, double y, double z, Color color) {
+		public Point(double x, double y, double z, double size, Color color) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.size = size;
 			this.color = color;
 		}
 
@@ -100,15 +102,15 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 					"sphereColor");
 			int radiusLoc = gl2.glGetUniformLocation(program.program(),
 					"sphereRadius");
-			
+
 			gl2.glUseProgram(program.program());
 			for (Point p : points) {
 				gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y,
 						(float) p.z);
 				gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null),
 						0);
-				gl2.glUniform1f(radiusLoc, 0.025f);
-				//gl2.glFlush();
+				gl2.glUniform1f(radiusLoc, (float) p.size * 0.025f);
+				// gl2.glFlush();
 				gl2.glBegin(GL2.GL_QUADS);
 				gl2.glVertex2f(-1, -1);
 				gl2.glVertex2f(1, -1);
@@ -198,28 +200,29 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	}
 
 	private void updatePoints() {
-//		int requestedSize = points.size() * 6;
-//		if (pointBuffer == null || pointBuffer.capacity() < requestedSize) {
-//			log.info("Buffer allocation");
-//			pointBuffer = ByteBuffer.allocateDirect(requestedSize * FLOAT_SIZE)
-//					.order(ByteOrder.nativeOrder()).asFloatBuffer();
-//		} else {
-//			pointBuffer.rewind();
-//		}
-//		for (Point p : points) {
-//			pointBuffer.put((float) p.x);
-//			pointBuffer.put((float) p.y);
-//			pointBuffer.put((float) p.z);
-//			pointBuffer.put(p.color.getRGBColorComponents(null));
-//		}
-//		pointBuffer.rewind();
+		// int requestedSize = points.size() * 6;
+		// if (pointBuffer == null || pointBuffer.capacity() < requestedSize) {
+		// log.info("Buffer allocation");
+		// pointBuffer = ByteBuffer.allocateDirect(requestedSize * FLOAT_SIZE)
+		// .order(ByteOrder.nativeOrder()).asFloatBuffer();
+		// } else {
+		// pointBuffer.rewind();
+		// }
+		// for (Point p : points) {
+		// pointBuffer.put((float) p.x);
+		// pointBuffer.put((float) p.y);
+		// pointBuffer.put((float) p.z);
+		// pointBuffer.put(p.color.getRGBColorComponents(null));
+		// }
+		// pointBuffer.rewind();
 	}
 
 	@Override
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
 		// log.info("addPoint(" + x + "," + y + "," + z + ")");
-		points.add(new Point(x, y, z, appearance.getColor()));
+		points.add(new Point(x, y, z, appearance.getSize(), appearance
+				.getColor()));
 	}
 
 	@Override
@@ -299,7 +302,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			gl.glMatrixMode(GL2.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glClearColor(0.65625f, 0.6875f, 0.75f, 0.0f);
-			
+
 			gl.glEnable(GL2.GL_DEPTH_TEST);
 
 			gl.glEnable(GL2.GL_LIGHTING);
