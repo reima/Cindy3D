@@ -12,7 +12,6 @@ import javax.vecmath.Vector4d;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-import de.jreality.math.Rn;
 import de.tum.in.jrealityplugin.jogl.Line.LineType;
 
 public class LineRenderer extends Renderer<Line> {
@@ -26,20 +25,10 @@ public class LineRenderer extends Renderer<Line> {
 	private int colorLoc;
 	private int lengthLoc;
 
-	// private int centerLoc;
-	// private int colorLoc;
-	// private int radiusLoc;
-
-	/*
-	 * uniform mat4 cylinderTransform; uniform vec3 cylinderPoint; uniform vec3
-	 * cylinderDirection; uniform float cylinderRadius; uniform vec3
-	 * cylinderColor; uniform float cylinderLength;
-	 */
-
 	@Override
 	public void dispose(GL gl) {
-		// TODO Auto-generated method stub
-
+		if (program != null)
+			program.destroy(gl.getGL2());
 	}
 
 	@Override
@@ -177,7 +166,6 @@ public class LineRenderer extends Renderer<Line> {
 			}
 
 			double dist = Math.max(p1.distance(p2), 2.0 * l.radius) / 2.0;
-			
 			
 			Vector3d axis = new Vector3d();
 			axis.sub(p1, p2);
