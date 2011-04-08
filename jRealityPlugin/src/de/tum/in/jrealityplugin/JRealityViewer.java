@@ -232,7 +232,7 @@ public class JRealityViewer implements Cindy3DViewer {
 	}
 
 	@Override
-	public void addPolygon(double[][] vertices, AppearanceState appearance) {
+	public void addPolygon(double[][] vertices, double[][] normals, AppearanceState appearance) {
 		polygonVertices.add(vertices);
 		polygonColors.add(appearance.getColor());
 		polygonTotalVertexCount += vertices.length;

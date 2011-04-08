@@ -39,6 +39,12 @@ public class JOGLViewerTest {
 		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
 		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
 		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
+		
+		viewer.addPolygon(new double[][] { { 0, 0, 0 }, { 5, 0, 0 },
+				{ 5, 5, 0 } }, null, appearance);
+		
+		viewer.addLineStrip(new double[][] { { 0, 0, 0 }, { 5, 0, 0 },
+				{ 5, 5, 0 } }, appearance, true);
 
 		viewer.end();
 	}
