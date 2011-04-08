@@ -1,6 +1,7 @@
 package de.tum.in.jrealityplugin.jogl;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -22,11 +23,8 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import de.tum.in.jrealityplugin.AppearanceState;
@@ -38,6 +36,8 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private JFrame frame;
 	private GLCanvas canvas;
 	private GLU glu = new GLU();
+	
+	private float[] backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f }; 
 
 	private ArrayList<Point> points = new ArrayList<Point>();
 	private ArrayList<Circle> circles = new ArrayList<Circle>();
@@ -221,6 +221,8 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		// log.info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
+		gl.glClearColor(backgroundColor[0], backgroundColor[1],
+				backgroundColor[2], backgroundColor[3]);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -258,7 +260,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			gl.glLoadIdentity();
 			gl.glMatrixMode(GL2.GL_MODELVIEW);
 			gl.glLoadIdentity();
-			gl.glClearColor(0.65625f, 0.6875f, 0.75f, 0.0f);
 
 			gl.glEnable(GL2.GL_DEPTH_TEST);
 
@@ -358,5 +359,10 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			camDistance /= 1.1;
 		}
 		canvas.display();
+	}
+
+	@Override
+	public void setBackgroundColor(Color color) {
+		color.getRGBComponents(backgroundColor);
 	}
 }

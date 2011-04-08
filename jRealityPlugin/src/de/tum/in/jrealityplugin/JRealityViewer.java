@@ -404,4 +404,10 @@ public class JRealityViewer implements Cindy3DViewer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setBackgroundColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
 }

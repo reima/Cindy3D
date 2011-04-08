@@ -10,6 +10,8 @@ public class JOGLViewerTest {
 	public static void main(String[] args) {
 		JOGLViewer viewer = new JOGLViewer();
 		
+		viewer.setBackgroundColor(Color.white);
+		
 		viewer.begin();
 //		colorSpiral(viewer);
 //		circles(viewer);

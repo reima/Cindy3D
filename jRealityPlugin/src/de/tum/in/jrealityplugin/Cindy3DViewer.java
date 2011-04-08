@@ -1,5 +1,7 @@
 package de.tum.in.jrealityplugin;
 
+import java.awt.Color;
+
 public interface Cindy3DViewer {
 	/**
 	 * Marks the beginning of a new scene
@@ -38,4 +40,5 @@ public interface Cindy3DViewer {
 	void addLineStrip(double[][] vertices, AppearanceState appearance, boolean closed);
 	void addPolygon(double[][] vertices, double[][] normals,
 			AppearanceState appearance);
+	void setBackgroundColor(Color color);
 }
