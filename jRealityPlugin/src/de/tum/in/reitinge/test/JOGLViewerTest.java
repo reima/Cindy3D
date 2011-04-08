@@ -61,10 +61,20 @@ public class JOGLViewerTest {
 		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
 		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
 		
-		viewer.addPolygon(new double[][] { { 0, 0, 0 }, { 5, 0, 0 },
-				{ 5, 5, 0 } }, null, appearance);
+		double r = 1;
+		int n = 7500;
+		double[][] vertices = new double[n][3];
+		for (int i=0; i<n; ++i) {
+			vertices[i][2] = 0;
+			vertices[i][0] = r*Math.sin(i*2*Math.PI/n);
+			vertices[i][1] = r*Math.cos(i*2*Math.PI/n);
+		}
 		
-		viewer.addLineStrip(new double[][] { { 0, 0, 0 }, { 5, 0, 0 },
-				{ 5, 5, 0 } }, appearance, true);
+		viewer.addCircle(0, 0, 0.5, 0, 0, 1, r, appearance);
+		
+		viewer.addPolygon(vertices, null, appearance);
+		
+		appearance.setColor(Color.GREEN);
+		viewer.addLineStrip(vertices, appearance, true);
 	}
 }
