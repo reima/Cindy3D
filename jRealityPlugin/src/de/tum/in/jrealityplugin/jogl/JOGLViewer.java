@@ -33,13 +33,10 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private GLCanvas canvas;
 	private GLU glu = new GLU();
 
-	// private static final int FLOAT_SIZE = 4;
-
 	private ArrayList<Point> points = new ArrayList<Point>();
 	private ArrayList<Circle> circles = new ArrayList<Circle>();
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
-	// private FloatBuffer pointBuffer;
 
 	private Logger log;
 	private FileHandler fh;
@@ -105,7 +102,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void end() {
 		log.info("end()");
-		updatePoints();
 
 		try {
 			if (!frame.isVisible())
@@ -114,24 +110,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.toString(), e);
 		}
-	}
-
-	private void updatePoints() {
-		// int requestedSize = points.size() * 6;
-		// if (pointBuffer == null || pointBuffer.capacity() < requestedSize) {
-		// log.info("Buffer allocation");
-		// pointBuffer = ByteBuffer.allocateDirect(requestedSize * FLOAT_SIZE)
-		// .order(ByteOrder.nativeOrder()).asFloatBuffer();
-		// } else {
-		// pointBuffer.rewind();
-		// }
-		// for (Point p : points) {
-		// pointBuffer.put((float) p.x);
-		// pointBuffer.put((float) p.y);
-		// pointBuffer.put((float) p.z);
-		// pointBuffer.put(p.color.getRGBColorComponents(null));
-		// }
-		// pointBuffer.rewind();
 	}
 
 	@Override
