@@ -38,6 +38,17 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 * The current line appearance
 	 */
 	private AppearanceState lineAppearance;
+	
+	/**
+	 * Stack of saved polygon appearances
+	 * @see JRealityPlugin#gsave3d()
+	 * @see JRealityPlugin#grestore3d()
+	 */
+	private Stack<AppearanceState> polygonAppearanceStack;
+	/**
+	 * The current polygon appearance
+	 */
+	private AppearanceState polygonAppearance;
 
 	/**
 	 * Modifiers for the current CindyScript function call
@@ -50,6 +61,8 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		pointAppearance = new AppearanceState(Color.RED, 1);
 		lineAppearanceStack = new Stack<AppearanceState>();
 		lineAppearance = new AppearanceState(Color.BLUE, 1);
+		polygonAppearanceStack = new Stack<AppearanceState>();
+		polygonAppearance = new AppearanceState(Color.GREEN, 1);
 	}
 
 	@Override
@@ -174,29 +187,70 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("connect3d")
 	public void connect3d(ArrayList<Vec> points) {
-		Vec last = points.get(0);
-		for (int i = 1; i < points.size(); ++i) {
-			Vec current = points.get(i);
-			cindy3d.addSegment(last.getXR(), last.getYR(), last.getZR(),
-					current.getXR(), current.getYR(), current.getZR(),
-					lineAppearance);
-			last = current;
-		}
-	}
-	
-	/**
-	 * Draws a polygon
-	 * @param points Vertices of the polygon
-	 */
-	@CindyScript("drawpoly3d")
-	public void drawpoly3d(ArrayList<Vec> points) {
 		double vertices[][] = new double[points.size()][3];
+
 		for (int i = 0; i < points.size(); ++i) {
 			vertices[i][0] = points.get(i).getXR();
 			vertices[i][1] = points.get(i).getYR();
 			vertices[i][2] = points.get(i).getZR();
 		}
-		cindy3d.addPolygon(vertices, lineAppearance);
+
+		cindy3d.addLineStrip(vertices, polygonAppearance, false);
+	}
+
+	/**
+	 * Draws the outline of a polygon
+	 * @param points Vertices of the polygon
+	 */
+	@CindyScript("drawpoly3d")
+	public void drawpoly3d(ArrayList<Vec> points) {
+		double vertices[][] = new double[points.size()][3];
+
+		for (int i = 0; i < points.size(); ++i) {
+			vertices[i][0] = points.get(i).getXR();
+			vertices[i][1] = points.get(i).getYR();
+			vertices[i][2] = points.get(i).getZR();
+		}
+
+		cindy3d.addLineStrip(vertices, polygonAppearance, true);
+	}
+
+	/**
+	 * Draws a polygon
+	 * 
+	 * @param points Vertices of the polygon
+	 */
+	@CindyScript("fillpoly3d")
+	public void fillpoly3d(ArrayList<Vec> points) {
+		fillpoly3d(points, null);
+	}
+	
+	/**
+	 * Draws a polygon with specifying vertex specific normals
+	 * @param points Vertices of the polygon
+	 * @param normals Normals for each vertex
+	 */
+	@CindyScript("fillpoly3d")
+	public void fillpoly3d(ArrayList<Vec> points, ArrayList<Vec> normals) {
+		if (points.size() == 0
+				|| (normals != null && points.size() != normals.size()))
+			return;
+		
+		double vertices[][] = new double[points.size()][3];
+		double normal[][] = (normals == null) ? null : new double[normals
+				.size()][3];
+		
+		for (int i = 0; i < points.size(); ++i) {
+			vertices[i][0] = points.get(i).getXR();
+			vertices[i][1] = points.get(i).getYR();
+			vertices[i][2] = points.get(i).getZR();
+			if (normals != null) {
+				normal[i][0] = normals.get(i).getXR();
+				normal[i][1] = normals.get(i).getYR();
+				normal[i][2] = normals.get(i).getZR();
+			}
+		}
+		cindy3d.addPolygon(vertices, normal, polygonAppearance);
 	}
 	
 	@CindyScript("drawcircle3d")
@@ -216,6 +270,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	public void gsave3d() {
 		pointAppearanceStack.push(new AppearanceState(pointAppearance));
 		lineAppearanceStack.push(new AppearanceState(lineAppearance));
+		polygonAppearanceStack.push(new AppearanceState(polygonAppearance));
 	}
 
 	/**
@@ -229,6 +284,8 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			pointAppearance = pointAppearanceStack.pop();
 		if (!lineAppearanceStack.isEmpty())
 			lineAppearance = lineAppearanceStack.pop();
+		if (!polygonAppearanceStack.isEmpty())
+			polygonAppearance = polygonAppearanceStack.pop();
 	}
 
 	/**
@@ -239,6 +296,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	public void color3d(ArrayList<Double> vec) {
 		setColorState(pointAppearance, vec);
 		setColorState(lineAppearance, vec);
+		setColorState(polygonAppearance, vec);
 	}
 
 	/**
@@ -251,6 +309,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			return;
 		pointAppearance.setSize(size);
 		lineAppearance.setSize(size);
+		polygonAppearance.setSize(size);
 	}
 
 	/**
@@ -280,6 +339,15 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	@CindyScript("linecolor3d")
 	public void linecolor3d(ArrayList<Double> vec) {
 		setColorState(lineAppearance, vec);
+	}
+	
+	/**
+	 * Set polygon color state
+	 * @param vec Color vector
+	 */
+	@CindyScript("polygoncolor3d")
+	public void polygoncolor3d(ArrayList<Double> vec) {
+		setColorState(polygonAppearance, vec);
 	}
 
 	/**
