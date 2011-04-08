@@ -22,6 +22,12 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Quat4d;
+import javax.vecmath.Vector3d;
 
 import de.tum.in.jrealityplugin.AppearanceState;
 import de.tum.in.jrealityplugin.Cindy3DViewer;
@@ -42,12 +48,13 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private FileHandler fh;
 	private boolean mouseDown;
 	private double[] mousePosition = new double[2];
-	private double[] rotation = new double[2];
 
 	private PointRenderer pointRenderer = new PointRenderer();
 	private CircleRenderer circleRenderer = new CircleRenderer();
 	private LineRenderer lineRenderer = new LineRenderer();
 	private PolygonRenderer polygonRenderer = new PolygonRenderer();
+	
+	private ModelViewerCamera camera = new ModelViewerCamera();
 	private double camDistance = 5.0;
 
 	public JOGLViewer() {
@@ -217,10 +224,11 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		glu.gluLookAt(0.0, 0.0, camDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-		gl.glRotated(rotation[0], 0.0, 1.0, 0.0);
-		gl.glRotated(rotation[1], 1.0, 0.0, 0.0);
+		camera.lookAt(new Point3d(0.0, 0.0, camDistance), new Point3d(0.0, 0.0,
+				0.0), new Vector3d(0.0, 1.0, 0.0));
+		Matrix4d m = new Matrix4d(camera.getTransform());
+		m.transpose();
+		gl.glLoadMatrixf(Util.matrix4dToFloatArray(m), 0);
 
 		pointRenderer.render(gl, points);
 		circleRenderer.render(gl, circles);
@@ -321,15 +329,16 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			mouseDown = false;
 		}
-
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (!mouseDown)
 			return;
-		rotation[0] += (e.getX() - mousePosition[0]);
-		rotation[1] += (e.getY() - mousePosition[1]);
+		
+		camera.mouseDragged(e.getX() - mousePosition[0],
+				e.getY() - mousePosition[1]);
+
 		mousePosition[0] = e.getX();
 		mousePosition[1] = e.getY();
 		canvas.display();
