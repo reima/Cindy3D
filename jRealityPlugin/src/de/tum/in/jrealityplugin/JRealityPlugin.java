@@ -195,7 +195,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			vertices[i][2] = points.get(i).getZR();
 		}
 
-		cindy3d.addLineStrip(vertices, polygonAppearance, false);
+		cindy3d.addLineStrip(vertices, lineAppearance, false);
 	}
 
 	/**
