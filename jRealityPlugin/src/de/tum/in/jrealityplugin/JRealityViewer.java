@@ -397,4 +397,11 @@ public class JRealityViewer implements Cindy3DViewer {
 		
 		ifsf.update();
 	}
+
+	@Override
+	public void addLineStrip(double[][] vertices, AppearanceState appearance,
+			boolean closed) {
+		// TODO Auto-generated method stub
+		
+	}
 }
