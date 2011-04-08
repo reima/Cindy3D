@@ -143,7 +143,7 @@
 \item[Description] Changes the shininess for every kind of geometry to \texttt{shininess}. The shininess influences how specular a geometry surface is displayed.
 \end{description}
 
-\item \cRed{background3d(color : [<real1>, <real2>, <real3>])}
+\item \cBlue{background3d(color : [<real1>, <real2>, <real3>])}
 \begin{description}
 \desc Sets background color to \texttt{color}.
 \end{description}
@@ -174,91 +174,108 @@
 \csubsection{Line, Ray, Segment}
 \begin{itemize}
 
-
-
-\item \textcolor{CBlue}{\texttt{draw3d(p1, p2)}}\\[1ex]
-Adds a line, ray or segment to the scene. The type of the object is specified by the modifier \texttt{type}.
-
-\item \textcolor{CBlue}{\texttt{connect3d(pList)}}
+\item \cBlue{draw3d(position1 : [<real1>, <real2>, <real3>], position2 : [<real1>, <real2>, <real3>])}
 \begin{description}
-\item[Description] Adds a line strip to the scene. The position of the points are specified in the list.
-\item[Modifiers] \textcolor{red}{TODO: Add parameter for closed line strips}
+\desc Adds a line, ray or segment to the scene. The type of the object is specified by the modifier \texttt{type}. This command corresponds to the Cindy \texttt{draw()} command.
+\salso \textit{draw()}
+\modi TODO
 \end{description}
 
-\item \textcolor{CBlue}{\texttt{linecolor3d(color)}}\\[1ex]
-Changes the line, ray and segment color of the current general appearance.
+\item \cBlue{connect3d(positions : <list<[<real1>, <real2>, <real3>]>>)}
+\begin{description}
+\desc Adds a line strip to the scene. The position of the points are specified in the \texttt{positions} list. This command corresponds to the Cindy \texttt{connect()} command.
+\salso \textit{connect()}
+\end{description}
 
-\item \textcolor{CBlue}{\texttt{linesize3d(size)}}\\[1ex]
-Changes the line, ray and segment size of the current general appearance state.
+\item \cBlue{lincolor3d(color : [<real1>, <real2>, <real3>])}
+\begin{description}
+\desc Changes the line, ray and segment color of the current general appearance to \texttt{color}. This command corresponds to the Cindy \texttt{linecolor()} command.
+\salso \textit{linecolor(), color(), color3d()}
+\end{description}
 
+\item \cBlue{linesize3d(size : <real>)}
+\begin{description}
+\desc Changes the line, ray and segment size of the current general appearance state to \texttt{size}.
+\salso \textit{size(), size3d()}
+\end{description}
 \end{itemize}
+
 \csubsection{Sphere}
 \begin{itemize}
-\item \textcolor{red}{drawsphere3d(point, radius)}
+
+\item \cRed{drawsphere3d(position : [<real1>, <real2>, <real3>], radius : <real>)}
 \begin{description}
-\item[Description] Adds a sphere to the scene.
+\desc Adds a sphere to the scene. The center of the sphere with radius \texttt{radius }is placed at \texttt{position}.
 \end{description}
 \end{itemize}
 
 \csubsection{Circle}
 \begin{itemize}
-\item \textcolor{red}{drawcircle3d(point, radius, normal)}
+\item \cRed{drawcircle3d(position : [<real1>, <real2>, <real3>], radius : <real>, normal : [<real1>, <real2>, <real3>])}
 \begin{description}
-\item[Description] Adds the outline of a circle to the scene. The orientation of the circle is defined by its normal.
+\desc Adds the outline of a circle to the scene. The circle with radius \texttt{radius} is centered at \texttt{position}. The orientation of the circle is defined by its normal \texttt{normal}.
+\salso \textit{fillcircle3d()}
 \end{description}
 
-\item \textcolor{CBlue}{fillcircle3d(point, radius)}
+\item \cBlue{fillcircle3d(position : [<real1>, <real2>, <real3>], radius : <real>, normal : [<real1>, <real2>, <real3>])}
 \begin{description}
-\item[Description] Adds a circle to the scene. The orientation of the circle is defined by its normal.
+\desc Adds a circle to the scene. The circle with radius \texttt{radius} is centered at \texttt{position}. The orientation of the plane containing the circle is defined by its normal
 \end{description}
 \end{itemize}
 
 \csubsection{Polygon}
 \begin{itemize}
-\item \textcolor{red}{\texttt{drawpoly3d(pList)}}
+
+\item \cBlue{drawpoly3d(positions : <list<[<real1>, <real2>, <real3>]>>)}
 \begin{description}
-\item[Description] Adds the outline of a polygon to the scene. The vertex positions are specified in the list.
+\desc Adds the outline of a polygon to the scene. The vertex positions are specified in \texttt{positions}. This command corresponds to the Cindy \texttt{drawpoly()} command.
+\salso \textit{drawpoly(), fillpoly(), fillpoly3d()}
 \end{description}
 
-\item \textcolor{CBlue}{\texttt{fillpoly3d(pList)}}\\[1ex]
-Adds a polygon to the scene. The vertex positions are specified in the list.
-
-\item \textcolor{red}{\texttt{mesh3d()}}
+\item \cBlue{fillpoly3d(positions : <list<[<real1>, <real2>, <real3>]>>)}
 \begin{description}
-\item[Description] Adds a polygon mesh to the scene.
+\desc Adds a polygon to the scene. The vertex positions are specified in \texttt{positions}. This command corresponds to the Cindy \texttt{fillpoly()} command.
+\salso \textit{fillpoly(), drawpoly(), drawpoly3d()}
+\end{description}
+
+\item \cRed{mesh3d()}
+\begin{description}
+\desc Adds a polygon mesh to the scene.
 \end{description}
 \end{itemize}
 
 \csubsection{Miscellaneous Geometry}
 \begin{itemize}
-\item \textcolor{red}{\texttt{drawtorus3d(point, normal, oradius, iradius)}}
+
+\item \cRed{drawtorus3d(position : [<real1>, <real2>, <real3>], normal : [<real1>, <real2>, <real3>], oradius : <real>, iradius : <real>)}
 \begin{description}
-\item[Description] Adds a torus to the scene. The orientation is defined by the normal and its size by the inner and outer radius.
+\desc Adds a torus to the scene. The torus is centered at \texttt{position} and its orientation is defined by its normal \textit{normal}. The outer and inner radius are defined by \texttt{oradius} and \texttt{iradius}.
 \end{description}
 \end{itemize}
 
 \csubsection{Light}
 \begin{itemize}
-\item \textcolor{red}{\texttt{setlight3d(nr)}}
+
+\item \cRed{setlight3d(lightid : <int>)}
 \begin{description}
-\item[Description] Changes light parameters for specified light.
+\desc Changes light parameters for the light specified by its ID \texttt{lightid}. Which property of the specific light should be changed is defined by modifiers.
 \item[Modifier]
 \end{description}
 \begin{center}
 \begin{tabular}{l|l|l}
 Modifier & Type & Effect \\ 
-\hline enabled & <bool> & Enables/Disables light source\\
-\hline position & [<real1>, <real2>, <real3>, <real4>] & Sets the homogeneous position \\ 
-\hline color & [<real1>, <real2>, <real3>] & Sets the light color
+\hline enabled & \texttt{<bool>} & Enables/Disables light source\\
+\hline position & \texttt{[<real1>, <real2>, <real3>, <real4>]} & Sets the homogeneous position \\ 
+\hline color & \texttt{[<real1>, <real2>, <real3>]} & Sets the light color
 \end{tabular}
 \end{center}
 \end{itemize}
 
 \csubsection{Camera}
 \begin{itemize}
-\item \textcolor{red}{\texttt{lookat3d([<real1>, <real2>, <real3>], [<real1>, <real2>, <real3>], [<real1>, <real2>, <real3>])}}
+\item \cRed{lookat3d(eyeposition : [<real1>, <real2>, <real3>], lookatposition : [<real1>, <real2>, <real3>], up : [<real1>, <real2>, <real3>])}
 \begin{description}
-\item[Description] Changes the camera position and orientation to match the specified parameters.
+\desc Changes the camera position and orientation to match the specified parameters. With this command, the camera is positioned at \texttt{eyeposition} looking at \texttt{lookatposition}. The camera up vector is specified by \texttt{up}.
 \end{description}
 \end{itemize}
 
