@@ -360,6 +360,16 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			return;
 		lineAppearance.setSize(size);
 	}
+	
+	@CindyScript("background3d")
+	public void background3d(ArrayList<Double> vec) {
+		if (vec.size() != 3)
+			return;
+		cindy3d.setBackgroundColor(new Color(
+				(float)Math.max(0, Math.min(1, vec.get(0))),
+				(float)Math.max(0, Math.min(1, vec.get(1))),
+				(float)Math.max(0, Math.min(1, vec.get(2)))));		
+	}
 
 	protected void setColorState(AppearanceState appearance,
 			ArrayList<Double> vec) {
