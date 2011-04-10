@@ -2,38 +2,36 @@ package de.tum.in.jrealityplugin.jogl;
 
 import java.awt.Color;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import org.apache.commons.math.geometry.Vector3D;
 
 public class Polygon {
-
-	Point3d positions[];
-	Vector3d normals[];
+	Vector3D positions[];
+	Vector3D normals[];
 
 	Color color;
 
 	public Polygon(double[][] positions, double[][] normals,
 			Color color) {
+		this.positions = new Vector3D[positions.length];
+		this.normals = new Vector3D[positions.length];
 
-		this.positions = new Point3d[positions.length];
-		this.normals = new Vector3d[positions.length];
-
-		for (int i = 0; i < positions.length; ++i)
-			this.positions[i] = new Point3d(positions[i][0],positions[i][1],positions[i][2]);
-		if (normals != null)
-			for (int i = 0; i < positions.length; ++i)
-				this.normals[i] = new Vector3d(normals[i][0], normals[i][1], normals[i][2]);
-		else {
-			Vector3d v1 = new Vector3d();
-			Vector3d v2 = new Vector3d();
-
-			v1.sub(this.positions[2], this.positions[0]);
-			v2.sub(this.positions[1], this.positions[0]);
+		for (int i = 0; i < positions.length; ++i) {
+			this.positions[i] = new Vector3D(positions[i][0], positions[i][1],
+					positions[i][2]);
+		}
+		
+		if (normals != null) {
+			for (int i = 0; i < positions.length; ++i) {
+				this.normals[i] = new Vector3D(normals[i][0], normals[i][1],
+						normals[i][2]);
+			}
+		} else {
+			Vector3D v1 = this.positions[2].subtract(this.positions[0]);
+			Vector3D v2 = this.positions[1].subtract(this.positions[0]);
+			Vector3D normal = Vector3D.crossProduct(v2, v1).normalize();
 
 			for (int i = 0; i < this.normals.length; ++i) {
-				this.normals[i] = new Vector3d();
-				this.normals[i].cross(v2, v1);
-				this.normals[i].normalize();
+				this.normals[i] = normal;
 			}
 		}
 		this.color = color;
@@ -43,8 +41,7 @@ public class Polygon {
 	public String toString() {
 		String str = "[";
 		for (int i = 0; i < positions.length; ++i)
-			str += "[" + positions[i].x + "," + positions[i].y + ","
-					+ positions[i].z + "]";
+			str += positions[i].toString();
 		str += "]";
 		return str;
 	}

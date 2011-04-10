@@ -68,10 +68,10 @@ public class PolygonRenderer extends Renderer<Polygon> {
 
 			gl2.glBegin(GL2.GL_POLYGON);
 			for (int i = 0; i < p.positions.length; ++i) {
-				gl2.glNormal3d(p.normals[i].x, p.normals[i].y,
-						p.normals[i].z);
-				gl2.glVertex3d(p.positions[i].x, p.positions[i].y,
-						p.positions[i].z);
+				gl2.glNormal3d(p.normals[i].getX(), p.normals[i].getY(),
+						p.normals[i].getZ());
+				gl2.glVertex3d(p.positions[i].getX(), p.positions[i].getY(),
+						p.positions[i].getZ());
 			}
 			gl2.glEnd();
 		}
