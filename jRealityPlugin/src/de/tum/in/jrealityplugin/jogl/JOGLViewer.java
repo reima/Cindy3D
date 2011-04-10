@@ -23,9 +23,8 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+
+import org.apache.commons.math.geometry.Vector3D;
 
 import de.tum.in.jrealityplugin.AppearanceState;
 import de.tum.in.jrealityplugin.Cindy3DViewer;
@@ -180,15 +179,15 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void addPolygon(double[][] vertices, double[][] normals,
 			AppearanceState appearance) {
-		String str = "addPolygon(";
-		for (int i = 0; i < vertices.length; ++i) {
-			if (i != 0)
-				str += ", ";
-			str += "[" + vertices[i][0] + "," + vertices[i][1] + ","
-					+ vertices[i][2] + "]";
-		}
-		str += ")";
-		log.info(str);
+//		String str = "addPolygon(";
+//		for (int i = 0; i < vertices.length; ++i) {
+//			if (i != 0)
+//				str += ", ";
+//			str += "[" + vertices[i][0] + "," + vertices[i][1] + ","
+//					+ vertices[i][2] + "]";
+//		}
+//		str += ")";
+//		log.info(str);
 		
 		polygons.add(new Polygon(vertices, normals, appearance.getColor()));
 	}
@@ -226,11 +225,11 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		camera.lookAt(new Point3d(0.0, 0.0, camDistance), new Point3d(0.0, 0.0,
-				0.0), new Vector3d(0.0, 1.0, 0.0));
-		Matrix4d m = new Matrix4d(camera.getTransform());
-		m.transpose();
-		gl.glLoadMatrixf(Util.matrix4dToFloatArray(m), 0);
+		gl.glLoadIdentity();
+		//gl.glTranslated(0, 0, -camDistance);
+		camera.lookAt(new Vector3D(0.0, 0.0, camDistance), Vector3D.ZERO,
+				Vector3D.PLUS_J);
+		gl.glMultMatrixf(Util.matrixToFloatArray(camera.getTransform()), 0);
 
 		pointRenderer.render(gl, points);
 		circleRenderer.render(gl, circles);
