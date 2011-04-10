@@ -4,6 +4,8 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
+import org.apache.commons.math.linear.RealMatrix;
+
 public class Util {
 	public static AxisAngle4d rotateFromTo(Vector3d from, Vector3d to) {
 		double angle = from.angle(to);
@@ -21,5 +23,21 @@ public class Util {
 				(float) m.m13, (float) m.m20, (float) m.m21, (float) m.m22,
 				(float) m.m23, (float) m.m30, (float) m.m31, (float) m.m32,
 				(float) m.m33 };
+	}
+
+	public static float[] matrixToFloatArray(RealMatrix m) {
+		int rows = m.getRowDimension();
+		int cols = m.getColumnDimension();
+		
+		float[] result = new float[rows*cols];
+		double[][] data = m.getData();
+		int offset = 0;
+		for (int row = 0; row < rows; ++row) {
+			for (int col = 0; col < cols; ++col, ++offset) {
+				result[offset] = (float) data[row][col];
+			}
+		}
+		
+		return result;
 	}
 }

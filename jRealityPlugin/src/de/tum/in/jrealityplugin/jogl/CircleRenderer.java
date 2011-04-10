@@ -4,25 +4,14 @@ import java.util.Collection;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
-import com.jogamp.opengl.util.PMVMatrix;
+import org.apache.commons.math.geometry.Rotation;
+import org.apache.commons.math.geometry.Vector3D;
+import org.apache.commons.math.linear.MatrixUtils;
+import org.apache.commons.math.linear.RealMatrix;
+
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
-
-import de.jreality.jogl.JOGLRenderer;
-import de.jreality.jogl.shader.GlslShaderProgram;
-import de.jreality.math.Matrix;
-import de.jreality.math.MatrixBuilder;
-import de.jreality.math.Rn;
-import de.jreality.scene.Geometry;
-import de.jreality.scene.PointSet;
-import de.jreality.scene.data.Attribute;
-import de.jreality.scene.data.DataList;
-import de.jreality.scene.data.DoubleArray;
 
 public class CircleRenderer extends Renderer<Circle> {
 	private ShaderProgram program = null;
@@ -86,21 +75,26 @@ public class CircleRenderer extends Renderer<Circle> {
 			gl2.glUniform1f(radiusSqLoc, (float) (c.radius * c.radius));
 			gl2.glUniform3fv(colorLoc, 1, c.color.getColorComponents(null), 0);
 
-			Matrix4d transform = new Matrix4d();
-			transform.set(new Vector3d(c.centerX, c.centerY, c.centerZ));
-			Matrix4d rotation = new Matrix4d();
-			rotation.set(Util.rotateFromTo(new Vector3d(0, 0, 1), new Vector3d(
-					c.normalX, c.normalY, c.normalZ)));
-			transform.mul(rotation);
-			Matrix4d scale = new Matrix4d();
-			scale.set(c.radius);
-			transform.mul(scale);
+			RealMatrix transform = MatrixUtils.createRealIdentityMatrix(4);
+			transform.setColumn(3, new double[] { c.centerX, c.centerY,
+					c.centerZ, 1 });
+			
+			Rotation rotation = new Rotation(Vector3D.PLUS_K, new Vector3D(
+					c.normalX, c.normalY, c.normalZ));
+			RealMatrix rotationMatrix = MatrixUtils.createRealIdentityMatrix(4);
+			rotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
+			
+			RealMatrix scaleMatrix = MatrixUtils
+					.createRealDiagonalMatrix(new double[] { c.radius,
+							c.radius, c.radius, 1 });
+
+			transform = transform.multiply(rotationMatrix)
+					.multiply(scaleMatrix);
 
 			gl2.glUniformMatrix4fv(transformLoc, 1, true,
-					Util.matrix4dToFloatArray(transform), 0);
+					Util.matrixToFloatArray(transform), 0);
 
-			// uniform mat4 circleTransform;
-			// gl2.glFlush();
+			//gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
 			gl2.glVertex2f(-1, -1);
 			gl2.glVertex2f(1, -1);
