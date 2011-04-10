@@ -1,13 +1,17 @@
 package de.tum.in.jrealityplugin.jogl;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
+
+import org.apache.commons.math.geometry.Rotation;
+import org.apache.commons.math.geometry.Vector3D;
+import org.apache.commons.math.linear.LUDecompositionImpl;
+import org.apache.commons.math.linear.MatrixUtils;
+import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math.linear.RealVector;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
@@ -82,69 +86,79 @@ public class LineRenderer extends Renderer<Line> {
 
 		double mV[] = new double[16];
 		gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, mV, 0);
-		Matrix4d modelView = new Matrix4d(mV);
-		modelView.transpose();
+		RealMatrix modelView = MatrixUtils.createRealMatrix(4, 4);
+		modelView.setColumn(0, Arrays.copyOfRange(mV, 0, 4));
+		modelView.setColumn(1, Arrays.copyOfRange(mV, 4, 8));
+		modelView.setColumn(2, Arrays.copyOfRange(mV, 8, 12));
+		modelView.setColumn(3, Arrays.copyOfRange(mV, 12, 16));		
 
 		double pr[] = new double[16];
 		gl2.glGetDoublev(GL2.GL_PROJECTION_MATRIX, pr, 0);
-		Matrix4d invProjection = new Matrix4d(pr);
-		invProjection.transpose();
-		invProjection.invert();
-
-		Vector4d[] f = new Vector4d[] { new Vector4d(-1, -1, 1, 1),
-				new Vector4d(-1, -1, -1, 1), new Vector4d(-1, 1, -1, 1),
-				new Vector4d(1, 1, -1, 1), new Vector4d(1, 1, 1, 1),
-				new Vector4d(1, -1, 1, 1), };
+		RealMatrix projection = MatrixUtils.createRealMatrix(4, 4);
+		projection.setColumn(0, Arrays.copyOfRange(pr, 0, 4));
+		projection.setColumn(1, Arrays.copyOfRange(pr, 4, 8));
+		projection.setColumn(2, Arrays.copyOfRange(pr, 8, 12));
+		projection.setColumn(3, Arrays.copyOfRange(pr, 12, 16));
+		RealMatrix invProjection = new LUDecompositionImpl(projection)
+				.getSolver().getInverse();
+		
+		RealVector[] f = new RealVector[] {
+				MatrixUtils.createRealVector(new double[] { -1, -1,  1, 1 }),
+				MatrixUtils.createRealVector(new double[] { -1, -1, -1, 1 }),
+				MatrixUtils.createRealVector(new double[] { -1,  1, -1, 1 }),
+				MatrixUtils.createRealVector(new double[] {  1,  1, -1, 1 }),
+				MatrixUtils.createRealVector(new double[] {  1,  1,  1, 1 }),
+				MatrixUtils.createRealVector(new double[] {  1, -1,  1, 1 })
+		};
 
 		for (int i = 0; i < 6; ++i) {
-			invProjection.transform(f[i]);
-			f[i].scale(1.0 / f[i].w);
+			f[i] = invProjection.operate(f[i]);
+			f[i].mapDivideToSelf(f[i].getEntry(3));
 		}
-
-		Vector3d[] frustumVertices = new Vector3d[6];
-		for (int i = 0; i < 6; ++i)
-			frustumVertices[i] = new Vector3d(f[i].x, f[i].y, f[i].z);
-
-		Vector3d[] frustumNormals = new Vector3d[6];
+		
+		Vector3D[] frustumVertices = new Vector3D[6];
+		for (int i = 0; i < 6; ++i) {
+			frustumVertices[i] = new Vector3D(f[i].getEntry(0),
+					f[i].getEntry(1), f[i].getEntry(2));
+		}
+		
+		Vector3D[] frustumNormals = new Vector3D[6];
 		double[] frustumOrigin = new double[6];
 
-		Vector3d v1 = new Vector3d(), v2 = new Vector3d();
 		for (int i = 0; i < 6; ++i) {
-			v1.sub(frustumVertices[(i + 1) % 6], frustumVertices[i]);
-			v2.sub(frustumVertices[(i + 2) % 6], frustumVertices[i]);
-			frustumNormals[i] = new Vector3d();
-			frustumNormals[i].cross(v1, v2);
-			frustumOrigin[i] = -frustumNormals[i].dot(frustumVertices[i]);
+			Vector3D v1 = frustumVertices[(i + 1) % 6]
+					.subtract(frustumVertices[i]);
+			Vector3D v2 = frustumVertices[(i + 2) % 6]
+					.subtract(frustumVertices[i]);
+			frustumNormals[i] = Vector3D.crossProduct(v1, v2);
+			frustumOrigin[i] = -Vector3D.dotProduct(frustumNormals[i],
+					frustumVertices[i]);
 		}
-
-		Point3d p1, p2;
-		Vector3d direction = new Vector3d();
-		double cylinderLength;
 
 		gl2.glUseProgram(program.program());
 		for (Line l : lines) {
-			p1 = new Point3d(l.p1);
-			p2 = new Point3d(l.p2);
+			double[] tmp = modelView.operate(new double[] { l.p1.getX(),
+					l.p1.getY(), l.p1.getZ(), 1 });
+			Vector3D p1 = new Vector3D(tmp[0], tmp[1], tmp[2]);
+			tmp = modelView.operate(new double[] { l.p2.getX(), l.p2.getY(),
+					l.p2.getZ(), 1 });
+			Vector3D p2 = new Vector3D(tmp[0], tmp[1], tmp[2]); 
+			
+			Vector3D direction = p2.subtract(p1);
+			double cylinderLength = direction.getNorm();
+			direction = direction.normalize();
 
-			modelView.transform(p1);
-			modelView.transform(p2);
-
-			direction.sub(p2, p1);
-
-			cylinderLength = direction.length();
-			direction.scale(1.0 / cylinderLength);
-
-			gl2.glUniform3f(originLoc, (float) p1.x, (float) p1.y,
-							(float) p1.z);
-			gl2.glUniform3f(directionLoc, (float) direction.x,
-					(float) direction.y, (float) direction.z);
+			gl2.glUniform3f(originLoc, (float) p1.getX(), (float) p1.getY(),
+					(float) p1.getZ());
+			gl2.glUniform3f(directionLoc, (float) direction.getX(),
+					(float) direction.getY(), (float) direction.getZ());
 
 			if (l.lineType != LineType.SEGMENT) {
 				double min = Double.MAX_VALUE;
 				double max = Double.MIN_VALUE;
 				for (int i = 0; i < 6; ++i) {
-					double lambda = linePlaneIntersection(new Vector3d(p1),
-							direction, frustumNormals[i], frustumOrigin[i]);
+					double lambda = linePlaneIntersection(p1, direction,
+							frustumNormals[i], frustumOrigin[i]);
 					if (lambda == Double.MAX_VALUE)
 						continue;
 					else {
@@ -154,52 +168,41 @@ public class LineRenderer extends Renderer<Line> {
 				}
 
 				cylinderLength = 0;
-				p2 = new Point3d(direction);
-				p2.scale(max);
-				p2.add(p1);
+				p2 = new Vector3D(1, p1, max, direction);
 				if (l.lineType == LineType.LINE) {
 					cylinderLength = -1;
-					v1 = direction;
-					v1.scale(min);
-					p1.add(v1);
+					p1 = p1.add(min, direction);
 				}
 			}
 
-			double dist = Math.max(p1.distance(p2), 2.0 * l.radius) / 2.0;
+			double dist = Math.max(Vector3D.distance(p1, p2), 2.0 * l.radius) / 2.0;
 			
-			Vector3d axis = new Vector3d();
-			axis.sub(p1, p2);
+			Vector3D axis = p1.subtract(p2);
+			Vector3D avg = new Vector3D(0.5, p1, 0.5, p2);
 			
-			p1.scale(0.5);
-			p2.scale(0.5);
+			RealMatrix translationMatrix = MatrixUtils
+					.createRealIdentityMatrix(4);
+			translationMatrix.setColumn(3,
+					new double[] { avg.getX(), avg.getY(), avg.getZ(), 1 });
 			
-			Vector3d avg = new Vector3d();
-			avg.add(p1, p2);
-
-			Matrix4d cylinder = new Matrix4d();
-
-			cylinder.set(avg);
+			Rotation rotation = new Rotation(Vector3D.PLUS_I, axis);
+			RealMatrix rotationMatrix = MatrixUtils.createRealIdentityMatrix(4);
+			rotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
 			
-			Matrix4d fromTo = new Matrix4d();
+			RealMatrix scaleMatrix = MatrixUtils
+					.createRealDiagonalMatrix(new double[] { dist, l.radius,
+							l.radius, 1 });
 			
-			fromTo.set(Util.rotateFromTo(new Vector3d(1,0,0), axis));
-			
-			Matrix4d scale = new Matrix4d();
-			scale.m00 = dist;
-			scale.m11 = l.radius;
-			scale.m22 = l.radius;
-			scale.m33 = 1;
-			
-			cylinder.mul(fromTo);
-			cylinder.mul(scale);
+			RealMatrix cylinder = translationMatrix.multiply(rotationMatrix)
+					.multiply(scaleMatrix);
 			
 			gl2.glUniformMatrix4fv(transformLoc, 1, true,
-					Util.matrix4dToFloatArray(cylinder), 0);
+					Util.matrixToFloatArray(cylinder), 0);
 
-			gl2.glUniform1f(lengthLoc, (float)cylinderLength);
+			gl2.glUniform1f(lengthLoc, (float) cylinderLength);
 			gl2.glUniform1f(radiusLoc, (float) l.radius);
 			gl2.glUniform3fv(colorLoc, 1, l.color.getColorComponents(null), 0);
-			// // gl2.glFlush();
+			//gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
 				gl2.glVertex3d(-1, -1, -1);
 				gl2.glVertex3d(-1, -1, 1);
@@ -235,14 +238,13 @@ public class LineRenderer extends Renderer<Line> {
 		gl2.glUseProgram(0);
 	}
 
-	private double linePlaneIntersection(Vector3d p1, Vector3d direction,
-			Vector3d normal, double distance) {
-
-		double denom = direction.dot(normal);
+	private double linePlaneIntersection(Vector3D p1, Vector3D direction,
+			Vector3D normal, double distance) {
+		double denom = Vector3D.dotProduct(direction, normal);
 		if (Math.abs(denom) < 10E-8)
 			return Double.MAX_VALUE;
 		
-		double lambda = -(p1.dot(normal) + distance) / denom;
+		double lambda = -(Vector3D.dotProduct(p1, normal) + distance) / denom;
 		return lambda;
 	}
 
