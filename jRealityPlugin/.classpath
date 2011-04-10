@@ -10,5 +10,10 @@
 	<classpathentry kind="lib" path="lib/jReality-3rd-party/bsh.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JOGL2"/>
 	<classpathentry kind="lib" path="/jreality/release/jReality.jar"/>
+	<classpathentry kind="lib" path="lib/commons-math-2.2/commons-math-2.2.jar" sourcepath="lib/commons-math-2.2/commons-math-2.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/jRealityPlugin/lib/commons-math-2.2/commons-math-2.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
