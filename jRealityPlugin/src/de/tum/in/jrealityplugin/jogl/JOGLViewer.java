@@ -21,7 +21,6 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
 import org.apache.commons.math.geometry.Vector3D;
@@ -34,7 +33,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		MouseListener, MouseMotionListener, MouseWheelListener {
 	private JFrame frame;
 	private GLCanvas canvas;
-	private GLU glu = new GLU();
 	
 	private float[] backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f }; 
 
@@ -223,13 +221,13 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		gl.glClearColor(backgroundColor[0], backgroundColor[1],
 				backgroundColor[2], backgroundColor[3]);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
+		
 		camera.lookAt(new Vector3D(0.0, 0.0, camDistance), Vector3D.ZERO,
 				Vector3D.PLUS_J);
-		gl.glMultMatrixf(Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
-		
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadMatrixf(
+				Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
+			
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera);
 
 		pointRenderer.render(jrs, points);
@@ -291,12 +289,15 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			int height) {
 		log.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
 		GL2 gl = drawable.getGL().getGL2();
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
 		if (height <= 0)
 			height = 1;
 		double aspect = (double) width / height;
-		glu.gluPerspective(60.0, aspect, 0.01, 1000.0);
+		camera.setPerspective(60.0, aspect, 0.01, 1000.0);
+		
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadMatrixf(Util.matrixToFloatArrayTransposed(camera
+				.getPerspectiveTransform()), 0);
+		
 		display(drawable);
 	}
 

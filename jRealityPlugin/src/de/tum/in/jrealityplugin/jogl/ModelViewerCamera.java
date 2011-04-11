@@ -13,8 +13,12 @@ public class ModelViewerCamera {
 	private Vector3D position;
 	private Vector3D lookAt;
 	private Vector3D up;
-	
 	private RealMatrix transform;
+	
+	private double zNear, zFar;
+	private double fieldOfView; // In degrees
+	private double aspectRatio;
+	private RealMatrix perspectiveTransform;	
 	
 	public ModelViewerCamera() {
 		rotation = Rotation.IDENTITY;
@@ -23,8 +27,27 @@ public class ModelViewerCamera {
 		up = new Vector3D(0, 1, 0);
 		transform = MatrixUtils.createRealMatrix(4, 4);
 		updateTransform();
+		
+		zNear = 0.1;
+		zFar = 100.0;
+		fieldOfView = 45.0;
+		aspectRatio = 4.0/3.0;
+		perspectiveTransform = MatrixUtils.createRealMatrix(4, 4);
+		updatePerspectiveTransform();		
 	}
 	
+	private void updatePerspectiveTransform() {
+		double f = 1.0/Math.tan(Math.toRadians(fieldOfView)*0.5);
+		double nearMinusFar = zNear - zFar;
+		perspectiveTransform.setEntry(0, 0, f/aspectRatio);
+		perspectiveTransform.setEntry(1, 1, f);
+		perspectiveTransform.setEntry(2, 2, (zFar + zNear)
+				/ nearMinusFar);
+		perspectiveTransform.setEntry(2, 3, 2 * zFar * zNear
+				/ nearMinusFar);
+		perspectiveTransform.setEntry(3, 2, -1);
+	}
+
 	protected void updateTransform() {
 		// Lookat
 		Vector3D forward = lookAt.subtract(position);
@@ -54,6 +77,18 @@ public class ModelViewerCamera {
 
 	public RealMatrix getTransform() {
 		return transform;
+	}
+	
+	public void setPerspective(double fieldOfView, double aspect, double zNear, double zFar) {
+		this.fieldOfView = fieldOfView;
+		this.aspectRatio = aspect;
+		this.zNear = zNear;
+		this.zFar = zFar;
+		updatePerspectiveTransform();
+	}
+	
+	public RealMatrix getPerspectiveTransform() {
+		return perspectiveTransform;
 	}
 	
 	public Rotation getRotation() {
