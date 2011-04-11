@@ -182,8 +182,8 @@ public class LineRenderer extends Renderer<Line> {
 				}
 			}
 
-			// After defining shifted the end points of the ray/line to the
-			// maximal visible positions, he boundbox is needed
+			// After shifting the end points of the ray/line to the maximal
+			// visible positions, the size and orientation fo the OBB is needed
 			
 			// Length of the OBB
 			double dist = Vector3D.distance(p1, p2) / 2.0;
