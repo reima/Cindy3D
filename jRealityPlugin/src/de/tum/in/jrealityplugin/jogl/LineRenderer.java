@@ -1,6 +1,5 @@
 package de.tum.in.jrealityplugin.jogl;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.media.opengl.GL;
@@ -84,18 +83,12 @@ public class LineRenderer extends Renderer<Line> {
 
 		GL2 gl2 = jrs.gl.getGL2();
 
+		// Get the model view matrix
 		RealMatrix modelView = jrs.camera.getTransform();
 
 		// Get the inverse of the projection matrix
-		double pr[] = new double[16];
-		gl2.glGetDoublev(GL2.GL_PROJECTION_MATRIX, pr, 0);
-		RealMatrix projection = MatrixUtils.createRealMatrix(4, 4);
-		projection.setColumn(0, Arrays.copyOfRange(pr, 0, 4));
-		projection.setColumn(1, Arrays.copyOfRange(pr, 4, 8));
-		projection.setColumn(2, Arrays.copyOfRange(pr, 8, 12));
-		projection.setColumn(3, Arrays.copyOfRange(pr, 12, 16));
-		RealMatrix invProjection = new LUDecompositionImpl(projection)
-				.getSolver().getInverse();
+		RealMatrix invProjection = new LUDecompositionImpl(
+				jrs.camera.getPerspectiveTransform()).getSolver().getInverse();
 		
 		// Coordinates of the normalized view frustum
 		RealVector[] f = new RealVector[] {
