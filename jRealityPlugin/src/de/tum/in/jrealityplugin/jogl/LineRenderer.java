@@ -78,19 +78,13 @@ public class LineRenderer extends Renderer<Line> {
 	}
 
 	@Override
-	public void render(GL gl, Collection<Line> lines) {
+	public void render(JOGLRenderState jrs, Collection<Line> lines) {
 		if (lines.isEmpty())
 			return;
 
-		GL2 gl2 = gl.getGL2();
+		GL2 gl2 = jrs.gl.getGL2();
 
-		double mV[] = new double[16];
-		gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, mV, 0);
-		RealMatrix modelView = MatrixUtils.createRealMatrix(4, 4);
-		modelView.setColumn(0, Arrays.copyOfRange(mV, 0, 4));
-		modelView.setColumn(1, Arrays.copyOfRange(mV, 4, 8));
-		modelView.setColumn(2, Arrays.copyOfRange(mV, 8, 12));
-		modelView.setColumn(3, Arrays.copyOfRange(mV, 12, 16));		
+		RealMatrix modelView = jrs.camera.getTransform();
 
 		double pr[] = new double[16];
 		gl2.glGetDoublev(GL2.GL_PROJECTION_MATRIX, pr, 0);

@@ -229,11 +229,13 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		camera.lookAt(new Vector3D(0.0, 0.0, camDistance), Vector3D.ZERO,
 				Vector3D.PLUS_J);
 		gl.glMultMatrixf(Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
+		
+		JOGLRenderState jrs = new JOGLRenderState(gl, camera);
 
-		pointRenderer.render(gl, points);
-		circleRenderer.render(gl, circles);
-		lineRenderer.render(gl, lines);
-		polygonRenderer.render(gl, polygons);
+		pointRenderer.render(jrs, points);
+		circleRenderer.render(jrs, circles);
+		lineRenderer.render(jrs, lines);
+		polygonRenderer.render(jrs, polygons);
 
 		// gl.glFlush();
 		// drawable.swapBuffers();

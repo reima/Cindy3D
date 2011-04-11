@@ -60,11 +60,11 @@ public class CircleRenderer extends Renderer<Circle> {
 	}
 
 	@Override
-	public void render(GL gl, Collection<Circle> circles) {
+	public void render(JOGLRenderState jrs, Collection<Circle> circles) {
 		if (circles.isEmpty())
 			return;
 
-		GL2 gl2 = gl.getGL2();
+		GL2 gl2 = jrs.gl.getGL2();
 
 		gl2.glUseProgram(program.program());
 		for (Circle c : circles) {

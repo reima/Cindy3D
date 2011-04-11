@@ -52,11 +52,11 @@ class PointRenderer extends Renderer<Point> {
 	}
 
 	@Override
-	public void render(GL gl, Collection<Point> points) {
+	public void render(JOGLRenderState jrs, Collection<Point> points) {
 		if (points.isEmpty())
 			return;
 
-		GL2 gl2 = gl.getGL2();
+		GL2 gl2 = jrs.gl.getGL2();
 
 		gl2.glUseProgram(program.program());
 		for (Point p : points) {

@@ -9,7 +9,7 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public abstract class Renderer<T> {
 	public abstract boolean init(GL gl);
-	public abstract void render(GL gl, Collection<T> c);
+	public abstract void render(JOGLRenderState jrs, Collection<T> c);
 	public abstract void dispose(GL gl);
 	
 	protected ShaderCode loadShader(int type, URL path) {

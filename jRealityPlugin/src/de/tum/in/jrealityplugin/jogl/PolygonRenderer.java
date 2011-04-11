@@ -56,11 +56,11 @@ public class PolygonRenderer extends Renderer<Polygon> {
 	}
 
 	@Override
-	public void render(GL gl, Collection<Polygon> polygons) {
+	public void render(JOGLRenderState jrs, Collection<Polygon> polygons) {
 		if (polygons.isEmpty())
 			return;
 
-		GL2 gl2 = gl.getGL2();
+		GL2 gl2 = jrs.gl.getGL2();
 
 		gl2.glUseProgram(program.program());
 		for (Polygon p : polygons) {
