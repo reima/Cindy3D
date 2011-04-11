@@ -226,10 +226,9 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		//gl.glTranslated(0, 0, -camDistance);
 		camera.lookAt(new Vector3D(0.0, 0.0, camDistance), Vector3D.ZERO,
 				Vector3D.PLUS_J);
-		gl.glMultMatrixf(Util.matrixToFloatArray(camera.getTransform()), 0);
+		gl.glMultMatrixf(Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
 
 		pointRenderer.render(gl, points);
 		circleRenderer.render(gl, circles);

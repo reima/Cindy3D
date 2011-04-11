@@ -32,7 +32,7 @@ public class ModelViewerCamera {
 				Vector3D.MINUS_K);
 		RealMatrix lookAtMatrix = MatrixUtils.createRealIdentityMatrix(4);
 		lookAtMatrix.setSubMatrix(lookAtRotation.getMatrix(), 0, 0);
-		lookAtMatrix.setRow(
+		lookAtMatrix.setColumn(
 				3,
 				new double[] { -position.getX(), -position.getY(),
 						-position.getZ(), 1 });
@@ -42,7 +42,7 @@ public class ModelViewerCamera {
 				.createRealIdentityMatrix(4);
 		modelRotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
 		
-		transform = modelRotationMatrix.multiply(lookAtMatrix);
+		transform = lookAtMatrix.multiply(modelRotationMatrix);
 	}
 	
 	public void lookAt(Vector3D position, Vector3D lookAt, Vector3D up) {
@@ -93,8 +93,8 @@ public class ModelViewerCamera {
 	}
 
 	public void mouseDragged(double dx, double dy) {
-		rotation = rotation.applyTo(new Rotation(RotationOrder.XYZ, -dy
-				* ROTATE_SENSITIVITY, -dx * ROTATE_SENSITIVITY, 0));
+		rotation = new Rotation(RotationOrder.XYZ, dy * ROTATE_SENSITIVITY, dx
+				* ROTATE_SENSITIVITY, 0).applyTo(rotation);
 
 		updateTransform();
 	}

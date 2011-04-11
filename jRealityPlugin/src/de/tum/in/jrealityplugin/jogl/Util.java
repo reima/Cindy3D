@@ -18,4 +18,20 @@ public class Util {
 		
 		return result;
 	}
+
+	public static float[] matrixToFloatArrayTransposed(RealMatrix m) {
+		int rows = m.getRowDimension();
+		int cols = m.getColumnDimension();
+		
+		float[] result = new float[rows*cols];
+		double[][] data = m.getData();
+		int offset = 0;
+		for (int row = 0; row < rows; ++row) {
+			for (int col = 0; col < cols; ++col, ++offset) {
+				result[offset] = (float) data[col][row];
+			}
+		}
+		
+		return result;
+	}
 }
