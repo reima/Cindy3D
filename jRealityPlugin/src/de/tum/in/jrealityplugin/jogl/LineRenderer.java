@@ -86,6 +86,7 @@ public class LineRenderer extends Renderer<Line> {
 
 		RealMatrix modelView = jrs.camera.getTransform();
 
+		// Get the inverse of the projection matrix
 		double pr[] = new double[16];
 		gl2.glGetDoublev(GL2.GL_PROJECTION_MATRIX, pr, 0);
 		RealMatrix projection = MatrixUtils.createRealMatrix(4, 4);
@@ -96,6 +97,7 @@ public class LineRenderer extends Renderer<Line> {
 		RealMatrix invProjection = new LUDecompositionImpl(projection)
 				.getSolver().getInverse();
 		
+		// Coordinates of the normalized view frustum
 		RealVector[] f = new RealVector[] {
 				MatrixUtils.createRealVector(new double[] { -1, -1,  1, 1 }),
 				MatrixUtils.createRealVector(new double[] { -1, -1, -1, 1 }),
@@ -105,6 +107,7 @@ public class LineRenderer extends Renderer<Line> {
 				MatrixUtils.createRealVector(new double[] {  1, -1,  1, 1 })
 		};
 
+		// Transform view frustum into camera space
 		for (int i = 0; i < 6; ++i) {
 			f[i] = invProjection.operate(f[i]);
 			f[i].mapDivideToSelf(f[i].getEntry(3));
@@ -116,6 +119,7 @@ public class LineRenderer extends Renderer<Line> {
 					f[i].getEntry(1), f[i].getEntry(2));
 		}
 		
+		// Compute plane representation of view frustum planes		
 		Vector3D[] frustumNormals = new Vector3D[6];
 		double[] frustumOrigin = new double[6];
 
@@ -129,8 +133,13 @@ public class LineRenderer extends Renderer<Line> {
 					frustumVertices[i]);
 		}
 
+		// Draw each line
 		gl2.glUseProgram(program.program());
 		for (Line l : lines) {
+			
+			// All computations are made in camera space, so first
+			// transform the two points of the line into camera space
+			// by multiplying with the modelview matrix			
 			double[] tmp = modelView.operate(new double[] { l.p1.getX(),
 					l.p1.getY(), l.p1.getZ(), 1 });
 			Vector3D p1 = new Vector3D(tmp[0], tmp[1], tmp[2]);
@@ -138,6 +147,8 @@ public class LineRenderer extends Renderer<Line> {
 					l.p2.getZ(), 1 });
 			Vector3D p2 = new Vector3D(tmp[0], tmp[1], tmp[2]); 
 			
+			// Compute orientation of the cylinder and its length, assuming
+			// a line segment is about to be drawn
 			Vector3D direction = p2.subtract(p1);
 			double cylinderLength = direction.getNorm();
 			direction = direction.normalize();
@@ -147,6 +158,8 @@ public class LineRenderer extends Renderer<Line> {
 			gl2.glUniform3f(directionLoc, (float) direction.getX(),
 					(float) direction.getY(), (float) direction.getZ());
 
+			// In case, no line segment should be drawn, a ray or line is drawn
+			// So the intersection points with the view frustum are computed
 			if (l.lineType != LineType.SEGMENT) {
 				double min = Double.MAX_VALUE;
 				double max = Double.MIN_VALUE;
@@ -161,38 +174,61 @@ public class LineRenderer extends Renderer<Line> {
 					}
 				}
 
+				// For each line or ray, the second point is to be shifted to
+				// infinity. As we can only see the ray/line until it leaves
+				// the view frustum, the point is shifted to the
+				// ray/line-frustum intersection, with maximum distance to p1
 				cylinderLength = 0;
 				p2 = new Vector3D(1, p1, max, direction);
 				if (l.lineType == LineType.LINE) {
+					// In case we want to draw a line, the first point should
+					// be shifted to infinity as well, here, it is shifted to
+					// the minimum intersection point
 					cylinderLength = -1;
 					p1 = p1.add(min, direction);
 				}
 			}
 
-			double dist = Math.max(Vector3D.distance(p1, p2), 2.0 * l.radius) / 2.0;
+			// After defining shifted the end points of the ray/line to the
+			// maximal visible positions, he boundbox is needed
 			
-			Vector3D axis = p1.subtract(p2);
+			// Length of the OBB
+			double dist = Vector3D.distance(p1, p2) / 2.0;
+			//double dist = Math.max(Vector3D.distance(p1, p2), 2.0 * l.radius) / 2.0;
+			
+			//Vector3D axis = p1.subtract(p2);
+			//Vector3D axis = direction;
+			
+			// Midpoint of OBB
 			Vector3D avg = new Vector3D(0.5, p1, 0.5, p2);
 			
+			// Translate OBB's center to origin
 			RealMatrix translationMatrix = MatrixUtils
 					.createRealIdentityMatrix(4);
 			translationMatrix.setColumn(3,
 					new double[] { avg.getX(), avg.getY(), avg.getZ(), 1 });
 			
-			Rotation rotation = new Rotation(Vector3D.PLUS_I, axis);
+			// Rotate x-axis to OBB main direction
+			Rotation rotation = new Rotation(Vector3D.PLUS_I, direction);
 			RealMatrix rotationMatrix = MatrixUtils.createRealIdentityMatrix(4);
 			rotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
 			
+			// Scale OBB to fit the size of the segment/ray/line
 			RealMatrix scaleMatrix = MatrixUtils
 					.createRealDiagonalMatrix(new double[] { dist, l.radius,
 							l.radius, 1 });
 			
+			// Compose the final transformation matrix for [-1,1]^3 by first
+			// scaling the OBB, then rotating it and finaling translating it
+			// into the final the line fitting position
 			RealMatrix cylinder = translationMatrix.multiply(rotationMatrix)
 					.multiply(scaleMatrix);
 			
 			gl2.glUniformMatrix4fv(transformLoc, 1, true,
 					Util.matrixToFloatArray(cylinder), 0);
 
+			// Draw [-1,1]^3 cube which is transformed into the OBB during
+			// processing the vertices on gpu
 			gl2.glUniform1f(lengthLoc, (float) cylinderLength);
 			gl2.glUniform1f(radiusLoc, (float) l.radius);
 			gl2.glUniform3fv(colorLoc, 1, l.color.getColorComponents(null), 0);
