@@ -77,8 +77,10 @@ public class MeshRenderer extends Renderer<Mesh> {
 		MeshBuffer mb;
 		
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 		
 		gl2.glUseProgram(program.program());
+		
 		
 		for (Mesh m : meshes)
 		{
@@ -89,14 +91,22 @@ public class MeshRenderer extends Renderer<Mesh> {
 			}
 			
 			gl2.glUniform3fv(colorLoc, 1, m.color.getColorComponents(null), 0);
-			
+
 			gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
-			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, mb.indexBuffer);
-			
-			gl2.glDrawElements(GL2.GL_QUADS, m.m*m.n, GL2.GL_INT, 0);
+
+			gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
+			gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
+
+			if (mb.hasIndexBuffer) {
+				gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, mb.indexBuffer);
+				gl2.glDrawElements(GL2.GL_QUADS, (m.m - 1) * (m.n - 1) * 4,
+						GL2.GL_UNSIGNED_INT, 0);
+			} else {
+				gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, (m.m-1)*(m.n-1)*2*3);
+			}
 		}
 		gl2.glUseProgram(0);
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
-
 }
