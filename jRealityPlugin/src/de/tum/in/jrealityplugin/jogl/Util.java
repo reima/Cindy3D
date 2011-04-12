@@ -1,5 +1,6 @@
 package de.tum.in.jrealityplugin.jogl;
 
+import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
 
 public class Util {
@@ -33,5 +34,9 @@ public class Util {
 		}
 		
 		return result;
+	}
+	
+	public static double[] vectorToDoubleArray(Vector3D v) {
+		return new double[] {v.getX(), v.getY(), v.getZ()};
 	}
 }
