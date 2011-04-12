@@ -40,6 +40,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private ArrayList<Circle> circles = new ArrayList<Circle>();
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+	private ArrayList<Mesh> meshes = new ArrayList<Mesh>();
 
 	private Logger log;
 	private FileHandler fh;
@@ -50,6 +51,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private CircleRenderer circleRenderer = new CircleRenderer();
 	private LineRenderer lineRenderer = new LineRenderer();
 	private PolygonRenderer polygonRenderer = new PolygonRenderer();
+	private MeshRenderer meshRenderer = new MeshRenderer();
 	
 	private ModelViewerCamera camera = new ModelViewerCamera();
 	private double camDistance = 5.0;
@@ -101,6 +103,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		circles.clear();
 		lines.clear();
 		polygons.clear();
+		meshes.clear();
 	}
 
 	@Override
@@ -234,6 +237,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		circleRenderer.render(jrs, circles);
 		lineRenderer.render(jrs, lines);
 		polygonRenderer.render(jrs, polygons);
+		meshRenderer.render(jrs, meshes);
 
 		// gl.glFlush();
 		// drawable.swapBuffers();
@@ -245,6 +249,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		circleRenderer.dispose(drawable.getGL());
 		lineRenderer.dispose(drawable.getGL());
 		polygonRenderer.dispose(drawable.getGL());
+		meshRenderer.dispose(drawable.getGL());
 	}
 
 	@Override
@@ -278,6 +283,8 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 				log.severe("Line renderer initialization failed");
 			if (!polygonRenderer.init(gl))
 				log.severe("Polygon renderer initialization failed");
+			if (!meshRenderer.init(gl))
+				log.severe("Mesh renderer initialization failed");
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
@@ -365,5 +372,12 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void setBackgroundColor(Color color) {
 		color.getRGBComponents(backgroundColor);
+	}
+
+	@Override
+	public void addMesh(int rows, int columns, double[][] vertices,
+			double[][] normals, AppearanceState appearance) {
+		
+		meshes.add(new Mesh(rows, columns, vertices, normals, appearance.getColor()));
 	}
 }

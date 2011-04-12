@@ -40,5 +40,6 @@ public interface Cindy3DViewer {
 	void addLineStrip(double[][] vertices, AppearanceState appearance, boolean closed);
 	void addPolygon(double[][] vertices, double[][] normals,
 			AppearanceState appearance);
+	void addMesh(int rows, int columns, double[][] vertices,double[][] normals, AppearanceState appearance);
 	void setBackgroundColor(Color color);
 }
