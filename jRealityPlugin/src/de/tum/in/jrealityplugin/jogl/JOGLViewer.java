@@ -39,6 +39,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private DefaultRenderer renderer;
 
 	private Scene scene = new Scene();
+	private ModelViewerCamera camera = new ModelViewerCamera();
+	private double camDistance = 5.0;
 
 	private Logger log;
 	private FileHandler fh;
@@ -65,6 +67,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		frame = new JFrame("Cindy3D (JOGL)");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
+		
+		camera.lookAt(new Vector3D(0, 0, 5), Vector3D.ZERO, Vector3D.PLUS_J);
 
 		try {
 			GLProfile.initSingleton(true);
@@ -266,11 +270,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (e.getWheelRotation() > 0) {
-			camDistance *= 1.1;
-		} else {
-			camDistance /= 1.1;
-		}
+		camera.mouseWheelMoved(e.getWheelRotation());
 		canvas.display();
 	}
 }

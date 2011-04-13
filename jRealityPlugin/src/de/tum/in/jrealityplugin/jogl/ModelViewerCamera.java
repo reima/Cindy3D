@@ -133,4 +133,15 @@ public class ModelViewerCamera {
 
 		updateTransform();
 	}
+
+	public void mouseWheelMoved(int wheelRotation) {
+		Vector3D lookAtToPosition = position.subtract(lookAt);
+		Vector3D newPosition;
+		if (wheelRotation > 0) {
+			newPosition = lookAt.add(1.1, lookAtToPosition);
+		} else {
+			newPosition = lookAt.add(1.0/1.1, lookAtToPosition);
+		}
+		setPosition(newPosition);
+	}
 }
