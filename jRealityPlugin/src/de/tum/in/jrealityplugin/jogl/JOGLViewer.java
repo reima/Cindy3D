@@ -67,7 +67,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			GLProfile profile = GLProfile.getDefault();
 			GLCapabilities caps = new GLCapabilities(profile);
 			canvas = new GLCanvas(caps);
-			renderer = new DefaultRenderer(scene, camera);
+			//renderer = new DefaultRenderer(scene, camera);
+			renderer = new SupersampledRenderer(scene, camera);			
 			canvas.addGLEventListener(renderer);
 			canvas.addMouseListener(this);
 			canvas.addMouseMotionListener(this);
