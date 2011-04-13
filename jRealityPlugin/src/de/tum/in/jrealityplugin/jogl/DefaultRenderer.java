@@ -5,13 +5,9 @@ import java.util.logging.Logger;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 
-public class DefaultRenderer implements GLEventListener {
-	private Scene scene;
-	private ModelViewerCamera camera;
-	
+public class DefaultRenderer extends JOGLRenderer {
 	private PointRenderer pointRenderer = new PointRenderer();
 	private CircleRenderer circleRenderer = new CircleRenderer();
 	private LineRenderer lineRenderer = new LineRenderer();
@@ -21,8 +17,7 @@ public class DefaultRenderer implements GLEventListener {
 	private Logger log;
 	
 	public DefaultRenderer(Scene scene, ModelViewerCamera camera) {
-		this.scene = scene;
-		this.camera = camera;
+		super(scene, camera);
 		
 		log = Logger.getLogger("log");
 	}

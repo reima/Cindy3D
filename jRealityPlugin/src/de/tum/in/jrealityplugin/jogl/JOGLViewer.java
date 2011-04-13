@@ -29,7 +29,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private JFrame frame;
 	private GLCanvas canvas;
 	
-	private DefaultRenderer renderer;
+	private JOGLRenderer renderer;
 
 	private Scene scene = new Scene();
 	private ModelViewerCamera camera = new ModelViewerCamera();
