@@ -34,13 +34,9 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	private JFrame frame;
 	private GLCanvas canvas;
 	
-	private float[] backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f }; 
+	private float[] backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-	private ArrayList<Point> points = new ArrayList<Point>();
-	private ArrayList<Circle> circles = new ArrayList<Circle>();
-	private ArrayList<Line> lines = new ArrayList<Line>();
-	private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
-	private ArrayList<Mesh> meshes = new ArrayList<Mesh>();
+	private Scene scene = new Scene();
 
 	private Logger log;
 	private FileHandler fh;
@@ -99,11 +95,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void begin() {
 		log.info("begin()");
-		points.clear();
-		circles.clear();
-		lines.clear();
-		polygons.clear();
-		meshes.clear();
+		scene.clear();
 	}
 
 	@Override
@@ -123,7 +115,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
 		// log.info("addPoint(" + x + "," + y + "," + z + ")");
-		points.add(new Point(x, y, z, appearance.getSize(), appearance
+		scene.addPoint(new Point(x, y, z, appearance.getSize(), appearance
 				.getColor()));
 	}
 
@@ -132,7 +124,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			double ny, double nz, double radius, AppearanceState appearance) {
 		log.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 				+ "," + nz + "," + radius + ")");
-		circles.add(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
+		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
 				.getColor()));
 	}
 
@@ -152,7 +144,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		addPoint(x1, y1, z1, appearance);
 		addPoint(x2, y2, z2, appearance);
 		
-		lines.add(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
+		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
 				appearance.getColor(), LineType.SEGMENT));
 	}
 
@@ -161,7 +153,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			double z2, AppearanceState appearance) {
 		log.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 				+ "," + z2 + ")");
-		lines.add(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
+		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
 				appearance.getColor(), LineType.LINE));
 	}
 
@@ -173,7 +165,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		
 		addPoint(x1, y1, z1, appearance);
 		
-		lines.add(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
+		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
 				appearance.getColor(), LineType.RAY));
 	}
 
@@ -190,25 +182,24 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 //		str += ")";
 //		log.info(str);
 		
-		polygons.add(new Polygon(vertices, normals, appearance.getColor()));
+		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor()));
 	}
 	
 	@Override
 	public void addLineStrip(double[][] vertices, AppearanceState appearance,
 			boolean closed) {
 		for (int i = 1; i < vertices.length; ++i) {
-			lines.add(new Line(vertices[i - 1][0], vertices[i - 1][1],
+			scene.addLine(new Line(vertices[i - 1][0], vertices[i - 1][1],
 					vertices[i - 1][2], vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * 0.05, appearance
 							.getColor(), LineType.SEGMENT));
-			points.add(new Point(vertices[i][0], vertices[i][1],
-					vertices[i][2], appearance.getSize(), appearance
-							.getColor()));
+			scene.addPoint(new Point(vertices[i][0], vertices[i][1],
+					vertices[i][2], appearance.getSize(), appearance.getColor()));
 		}
-		points.add(new Point(vertices[0][0], vertices[0][1], vertices[0][2],
-				appearance.getSize(), appearance.getColor()));
+		scene.addPoint(new Point(vertices[0][0], vertices[0][1],
+				vertices[0][2], appearance.getSize(), appearance.getColor()));
 		if (closed)
-			lines.add(new Line(vertices[vertices.length - 1][0],
+			scene.addLine(new Line(vertices[vertices.length - 1][0],
 					vertices[vertices.length - 1][1],
 					vertices[vertices.length - 1][2], vertices[0][0],
 					vertices[0][1], vertices[0][2],
@@ -233,11 +224,11 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera);
 
-		pointRenderer.render(jrs, points);
-		circleRenderer.render(jrs, circles);
-		lineRenderer.render(jrs, lines);
-		polygonRenderer.render(jrs, polygons);
-		meshRenderer.render(jrs, meshes);
+		pointRenderer.render(jrs, scene.getPoints());
+		circleRenderer.render(jrs, scene.getCircles());
+		lineRenderer.render(jrs, scene.getLines());
+		polygonRenderer.render(jrs, scene.getPolygons());
+		meshRenderer.render(jrs, scene.getMeshes());
 
 		// gl.glFlush();
 		// drawable.swapBuffers();
@@ -377,7 +368,7 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, AppearanceState appearance) {
-		
-		meshes.add(new Mesh(rows, columns, vertices, normals, appearance.getColor()));
+		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
+				.getColor()));
 	}
 }
