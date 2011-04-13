@@ -15,10 +15,11 @@ public class JOGLViewerTest {
 		viewer.begin();
 //		colorSpiral(viewer);
 //		circles(viewer);
-		lines(viewer);
+//		lines(viewer);
+		icosahedron(viewer);
 		viewer.end();
 	}
-
+	
 	public static void colorSpiral(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 1.0);
 		
@@ -81,5 +82,39 @@ public class JOGLViewerTest {
 		
 		appearance.setColor(Color.GREEN);
 		//viewer.addLineStrip(vertices, appearance, true);
+	}
+
+	public static void icosahedron(JOGLViewer viewer) {
+		AppearanceState appearance = new AppearanceState(Color.yellow, 1.0);
+		double golden = (1.0 + Math.sqrt(5)) / 2.0;
+		
+		double verts[][] = {
+				{       0,       1,  golden },
+				{       0,      -1,  golden },
+				{       0,       1, -golden },
+				{       0,      -1, -golden },
+				{  golden,       0,       1 },
+				{  golden,       0,      -1 },
+				{ -golden,       0,       1 },
+				{ -golden,       0,      -1 },
+				{       1,  golden,       0 },
+				{      -1,  golden,       0 },
+				{       1, -golden,       0 },
+				{      -1, -golden,       0 },
+		};
+		int[][] edges = {
+				{ 0, 1 }, { 2, 3 }, { 4, 5 }, { 6, 7 }, { 8, 9 }, { 10, 11 },
+				{ 0, 8 }, { 2, 8 }, { 4, 0 }, { 6, 0 }, { 8, 4 }, { 10, 4 },
+				{ 0, 9 }, { 2, 9 }, { 4, 1 }, { 6, 1 }, { 8, 5 }, { 10, 5 },
+				{ 1, 10 }, { 3, 10 }, { 5, 2 }, { 7, 2 }, { 9, 6 }, { 11, 6 },
+				{ 1, 11 }, { 3, 11 }, { 5, 3 }, { 7, 3 }, { 9, 7 }, { 11, 7 },
+		};
+		
+		for (int[] edge : edges) {
+			double vert1[] = verts[edge[0]];
+			double vert2[] = verts[edge[1]];
+			viewer.addSegment(vert1[0], vert1[1], vert1[2], vert2[0], vert2[1],
+					vert2[2], appearance);
+		}
 	}
 }
