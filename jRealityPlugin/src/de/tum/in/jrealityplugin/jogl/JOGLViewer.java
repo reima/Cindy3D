@@ -112,6 +112,18 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	}
 
 	@Override
+	public void shutdown() {
+		log.info("shutdown()");
+		frame.dispose();
+		frame = null;
+	}
+
+	@Override
+	public void setBackgroundColor(Color color) {
+		color.getRGBComponents(backgroundColor);
+	}
+
+	@Override
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
 		// log.info("addPoint(" + x + "," + y + "," + z + ")");
@@ -126,13 +138,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
 				.getColor()));
-	}
-
-	@Override
-	public void shutdown() {
-		log.info("shutdown()");
-		frame.dispose();
-		frame = null;
 	}
 
 	@Override
@@ -208,6 +213,69 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 	}
 
 	@Override
+	public void addMesh(int rows, int columns, double[][] vertices,
+			double[][] normals, AppearanceState appearance) {
+		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
+				.getColor()));
+	}
+
+	@Override
+	public void init(GLAutoDrawable drawable) {
+		log.info("init()");
+	
+		try {
+			// drawable.setGL(new DebugGL2(drawable.getGL().getGL2()));
+			GL2 gl = drawable.getGL().getGL2();
+			gl.glMatrixMode(GL2.GL_PROJECTION);
+			gl.glLoadIdentity();
+			gl.glMatrixMode(GL2.GL_MODELVIEW);
+			gl.glLoadIdentity();
+	
+			gl.glEnable(GL2.GL_DEPTH_TEST);
+	
+			gl.glEnable(GL2.GL_LIGHTING);
+			gl.glEnable(GL2.GL_LIGHT0);
+			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 10.0f,
+					10.0f, 0.0f, 1.0f }, 0);
+	
+			gl.glEnable(GL2.GL_LIGHT1);
+			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[] { 0.0f,
+					0.0f, 0.0f, 1.0f }, 0);
+	
+			if (!pointRenderer.init(gl))
+				log.severe("Point renderer initialization failed");
+			if (!circleRenderer.init(gl))
+				log.severe("Circle renderer initialization failed");
+			if (!lineRenderer.init(gl))
+				log.severe("Line renderer initialization failed");
+			if (!polygonRenderer.init(gl))
+				log.severe("Polygon renderer initialization failed");
+			if (!meshRenderer.init(gl))
+				log.severe("Mesh renderer initialization failed");
+		} catch (GLException e) {
+			// TODO Auto-generated catch block
+			log.log(Level.SEVERE, e.toString(), e);
+		}
+	}
+
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+			int height) {
+		log.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
+		GL2 gl = drawable.getGL().getGL2();
+		if (height <= 0)
+			height = 1;
+		double aspect = (double) width / height;
+		camera.setPerspective(60.0, aspect, 0.01, 1000.0);
+		
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadMatrixf(Util.matrixToFloatArrayTransposed(camera
+				.getPerspectiveTransform()), 0);
+		
+		display(drawable);
+	}
+
+	@Override
 	public void display(GLAutoDrawable drawable) {
 		// log.info("display()");
 
@@ -241,62 +309,6 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 		lineRenderer.dispose(drawable.getGL());
 		polygonRenderer.dispose(drawable.getGL());
 		meshRenderer.dispose(drawable.getGL());
-	}
-
-	@Override
-	public void init(GLAutoDrawable drawable) {
-		log.info("init()");
-
-		try {
-			// drawable.setGL(new DebugGL2(drawable.getGL().getGL2()));
-			GL2 gl = drawable.getGL().getGL2();
-			gl.glMatrixMode(GL2.GL_PROJECTION);
-			gl.glLoadIdentity();
-			gl.glMatrixMode(GL2.GL_MODELVIEW);
-			gl.glLoadIdentity();
-
-			gl.glEnable(GL2.GL_DEPTH_TEST);
-
-			gl.glEnable(GL2.GL_LIGHTING);
-			gl.glEnable(GL2.GL_LIGHT0);
-			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 10.0f,
-					10.0f, 0.0f, 1.0f }, 0);
-
-			gl.glEnable(GL2.GL_LIGHT1);
-			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[] { 0.0f,
-					0.0f, 0.0f, 1.0f }, 0);
-
-			if (!pointRenderer.init(gl))
-				log.severe("Point renderer initialization failed");
-			if (!circleRenderer.init(gl))
-				log.severe("Circle renderer initialization failed");
-			if (!lineRenderer.init(gl))
-				log.severe("Line renderer initialization failed");
-			if (!polygonRenderer.init(gl))
-				log.severe("Polygon renderer initialization failed");
-			if (!meshRenderer.init(gl))
-				log.severe("Mesh renderer initialization failed");
-		} catch (GLException e) {
-			// TODO Auto-generated catch block
-			log.log(Level.SEVERE, e.toString(), e);
-		}
-	}
-
-	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
-			int height) {
-		log.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
-		GL2 gl = drawable.getGL().getGL2();
-		if (height <= 0)
-			height = 1;
-		double aspect = (double) width / height;
-		camera.setPerspective(60.0, aspect, 0.01, 1000.0);
-		
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadMatrixf(Util.matrixToFloatArrayTransposed(camera
-				.getPerspectiveTransform()), 0);
-		
-		display(drawable);
 	}
 
 	@Override
@@ -358,17 +370,5 @@ public class JOGLViewer implements Cindy3DViewer, GLEventListener,
 			camDistance /= 1.1;
 		}
 		canvas.display();
-	}
-
-	@Override
-	public void setBackgroundColor(Color color) {
-		color.getRGBComponents(backgroundColor);
-	}
-
-	@Override
-	public void addMesh(int rows, int columns, double[][] vertices,
-			double[][] normals, AppearanceState appearance) {
-		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
-				.getColor()));
 	}
 }
