@@ -17,7 +17,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.jrealityplugin.jogl.Line.LineType;
 
-public class LineRenderer extends Renderer<Line> {
+public class LineRenderer extends PrimitiveRenderer<Line> {
 
 	private ShaderProgram program = null;
 

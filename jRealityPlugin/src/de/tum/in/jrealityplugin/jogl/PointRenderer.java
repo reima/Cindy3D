@@ -8,7 +8,7 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-class PointRenderer extends Renderer<Point> {
+class PointRenderer extends PrimitiveRenderer<Point> {
 	private ShaderProgram program = null;
 	private int centerLoc;
 	private int colorLoc;

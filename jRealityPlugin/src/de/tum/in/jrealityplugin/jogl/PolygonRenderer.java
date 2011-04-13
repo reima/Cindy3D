@@ -8,7 +8,7 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-public class PolygonRenderer extends Renderer<Polygon> {
+public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 
 	private ShaderProgram program = null;
 	

@@ -13,7 +13,7 @@ import org.apache.commons.math.linear.RealMatrix;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-public class CircleRenderer extends Renderer<Circle> {
+public class CircleRenderer extends PrimitiveRenderer<Circle> {
 	private ShaderProgram program = null;
 	private int centerLoc;
 	private int radiusSqLoc;

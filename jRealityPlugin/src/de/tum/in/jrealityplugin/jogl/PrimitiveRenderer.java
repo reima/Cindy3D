@@ -7,7 +7,7 @@ import javax.media.opengl.GL;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
 
-public abstract class Renderer<T> {
+public abstract class PrimitiveRenderer<T> {
 	public abstract boolean init(GL gl);
 	public abstract void render(JOGLRenderState jrs, Collection<T> c);
 	public abstract void dispose(GL gl);

@@ -10,7 +10,7 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-public class MeshRenderer extends Renderer<Mesh> {
+public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 	
 	private HashMap<Integer, MeshBuffer> meshBuffers;
 
