@@ -8,17 +8,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
@@ -34,14 +29,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private JFrame frame;
 	private GLCanvas canvas;
 	
-	private float[] backgroundColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-	
 	private DefaultRenderer renderer;
 
 	private Scene scene = new Scene();
 	private ModelViewerCamera camera = new ModelViewerCamera();
-	private double camDistance = 5.0;
-
+	
 	private Logger log;
 	private FileHandler fh;
 	private boolean mouseDown;
@@ -118,7 +110,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 	@Override
 	public void setBackgroundColor(Color color) {
-		color.getRGBComponents(backgroundColor);
+		scene.setBackgroundColor(color);
 	}
 
 	@Override

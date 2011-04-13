@@ -1,15 +1,25 @@
 package de.tum.in.jrealityplugin.jogl;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Scene {
+	private Color backgroundColor = Color.white;
 	private ArrayList<Point> points = new ArrayList<Point>();
 	private ArrayList<Circle> circles = new ArrayList<Circle>();
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 	private ArrayList<Mesh> meshes = new ArrayList<Mesh>();
 	
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
 	public Collection<Point> getPoints() {
 		return points;
 	}

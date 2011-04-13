@@ -8,8 +8,6 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 
-import org.apache.commons.math.geometry.Vector3D;
-
 public class DefaultRenderer implements GLEventListener {
 	private Scene scene;
 	private ModelViewerCamera camera;
@@ -91,8 +89,10 @@ public class DefaultRenderer implements GLEventListener {
 		// log.info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
-//		gl.glClearColor(backgroundColor[0], backgroundColor[1],
-//				backgroundColor[2], backgroundColor[3]);
+		float[] backgroundColor = new float[4];
+		scene.getBackgroundColor().getRGBComponents(backgroundColor);
+		gl.glClearColor(backgroundColor[0], backgroundColor[1],
+				backgroundColor[2], backgroundColor[3]);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
