@@ -417,4 +417,11 @@ public class JRealityViewer implements Cindy3DViewer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void addMesh(int rows, int columns, double[][] vertices,
+			boolean perVertexNormals, AppearanceState appearance) {
+		// TODO Auto-generated method stub
+		
+	}
 }
