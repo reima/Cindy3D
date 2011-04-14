@@ -8,52 +8,112 @@ import javax.media.opengl.GL2;
 public class MeshBuffer {
 	int vertexBuffer;
 	int indexBuffer;
-	
+
 	boolean hasIndexBuffer;
 
 	public MeshBuffer(GL2 gl2, Mesh m) {
+		if (m.perVertexNormals)
+			createBuffersPerVertex(gl2, m);
+		else
+			createBuffersPerFace(gl2, m);
+	}
+	
+	private void createBuffersPerFace(GL2 gl2, Mesh m) {
+		int faceCount = (m.m-1)*(m.n-1)*2;
+		int sizeofDouble = 8;
+		
+		int[] buffers = new int[1];
+		gl2.glGenBuffers(1, buffers, 0);
+		vertexBuffer = buffers[0];
+		
+		DoubleBuffer vertices = DoubleBuffer.allocate(faceCount * 36);
+
+		for (int i = 0; i < m.m - 1; ++i) {
+			for (int j = 0; j < m.n - 1; ++j) {
+				
+				int[] vertexIDs = new int[] {i * m.n + j,
+						i * m.n + j + 1,
+						(i + 1) * m.n + j + 1,
+						i * m.n + j,
+						(i + 1) * m.n + j + 1,
+						(i + 1) * m.n + j};
+				
+				int normalID = 2 * (i * (m.n - 1) + j);
+
+				for (int k=0; k<6; ++k) {
+					vertices.put(m.vertices[vertexIDs[k]]);
+					if (k < 3)
+						vertices.put(m.normals[normalID]);
+					else
+						vertices.put(m.normals[normalID]);
+				}
+			}
+		}
+		vertices.flip();
+		
+		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
+
+
+		
+		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()*sizeofDouble, vertices, GL2.GL_STATIC_DRAW);
+		
+		hasIndexBuffer = false;
+		
+		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
+	}
+	
+	private void createBuffersPerVertex(GL2 gl2, Mesh m) {
+		int sizeofDouble = 8;
+		int sizeofInt = 4;
+		int faceCount = (m.m - 1) * (m.n - 1) * 2;
+
 		IntBuffer buffers = IntBuffer.allocate(2);
+
 		gl2.glGenBuffers(2, buffers);
 
 		vertexBuffer = buffers.get(0);
 		indexBuffer = buffers.get(1);
-		
-		// TODO: create buffers matching the normal type and indexing type
 
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
 
-		double[] flatBuffer = new double[m.vertices.length *3*2];
-
+		DoubleBuffer vertices = DoubleBuffer.allocate(m.vertices.length*3*2);
 		for (int i = 0; i < m.vertices.length; ++i) {
-			//System.arraycopy(m.vertices[i], 0, flatBuffer, i * 3, 3);
-			System.arraycopy(m.vertices[i], 0, flatBuffer, i*6, 3);
-			System.arraycopy(m.normals[i], 0, flatBuffer, i*6+3, 3);
+			vertices.put(m.vertices[i]);
+			vertices.put(m.normals[i]);
 		}
-		DoubleBuffer b = DoubleBuffer.wrap(flatBuffer);
+		
+		vertices.flip();
 
-		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, m.m * m.n * 3 * 8 * 2, b,
-				GL2.GL_STATIC_DRAW);
+		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity() * sizeofDouble,
+				vertices, GL2.GL_STATIC_DRAW);
 
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 
 		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-		int[] indices = new int[(m.m - 1) * (m.n - 1) * 4];
+		IntBuffer indices = IntBuffer.allocate(faceCount*3);
 
 		for (int i = 0; i < m.m - 1; ++i) {
 			for (int j = 0; j < m.n - 1; ++j) {
-				indices[4 * (i * (m.n-1) + j) + 0] = i * m.n + j;
-				indices[4 * (i * (m.n-1) + j) + 1] = i * m.n + j + 1;
-				indices[4 * (i * (m.n-1) + j) + 2] = (i + 1) * m.n + j + 1;
-				indices[4 * (i * (m.n-1) + j) + 3] = (i + 1) * m.n + j;
+				// Vertices of first triangle in quad
+				indices.put(i * m.n + j);
+				indices.put(i * m.n + j + 1);
+				indices.put((i + 1) * m.n + j + 1);
+
+				// Vertices of second triangle in quad
+				indices.put(i * m.n + j);
+				indices.put((i + 1) * m.n + j + 1);
+				indices.put((i + 1) * m.n + j);
 			}
 		}
-		IntBuffer intbuffer = IntBuffer.wrap(indices);
-		gl2.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, (m.m - 1) * (m.n - 1) * 4
-				* 4, intbuffer, GL2.GL_STATIC_DRAW);
+		indices.flip();
+		
+		gl2.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
+				* sizeofInt, indices, GL2.GL_STATIC_DRAW);
 
 		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
-
+		
+		hasIndexBuffer = true;
 	}
 	
 	public void dispose(GL2 gl2) {

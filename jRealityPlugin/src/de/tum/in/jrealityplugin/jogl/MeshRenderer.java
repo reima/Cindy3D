@@ -99,7 +99,8 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 
 			if (mb.hasIndexBuffer) {
 				gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, mb.indexBuffer);
-				gl2.glDrawElements(GL2.GL_QUADS, (m.m - 1) * (m.n - 1) * 4,
+				gl2.glPointSize(5);
+				gl2.glDrawElements(GL2.GL_TRIANGLES, (m.m - 1) * (m.n - 1) * 6,
 						GL2.GL_UNSIGNED_INT, 0);
 			} else {
 				gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, (m.m-1)*(m.n-1)*2*3);
