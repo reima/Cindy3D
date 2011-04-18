@@ -262,6 +262,34 @@ public class JRealityPlugin extends CindyScriptPlugin {
 				radius, pointAppearance);
 	}
 	
+	@CindyScript("mesh3d")
+	public void mesh3d(int rows, int columns, ArrayList<Vec> points) {
+		if (rows < 0 || columns < 0 || rows * columns != points.size())
+			return;
+		
+		// Fill in default modifiers
+		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
+		modifiers.put("normaltype", "perface");
+		
+		// Apply overrides
+		modifiers.putAll(this.modifiers);
+		
+		String type = modifiers.get("normaltype").toString();
+		
+		boolean perVertex = false;
+		if (type.equals("pervertex"))
+			perVertex = true;
+			
+		double[][] vertices = new double[points.size()][3];
+		for (int i=0; i<points.size(); ++i) {
+			Vec v = points.get(i);
+			vertices[i][0] = v.getXR();
+			vertices[i][1] = v.getYR();
+			vertices[i][2] = v.getZR();
+		}
+		cindy3d.addMesh(rows, columns, vertices, perVertex, polygonAppearance);
+	}
+	
 	/**
 	 * Pushes the current appearance on the appearance stack
 	 * @see JRealityPlugin#grestore3d()

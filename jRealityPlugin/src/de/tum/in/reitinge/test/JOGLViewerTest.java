@@ -15,7 +15,7 @@ public class JOGLViewerTest {
 		viewer.begin();
 //		colorSpiral(viewer);
 //		circles(viewer);
-//		lines(viewer);
+		lines(viewer);
 		icosahedron(viewer);
 		viewer.end();
 	}
