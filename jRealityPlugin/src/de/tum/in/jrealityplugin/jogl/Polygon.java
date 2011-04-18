@@ -4,14 +4,15 @@ import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-public class Polygon {
+public class Polygon extends Primitive {
 	Vector3D positions[];
 	Vector3D normals[];
 
 	Color color;
+	double opacity;
 
 	public Polygon(double[][] positions, double[][] normals,
-			Color color) {
+			Color color, double opacity) {
 		this.positions = new Vector3D[positions.length];
 		this.normals = new Vector3D[positions.length];
 
@@ -35,6 +36,7 @@ public class Polygon {
 			}
 		}
 		this.color = color;
+		this.opacity = opacity;
 	}
 
 	@Override

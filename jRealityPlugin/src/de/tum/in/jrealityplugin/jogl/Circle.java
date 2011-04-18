@@ -2,7 +2,7 @@ package de.tum.in.jrealityplugin.jogl;
 
 import java.awt.Color;
 
-public class Circle {
+public class Circle extends Primitive {
 	double centerX, centerY, centerZ;
 	double normalX, normalY, normalZ;
 	double radius;

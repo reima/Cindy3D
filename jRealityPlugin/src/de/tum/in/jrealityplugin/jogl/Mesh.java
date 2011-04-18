@@ -4,10 +4,11 @@ import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-public class Mesh {	
+public class Mesh extends Primitive {	
 	int n, m;
 	
 	Color color;
+	double opacity;
 	double[][] vertices;
 	double[][] normals;
 
@@ -18,7 +19,7 @@ public class Mesh {
 	int identifier;
 	
 	public Mesh(int m, int n, double[][] vertices, double[][] normals,
-			Color color) {
+			Color color, double opacity) {
 		this.n = n;
 		this.m = m;
 		perVertexNormals = (normals != null);
@@ -26,12 +27,13 @@ public class Mesh {
 		this.vertices = vertices;
 		this.normals = normals;
 		this.color = color;
+		this.opacity = opacity;
 		if (normals == null)
 			computeNormals();
 	}
 	
 	public Mesh(int m, int n, double[][] vertices, boolean perVertexNormals,
-			Color color) {
+			Color color, double opactiy) {
 		this.n = n;
 		this.m = m;
 		this.perVertexNormals = perVertexNormals;
@@ -39,6 +41,7 @@ public class Mesh {
 		this.vertices = vertices;
 		this.normals = null;
 		this.color = color;
+		this.opacity = opactiy;
 		computeNormals();
 	}
 	

@@ -2,7 +2,7 @@ package de.tum.in.jrealityplugin.jogl;
 
 import java.awt.Color;
 
-class Point {
+class Point extends Primitive {
 	double x, y, z;
 	double size;
 	Color color;

@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-public class Line {
+public class Line extends Primitive{
 	
 	public enum LineType {
 		SEGMENT,
