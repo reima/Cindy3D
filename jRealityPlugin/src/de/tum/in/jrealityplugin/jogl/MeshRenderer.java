@@ -93,7 +93,7 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 			meshBuffers.put(m.identifier, mb);
 		}
 
-		gl2.glUniform3fv(colorLoc, 1, m.color.getColorComponents(null), 0);
+		gl2.glUniform4fv(colorLoc, 1, m.color.getComponents(null), 0);
 
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
 

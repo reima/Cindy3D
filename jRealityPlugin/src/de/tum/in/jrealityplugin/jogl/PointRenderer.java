@@ -72,7 +72,7 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUniform3f(centerLoc, (float) point.x, (float) point.y,
 				(float) point.z);
-		gl2.glUniform3fv(colorLoc, 1, point.color.getColorComponents(null), 0);
+		gl2.glUniform4fv(colorLoc, 1, point.color.getComponents(null), 0);
 		gl2.glUniform1f(radiusLoc, (float) point.size * 0.05f);
 		// gl2.glFlush();
 		gl2.glBegin(GL2.GL_QUADS);

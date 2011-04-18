@@ -1,6 +1,6 @@
 uniform vec3 sphereCenter;
 uniform float sphereRadius;
-uniform vec3 sphereColor;
+uniform vec4 sphereColor;
 
 varying vec3 pos;
 
@@ -85,10 +85,10 @@ void shade(in vec3 normal, in vec3 ecPoint) {
  
   vec4 color = gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
-    Diffuse  * vec4(sphereColor,1);
+    Diffuse  * vec4(sphereColor.rgb,1.0);
   color += Specular * gl_FrontMaterial.specular;
   color = clamp( color, 0.0, 1.0 );
-  gl_FragColor = vec4(color.rgb, 1.0);
+  gl_FragColor = vec4(color.rgb, sphereColor.a);
 }
 
 void main() {
@@ -116,7 +116,7 @@ void main() {
   vec3 pointOnSphere = lambda*dir;
   vec3 normal = normalize(pointOnSphere - camSpaceCenter);
   
-  gl_FragColor = vec4(sphereColor, 1.0);
+  //gl_FragColor = sphereColor;
   
   shade(normal, pointOnSphere);
    

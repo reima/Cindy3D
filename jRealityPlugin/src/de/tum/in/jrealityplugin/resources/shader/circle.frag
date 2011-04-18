@@ -1,7 +1,7 @@
 uniform vec3 circleCenter;
 uniform float circleRadiusSq;
 uniform vec3 circleNormal;
-uniform vec3 circleColor;
+uniform vec4 circleColor;
 
 varying vec3 pos;
 
@@ -86,10 +86,10 @@ void shade(in vec3 normal, in vec3 ecPoint) {
  
   vec4 color = gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
-    Diffuse  * vec4(circleColor,1);
+    Diffuse  * vec4(circleColor.rgb, 1.0);
   color += Specular * gl_FrontMaterial.specular;
   color = clamp( color, 0.0, 1.0 );
-  gl_FragColor = vec4(color.rgb, 1.0);
+  gl_FragColor = vec4(color.rgb, circleColor.a);
 }
 
 void main() {

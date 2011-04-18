@@ -240,7 +240,7 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 			// processing the vertices on gpu
 			gl2.glUniform1f(lengthLoc, (float) cylinderLength);
 			gl2.glUniform1f(radiusLoc, (float) line.radius);
-			gl2.glUniform3fv(colorLoc, 1, line.color.getColorComponents(null), 0);
+			gl2.glUniform4fv(colorLoc, 1, line.color.getComponents(null), 0);
 			//gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
 				gl2.glVertex3d(-1, -1, -1);
