@@ -253,6 +253,12 @@ public class JRealityPlugin extends CindyScriptPlugin {
 		cindy3d.addPolygon(vertices, normal, polygonAppearance);
 	}
 	
+	/**
+	 * Draws a filled circle with the specified center, radius and orientation
+	 * @param center Center
+	 * @param normal Orientation
+	 * @param radius Radius
+	 */
 	@CindyScript("drawcircle3d")
 	public void drawcircle3d(ArrayList<Double> center, ArrayList<Double> normal,
 			double radius) {
@@ -262,30 +268,66 @@ public class JRealityPlugin extends CindyScriptPlugin {
 				radius, pointAppearance);
 	}
 	
+	/**
+	 * Draws a grid based mesh. Normals are generated automatically.
+	 * @param rows Number of rows of vertices
+	 * @param columns Number of columns of vertices
+	 * @param points Vertex positions
+	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points) {
 		if (rows < 0 || columns < 0 || rows * columns != points.size())
 			return;
-		
+
 		// Fill in default modifiers
 		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
 		modifiers.put("normaltype", "perface");
-		
+
 		// Apply overrides
 		modifiers.putAll(this.modifiers);
-		
+
 		String type = modifiers.get("normaltype").toString();
-		
+
 		boolean perVertex = false;
 		if (type.equals("pervertex"))
 			perVertex = true;
-			
+
 		double[][] vertices = new double[points.size()][3];
+		for (int i = 0; i < points.size(); ++i) {
+			Vec v = points.get(i);
+			vertices[i][0] = v.getXR();
+			vertices[i][1] = v.getYR();
+			vertices[i][2] = v.getZR();
+		}
+		cindy3d.addMesh(rows, columns, vertices, perVertex, polygonAppearance);
+	}
+	
+	/**
+	 * Draws a grid based mesh. Normals are specified manually
+	 * @param rows Number of rows of vertices
+	 * @param columns Number of columns of vertices
+	 * @param points Vertex positions
+	 * @param normals Vertex normals
+	 */
+	@CindyScript("mesh3d")
+	public void mesh3d(int rows, int columns, ArrayList<Vec> points,
+			ArrayList<Vec> normals) {
+		if (rows < 0 || columns < 0 || rows * columns != points.size()
+				|| rows * columns != normals.size())
+			return;
+		
+		double[][] vertices = new double[points.size()][3];
+		double[][] perVertex = new double[normals.size()][3];
 		for (int i=0; i<points.size(); ++i) {
 			Vec v = points.get(i);
 			vertices[i][0] = v.getXR();
 			vertices[i][1] = v.getYR();
 			vertices[i][2] = v.getZR();
+			v = normals.get(i);
+			perVertex[i][0] = v.getXR();
+			perVertex[i][1] = v.getYR();
+			perVertex[i][2] = v.getZR();
+			
 		}
 		cindy3d.addMesh(rows, columns, vertices, perVertex, polygonAppearance);
 	}
