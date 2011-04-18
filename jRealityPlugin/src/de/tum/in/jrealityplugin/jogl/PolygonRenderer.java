@@ -1,7 +1,5 @@
 package de.tum.in.jrealityplugin.jogl;
 
-import java.util.Collection;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -54,28 +52,34 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 
 		return true;
 	}
-
+	
 	@Override
-	public void render(JOGLRenderState jrs, Collection<Polygon> polygons) {
-		if (polygons.isEmpty())
-			return;
-
+	public void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
-
 		gl2.glUseProgram(program.program());
-		for (Polygon p : polygons) {
-			gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null), 0);
-
-			gl2.glBegin(GL2.GL_POLYGON);
-			for (int i = 0; i < p.positions.length; ++i) {
-				gl2.glNormal3d(p.normals[i].getX(), p.normals[i].getY(),
-						p.normals[i].getZ());
-				gl2.glVertex3d(p.positions[i].getX(), p.positions[i].getY(),
-						p.positions[i].getZ());
-			}
-			gl2.glEnd();
-		}
-		gl2.glUseProgram(0);
 	}
 
+	@Override
+	protected void render(JOGLRenderState jrs, Polygon polygon) {
+		GL2 gl2 = jrs.gl.getGL2();
+
+		gl2
+				.glUniform3fv(colorLoc, 1, polygon.color
+						.getColorComponents(null), 0);
+
+		gl2.glBegin(GL2.GL_POLYGON);
+		for (int i = 0; i < polygon.positions.length; ++i) {
+			gl2.glNormal3d(polygon.normals[i].getX(),
+					polygon.normals[i].getY(), polygon.normals[i].getZ());
+			gl2.glVertex3d(polygon.positions[i].getX(), polygon.positions[i]
+					.getY(), polygon.positions[i].getZ());
+		}
+		gl2.glEnd();
+	}
+
+	@Override
+	public void postRender(JOGLRenderState jrs) {
+		GL2 gl2 = jrs.gl.getGL2();
+		gl2.glUseProgram(0);		
+	}
 }

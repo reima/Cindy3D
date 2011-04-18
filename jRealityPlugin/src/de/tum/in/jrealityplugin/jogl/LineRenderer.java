@@ -1,7 +1,5 @@
 package de.tum.in.jrealityplugin.jogl;
 
-import java.util.Collection;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -76,13 +74,32 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 		return true;
 	}
 
+	private double linePlaneIntersection(Vector3D p1, Vector3D direction,
+			Vector3D normal, double distance) {
+		double denom = Vector3D.dotProduct(direction, normal);
+		if (Math.abs(denom) < 10E-8)
+			return Double.MAX_VALUE;
+		
+		double lambda = -(Vector3D.dotProduct(p1, normal) + distance) / denom;
+		return lambda;
+	}
+
 	@Override
-	public void render(JOGLRenderState jrs, Collection<Line> lines) {
-		if (lines.isEmpty())
-			return;
-
+	public void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
+		gl2.glUseProgram(0);
+	}
 
+	@Override
+	public void preRender(JOGLRenderState jrs) {
+		GL2 gl2 = jrs.gl.getGL2();
+		gl2.glUseProgram(program.program());
+	}
+
+	@Override
+	protected void render(JOGLRenderState jrs, Line line) {
+		
+		GL2 gl2 = jrs.gl.getGL2();
 		// Get the model view matrix
 		RealMatrix modelView = jrs.camera.getTransform();
 
@@ -128,16 +145,15 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 
 		// Draw each line
 		gl2.glUseProgram(program.program());
-		for (Line l : lines) {
 			
 			// All computations are made in camera space, so first
 			// transform the two points of the line into camera space
 			// by multiplying with the modelview matrix			
-			double[] tmp = modelView.operate(new double[] { l.p1.getX(),
-					l.p1.getY(), l.p1.getZ(), 1 });
+			double[] tmp = modelView.operate(new double[] { line.p1.getX(),
+					line.p1.getY(), line.p1.getZ(), 1 });
 			Vector3D p1 = new Vector3D(tmp[0], tmp[1], tmp[2]);
-			tmp = modelView.operate(new double[] { l.p2.getX(), l.p2.getY(),
-					l.p2.getZ(), 1 });
+			tmp = modelView.operate(new double[] { line.p2.getX(), line.p2.getY(),
+					line.p2.getZ(), 1 });
 			Vector3D p2 = new Vector3D(tmp[0], tmp[1], tmp[2]); 
 			
 			// Compute orientation of the cylinder and its length, assuming
@@ -153,7 +169,7 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 
 			// In case, no line segment should be drawn, a ray or line is drawn
 			// So the intersection points with the view frustum are computed
-			if (l.lineType != LineType.SEGMENT) {
+			if (line.lineType != LineType.SEGMENT) {
 				double min = Double.MAX_VALUE;
 				double max = Double.MIN_VALUE;
 				for (int i = 0; i < 6; ++i) {
@@ -173,7 +189,7 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 				// ray/line-frustum intersection, with maximum distance to p1
 				cylinderLength = 0;
 				p2 = new Vector3D(1, p1, max, direction);
-				if (l.lineType == LineType.LINE) {
+				if (line.lineType == LineType.LINE) {
 					// In case we want to draw a line, the first point should
 					// be shifted to infinity as well, here, it is shifted to
 					// the minimum intersection point
@@ -208,8 +224,8 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 			
 			// Scale OBB to fit the size of the segment/ray/line
 			RealMatrix scaleMatrix = MatrixUtils
-					.createRealDiagonalMatrix(new double[] { dist, l.radius,
-							l.radius, 1 });
+					.createRealDiagonalMatrix(new double[] { dist, line.radius,
+							line.radius, 1 });
 			
 			// Compose the final transformation matrix for [-1,1]^3 by first
 			// scaling the OBB, then rotating it and finaling translating it
@@ -223,8 +239,8 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 			// Draw [-1,1]^3 cube which is transformed into the OBB during
 			// processing the vertices on gpu
 			gl2.glUniform1f(lengthLoc, (float) cylinderLength);
-			gl2.glUniform1f(radiusLoc, (float) l.radius);
-			gl2.glUniform3fv(colorLoc, 1, l.color.getColorComponents(null), 0);
+			gl2.glUniform1f(radiusLoc, (float) line.radius);
+			gl2.glUniform3fv(colorLoc, 1, line.color.getColorComponents(null), 0);
 			//gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
 				gl2.glVertex3d(-1, -1, -1);
@@ -258,17 +274,5 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 				gl2.glVertex3d(1, -1, -1);
 			gl2.glEnd();
 		}
-		gl2.glUseProgram(0);
-	}
-
-	private double linePlaneIntersection(Vector3D p1, Vector3D direction,
-			Vector3D normal, double distance) {
-		double denom = Vector3D.dotProduct(direction, normal);
-		if (Math.abs(denom) < 10E-8)
-			return Double.MAX_VALUE;
-		
-		double lambda = -(Vector3D.dotProduct(p1, normal) + distance) / denom;
-		return lambda;
-	}
 
 }

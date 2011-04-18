@@ -1,6 +1,5 @@
 package de.tum.in.jrealityplugin.jogl;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -11,7 +10,7 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 public class MeshRenderer extends PrimitiveRenderer<Mesh> {
-	
+
 	private HashMap<Integer, MeshBuffer> meshBuffers;
 
 	private ShaderProgram program = null;
@@ -22,12 +21,12 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 	public void dispose(GL gl) {
 		if (program != null)
 			program.destroy(gl.getGL2());
-		
+
 		Iterator<MeshBuffer> it = meshBuffers.values().iterator();
-		
+
 		MeshBuffer mb;
 		while (it.hasNext()) {
-			mb = (MeshBuffer)it.next();
+			mb = (MeshBuffer) it.next();
 			mb.dispose(gl.getGL2());
 		}
 	}
@@ -35,7 +34,7 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 	@Override
 	public boolean init(GL gl) {
 		meshBuffers = new HashMap<Integer, MeshBuffer>();
-		
+
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();
@@ -67,47 +66,49 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 	}
 
 	@Override
-	public void render(JOGLRenderState jrs, Collection<Mesh> meshes) {
-		
-		if (meshes.isEmpty())
-			return;
-		
+	public void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUseProgram(program.program());
-		MeshBuffer mb;
-		
-		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
-		
-		gl2.glUseProgram(program.program());
-		
-		
-		for (Mesh m : meshes)
-		{
-			mb = meshBuffers.get(m.identifier);
-			if (mb == null) {
-				mb = new MeshBuffer(jrs.gl.getGL2(), m);
-				meshBuffers.put(m.identifier, mb);
-			}
-			
-			gl2.glUniform3fv(colorLoc, 1, m.color.getColorComponents(null), 0);
-
-			gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
-
-			gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
-			gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
-
-			if (mb.hasIndexBuffer) {
-				gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, mb.indexBuffer);
-				gl2.glPointSize(5);
-				gl2.glDrawElements(GL2.GL_TRIANGLES, (m.m - 1) * (m.n - 1) * 6,
-						GL2.GL_UNSIGNED_INT, 0);
-			} else {
-				gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, (m.m-1)*(m.n-1)*2*3);
-			}
-		}
 		gl2.glUseProgram(0);
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+	}
+
+	@Override
+	public void preRender(JOGLRenderState jrs) {
+		GL2 gl2 = jrs.gl.getGL2();
+		gl2.glUseProgram(program.program());
+		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+
+		gl2.glUseProgram(program.program());
+	}
+
+	@Override
+	protected void render(JOGLRenderState jrs, Mesh m) {
+		GL2 gl2 = jrs.gl.getGL2();
+		MeshBuffer mb;
+		mb = meshBuffers.get(m.identifier);
+		if (mb == null) {
+			mb = new MeshBuffer(jrs.gl.getGL2(), m);
+			meshBuffers.put(m.identifier, mb);
+		}
+
+		gl2.glUniform3fv(colorLoc, 1, m.color.getColorComponents(null), 0);
+
+		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
+
+		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
+		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
+
+		if (mb.hasIndexBuffer) {
+			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, mb.indexBuffer);
+			gl2.glPointSize(5);
+			gl2.glDrawElements(GL2.GL_TRIANGLES, (m.m - 1) * (m.n - 1) * 6,
+					GL2.GL_UNSIGNED_INT, 0);
+		} else {
+			gl2
+					.glDrawArrays(GL2.GL_TRIANGLES, 0, (m.m - 1) * (m.n - 1)
+							* 2 * 3);
+		}
 	}
 }

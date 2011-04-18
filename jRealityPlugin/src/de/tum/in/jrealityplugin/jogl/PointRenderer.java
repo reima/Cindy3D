@@ -1,7 +1,5 @@
 package de.tum.in.jrealityplugin.jogl;
 
-import java.util.Collection;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -52,31 +50,36 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 	}
 
 	@Override
-	public void render(JOGLRenderState jrs, Collection<Point> points) {
-		if (points.isEmpty())
-			return;
+	public void dispose(GL gl) {
+		if (program != null)
+			program.destroy(gl.getGL2());
+	}
 
+	@Override
+	public void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
-
-		gl2.glUseProgram(program.program());
-		for (Point p : points) {
-			gl2.glUniform3f(centerLoc, (float) p.x, (float) p.y, (float) p.z);
-			gl2.glUniform3fv(colorLoc, 1, p.color.getColorComponents(null), 0);
-			gl2.glUniform1f(radiusLoc, (float) p.size * 0.05f);
-			// gl2.glFlush();
-			gl2.glBegin(GL2.GL_QUADS);
-			gl2.glVertex2f(-1, -1);
-			gl2.glVertex2f(1, -1);
-			gl2.glVertex2f(1, 1);
-			gl2.glVertex2f(-1, 1);
-			gl2.glEnd();
-		}
 		gl2.glUseProgram(0);
 	}
 
 	@Override
-	public void dispose(GL gl) {
-		if (program != null)
-			program.destroy(gl.getGL2());
+	public void preRender(JOGLRenderState jrs) {
+		GL2 gl2 = jrs.gl.getGL2();
+		gl2.glUseProgram(program.program());
+	}
+
+	@Override
+	protected void render(JOGLRenderState jrs, Point point) {
+		GL2 gl2 = jrs.gl.getGL2();
+		gl2.glUniform3f(centerLoc, (float) point.x, (float) point.y,
+				(float) point.z);
+		gl2.glUniform3fv(colorLoc, 1, point.color.getColorComponents(null), 0);
+		gl2.glUniform1f(radiusLoc, (float) point.size * 0.05f);
+		// gl2.glFlush();
+		gl2.glBegin(GL2.GL_QUADS);
+		gl2.glVertex2f(-1, -1);
+		gl2.glVertex2f(1, -1);
+		gl2.glVertex2f(1, 1);
+		gl2.glVertex2f(-1, 1);
+		gl2.glEnd();
 	}
 }
