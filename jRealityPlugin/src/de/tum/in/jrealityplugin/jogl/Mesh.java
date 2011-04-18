@@ -6,9 +6,7 @@ import org.apache.commons.math.geometry.Vector3D;
 
 public class Mesh extends Primitive {	
 	int n, m;
-	
-	Color color;
-	double opacity;
+
 	double[][] vertices;
 	double[][] normals;
 
@@ -20,28 +18,26 @@ public class Mesh extends Primitive {
 	
 	public Mesh(int m, int n, double[][] vertices, double[][] normals,
 			Color color, double opacity) {
+		super(color, opacity);
 		this.n = n;
 		this.m = m;
 		perVertexNormals = (normals != null);
 		identifier = meshCounter++;
 		this.vertices = vertices;
 		this.normals = normals;
-		this.color = color;
-		this.opacity = opacity;
 		if (normals == null)
 			computeNormals();
 	}
 	
 	public Mesh(int m, int n, double[][] vertices, boolean perVertexNormals,
-			Color color, double opactiy) {
+			Color color, double opacity) {
+		super(color, opacity);
 		this.n = n;
 		this.m = m;
 		this.perVertexNormals = perVertexNormals;
 		identifier = meshCounter++;
 		this.vertices = vertices;
 		this.normals = null;
-		this.color = color;
-		this.opacity = opactiy;
 		computeNormals();
 	}
 	

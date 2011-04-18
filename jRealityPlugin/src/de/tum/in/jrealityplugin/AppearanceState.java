@@ -20,6 +20,7 @@ public class AppearanceState {
 	public AppearanceState(Color color, double size, double opacity) {
 		this.color = color;
 		this.size = size;
+		this.opacity = opacity;
 	}
 	
 	/**

@@ -96,11 +96,11 @@ public class DefaultRenderer extends JOGLRenderer {
 			
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera);
 
-		pointRenderer.render(jrs, scene.getPoints());
-		circleRenderer.render(jrs, scene.getCircles());
-		lineRenderer.render(jrs, scene.getLines());
-		polygonRenderer.render(jrs, scene.getPolygons());
-		meshRenderer.render(jrs, scene.getMeshes());
+		pointRenderer.render(jrs, scene.getPoints(), true);
+		circleRenderer.render(jrs, scene.getCircles(), true);
+		lineRenderer.render(jrs, scene.getLines(), true);
+		polygonRenderer.render(jrs, scene.getPolygons(), true);
+		meshRenderer.render(jrs, scene.getMeshes(), true);
 
 		// gl.glFlush();
 		// drawable.swapBuffers();

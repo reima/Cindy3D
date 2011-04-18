@@ -6,11 +6,11 @@ public class Circle extends Primitive {
 	double centerX, centerY, centerZ;
 	double normalX, normalY, normalZ;
 	double radius;
-	Color color;
 	
 	public Circle(double centerX, double centerY, double centerZ,
 			double normalX, double normalY, double normalZ, double radius,
 			Color color) {
+		super(color, 1.0);
 		this.centerX = centerX;
 		this.centerY = centerY;
 		this.centerZ = centerZ;
@@ -18,6 +18,5 @@ public class Circle extends Primitive {
 		this.normalY = normalY;
 		this.normalZ = normalZ;
 		this.radius = radius;
-		this.color = color;
 	}
 }

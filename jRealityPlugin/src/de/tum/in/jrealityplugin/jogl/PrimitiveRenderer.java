@@ -17,13 +17,15 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 	protected abstract void render(JOGLRenderState jrs, T primitive);
 	
 	
-	public void render(JOGLRenderState jrs, Collection<T> c) {
+	public void render(JOGLRenderState jrs, Collection<T> c, boolean renderOpaque) {
 		if (c.isEmpty())
 			return;
 		
+		
 		preRender(jrs);
 		for (T primitive : c)
-			render(jrs, primitive);		
+			if (primitive.isOpaque() == renderOpaque)
+				render(jrs, primitive);
 		postRender(jrs);
 	}
 	

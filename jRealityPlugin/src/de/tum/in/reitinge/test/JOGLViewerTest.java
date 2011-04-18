@@ -60,6 +60,7 @@ public class JOGLViewerTest {
 		
 		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
 		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
+
 		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
 		
 		double r = 1;
@@ -73,14 +74,14 @@ public class JOGLViewerTest {
 		
 		//viewer.addCircle(0, 0, 0.5, 0, 0, 1, r, appearance);
 		
-		//viewer.addPolygon(vertices, null, appearance);
+		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
 		
-//		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
-//				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } },
-//				new double[][] { { -1, 1, 0 }, { 0, 1, 0 }, { 1, 1, 0 },
-//						{ -1, 1, 1 }, { 0, 1, 0 }, { 1, 1, 0 } }, appearance);
+		appearance.setOpacity(0.99);
 		
-		appearance.setColor(Color.GREEN);
+		viewer.addPolygon(vertices2, null, appearance);
+		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
+				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
+		
 		// viewer.addLineStrip(vertices, appearance, true);
 	}
 

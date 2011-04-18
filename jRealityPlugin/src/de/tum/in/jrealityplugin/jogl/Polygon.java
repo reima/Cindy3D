@@ -8,11 +8,9 @@ public class Polygon extends Primitive {
 	Vector3D positions[];
 	Vector3D normals[];
 
-	Color color;
-	double opacity;
-
 	public Polygon(double[][] positions, double[][] normals,
 			Color color, double opacity) {
+		super(color, opacity);
 		this.positions = new Vector3D[positions.length];
 		this.normals = new Vector3D[positions.length];
 
@@ -35,8 +33,6 @@ public class Polygon extends Primitive {
 				this.normals[i] = normal;
 			}
 		}
-		this.color = color;
-		this.opacity = opacity;
 	}
 
 	@Override
