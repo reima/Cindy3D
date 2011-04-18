@@ -178,9 +178,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 //		str += ")";
 //		log.info(str);
 		
-		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor()));
+		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor(),
+				appearance.getOpacity()));
 	}
-	
+
 	@Override
 	public void addLineStrip(double[][] vertices, AppearanceState appearance,
 			boolean closed) {
@@ -189,8 +190,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 					vertices[i - 1][2], vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * 0.05, appearance
 							.getColor(), LineType.SEGMENT));
-			scene.addPoint(new Point(vertices[i][0], vertices[i][1],
-					vertices[i][2], appearance.getSize(), appearance.getColor()));
+			scene
+					.addPoint(new Point(vertices[i][0], vertices[i][1],
+							vertices[i][2], appearance.getSize(), appearance
+									.getColor()));
 		}
 		scene.addPoint(new Point(vertices[0][0], vertices[0][1],
 				vertices[0][2], appearance.getSize(), appearance.getColor()));
@@ -207,14 +210,14 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
-				.getColor()));
+				.getColor(), appearance.getOpacity()));
 	}
 	
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			boolean perVertexNormals, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, perVertexNormals,
-				appearance.getColor()));
+				appearance.getColor(), appearance.getOpacity()));
 	}
 	
 	@Override

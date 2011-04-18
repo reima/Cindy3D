@@ -58,11 +58,11 @@ public class JRealityPlugin extends CindyScriptPlugin {
 
 	public JRealityPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
-		pointAppearance = new AppearanceState(Color.RED, 1);
+		pointAppearance = new AppearanceState(Color.RED, 1, 1);
 		lineAppearanceStack = new Stack<AppearanceState>();
-		lineAppearance = new AppearanceState(Color.BLUE, 1);
+		lineAppearance = new AppearanceState(Color.BLUE, 1, 1);
 		polygonAppearanceStack = new Stack<AppearanceState>();
-		polygonAppearance = new AppearanceState(Color.GREEN, 1);
+		polygonAppearance = new AppearanceState(Color.GREEN, 1, 1);
 	}
 
 	@Override
@@ -356,6 +356,13 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			lineAppearance = lineAppearanceStack.pop();
 		if (!polygonAppearanceStack.isEmpty())
 			polygonAppearance = polygonAppearanceStack.pop();
+	}
+	
+	@CindyScript("opacity3d")
+	public void opacity3d(double opacity) {
+		if (opacity < 0 || opacity > 1)
+			return;
+		polygonAppearance.setOpacity(opacity);
 	}
 
 	/**

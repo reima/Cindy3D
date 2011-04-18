@@ -10,13 +10,14 @@ public class AppearanceState {
 
 	private Color color;
 	private double size;
+	private double opacity;
 	
 	/**
 	 * Create a new appearance state with a certain color and size
 	 * @param color Point color
 	 * @param size Point size
 	 */
-	public AppearanceState(Color color, double size) {
+	public AppearanceState(Color color, double size, double opacity) {
 		this.color = color;
 		this.size = size;
 	}
@@ -26,7 +27,7 @@ public class AppearanceState {
 	 * @param state Appearance state to initialize from
 	 */
 	public AppearanceState(AppearanceState state) {
-	    this(state.color, state.size);
+	    this(state.color, state.size, state.opacity);
 	}
 
 	/**
@@ -52,6 +53,20 @@ public class AppearanceState {
 	 */
 	public double getSize() {
 		return size;
+	}
+	
+	/**
+	 * @param opacity Opacity to set
+	 */
+	public void setOpacity(double opacity) {
+		this.opacity = opacity;
+	}
+	
+	/**
+	 * @return The opacity
+	 */
+	public double getOpacity() {
+		return opacity;
 	}
 			
 }

@@ -21,7 +21,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void colorSpiral(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
 		
 		double height = 2;
 		double radius = 1;
@@ -41,7 +41,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void circles(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
 		
 		for (int i = -5; i <= 5; ++i) {
 			for (int j = -5; j <= 5; ++j) {
@@ -56,7 +56,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void lines(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
 		
 		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
 		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
@@ -81,16 +81,14 @@ public class JOGLViewerTest {
 //						{ -1, 1, 1 }, { 0, 1, 0 }, { 1, 1, 0 } }, appearance);
 		
 		appearance.setColor(Color.GREEN);
-		//viewer.addLineStrip(vertices, appearance, true);
+		// viewer.addLineStrip(vertices, appearance, true);
 	}
 
 	public static void icosahedron(JOGLViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.yellow, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.yellow, 1.0, 1.0);
 		double golden = (1.0 + Math.sqrt(5)) / 2.0;
-		
-		double verts[][] = {
-				{       0,       1,  golden },
-				{       0,      -1,  golden },
+
+		double verts[][] = { { 0, 1, golden }, { 0, -1, golden },
 				{       0,       1, -golden },
 				{       0,      -1, -golden },
 				{  golden,       0,       1 },
