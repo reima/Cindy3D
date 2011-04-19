@@ -21,7 +21,7 @@ public class Line extends Primitive{
 				double x2, double y2, double z2,
 				double radius, Color color, LineType lineType) {
 		
-		super(color, 1);
+		super(color, 0.99);
 		p1 = new Vector3D(x1, y1, z1);
 		p2 = new Vector3D(x2, y2, z2);
 		this.radius = radius;

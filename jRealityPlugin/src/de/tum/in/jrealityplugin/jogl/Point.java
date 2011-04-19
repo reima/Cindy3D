@@ -7,7 +7,7 @@ class Point extends Primitive {
 	double size;
 
 	public Point(double x, double y, double z, double size, Color color) {
-		super(color, 1.0);
+		super(color, 0.99);
 		this.x = x;
 		this.y = y;
 		this.z = z;
