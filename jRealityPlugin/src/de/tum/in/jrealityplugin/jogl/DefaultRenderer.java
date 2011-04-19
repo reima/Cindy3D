@@ -39,12 +39,12 @@ public class DefaultRenderer extends JOGLRenderer {
 	
 			gl.glEnable(GL2.GL_LIGHTING);
 			gl.glEnable(GL2.GL_LIGHT0);
-			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 10.0f,
-					10.0f, 0.0f, 1.0f }, 0);
-	
-			gl.glEnable(GL2.GL_LIGHT1);
-			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[] { 0.0f,
+			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 0.0f,
 					0.0f, 0.0f, 1.0f }, 0);
+	
+			//gl.glEnable(GL2.GL_LIGHT1);
+			//gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[] { 0.0f,
+			//		0.0f, 0.0f, 1.0f }, 0);
 	
 			if (!pointRenderer.init(gl))
 				log.severe("Point renderer initialization failed");
@@ -105,29 +105,61 @@ public class DefaultRenderer extends JOGLRenderer {
 			
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera);
 		
-		gl.glEnable(GL2.GL_BLEND);
+		
+		/*
+		 * gl.glEnable(GL.GL_BLEND);
 		gl.glDepthMask(false);
-		renderPrimitives(jrs, false);
+		drawTransparent(gl);
 		gl.glDepthMask(true);
 		
-		gl.glDisable(GL2.GL_BLEND);
+		gl.glDisable(GL.GL_BLEND);
 		
-		renderPrimitives(jrs, true);
+		drawOpaque(gl);
 		
-		gl.glEnable(GL2.GL_BLEND);
+		gl.glEnable(GL.GL_BLEND);
 		gl.glDepthMask(false);
-		renderPrimitives(jrs, false);
+		drawTransparent(gl);
 		gl.glDepthMask(true);
 		
 		gl.glColorMask(false, false, false, false);
-		renderPrimitives(jrs, true);
-		renderPrimitives(jrs, false);
+		drawOpaque(gl);
+		drawTransparent(gl);
 		gl.glColorMask(true, true, true, true);
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glDepthMask(false);
+		drawTransparent(gl);
+		gl.glDepthMask(true);
+
+		drawOpaque(gl);
+		 * 
+		 */
+		
+//		gl.glEnable(GL2.GL_BLEND);
+//		gl.glDepthMask(false);
+//		renderPrimitives(jrs, false);
+//		gl.glDepthMask(true);
+//		
+		gl.glEnable(GL2.GL_BLEND);
+		
+		renderPrimitives(jrs, true);
 		
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glDepthMask(false);
 		renderPrimitives(jrs, false);
+		renderPrimitives(jrs, false);
 		gl.glDepthMask(true);
+		
+		//gl.glColorMask(false, false, false, false);
+		renderPrimitives(jrs, true);
+		renderPrimitives(jrs, false);
+		//gl.glColorMask(true, true, true, true);
+		
+		gl.glEnable(GL2.GL_BLEND);
+		//gl.glDepthMask(false);
+		renderPrimitives(jrs, false);
+		//gl.glDepthMask(true);
+		gl.glDisable(GL2.GL_BLEND);
 
 		renderPrimitives(jrs, true);
 		

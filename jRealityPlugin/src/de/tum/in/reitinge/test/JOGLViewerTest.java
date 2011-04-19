@@ -13,9 +13,11 @@ public class JOGLViewerTest {
 		viewer.setBackgroundColor(Color.white);
 		
 		viewer.begin();
+		
+		//viewer.setBackgroundColor(Color.BLACK);
 //		colorSpiral(viewer);
 //		circles(viewer);
-		lines(viewer);
+		//lines(viewer);
 		icosahedron(viewer);
 		viewer.end();
 	}
@@ -58,10 +60,10 @@ public class JOGLViewerTest {
 	public static void lines(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
 		
-		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
-		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
+		//viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
+		//viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
 
-		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
+		//viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
 		
 		double r = 1;
 		int n = 750;
@@ -74,15 +76,15 @@ public class JOGLViewerTest {
 		
 		//viewer.addCircle(0, 0, 0.5, 0, 0, 1, r, appearance);
 		
-		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
-		
-		
-		
-		viewer.addPolygon(vertices2, null, appearance);
-		
-		appearance.setOpacity(0.25);
-		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
-				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
+//		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
+//		
+//		
+//		
+//		viewer.addPolygon(vertices2, null, appearance);
+//		
+//		appearance.setOpacity(0.25);
+//		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
+//				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
 		
 		double size = 10;
 		int sizeCount = 50;
@@ -100,8 +102,55 @@ public class JOGLViewerTest {
 				vert[i*sizeCount+j][2] = z;
 			}
 		}
-		
 		appearance.setColor(Color.BLUE);
+		appearance.setOpacity(0.5);
+		viewer.addMesh(sizeCount, sizeCount, vert, true, appearance);
+		
+		vert = new double[sizeCount*sizeCount][3];
+		
+		for (int i=0; i<sizeCount; ++i) {
+			for (int j=0; j<sizeCount; ++j) {
+				double x = -size/2.0 + i*size/sizeCount;
+				double z = -size/2.0 + j*size/sizeCount;
+				
+				vert[i*sizeCount+j][0] = x;
+				vert[i*sizeCount+j][1] = -0.1*(x*x+z*z)+2;
+				vert[i*sizeCount+j][2] = z;
+			}
+		}
+		appearance.setColor(Color.RED);
+		appearance.setOpacity(0.5);
+		viewer.addMesh(sizeCount, sizeCount, vert, true, appearance);
+		
+		vert = new double[sizeCount*sizeCount][3];
+		
+		for (int i=0; i<sizeCount; ++i) {
+			for (int j=0; j<sizeCount; ++j) {
+				double x = -size/2.0 + i*size/sizeCount;
+				double z = -size/2.0 + j*size/sizeCount;
+				
+				vert[i*sizeCount+j][0] = x;
+				vert[i*sizeCount+j][1] = z;
+				vert[i*sizeCount+j][2] = -0.1*(x*x+z*z)+2;
+			}
+		}
+		appearance.setColor(Color.YELLOW);
+		appearance.setOpacity(0.5);
+		viewer.addMesh(sizeCount, sizeCount, vert, true, appearance);
+		
+		vert = new double[sizeCount*sizeCount][3];
+		
+		for (int i=0; i<sizeCount; ++i) {
+			for (int j=0; j<sizeCount; ++j) {
+				double x = -size/2.0 + i*size/sizeCount;
+				double z = -size/2.0 + j*size/sizeCount;
+				
+				vert[i*sizeCount+j][0] = x;
+				vert[i*sizeCount+j][1] = z;
+				vert[i*sizeCount+j][2] = 0.1*(x*x+z*z)-2;
+			}
+		}
+		appearance.setColor(Color.GREEN);
 		appearance.setOpacity(0.5);
 		viewer.addMesh(sizeCount, sizeCount, vert, true, appearance);
 		
@@ -125,11 +174,36 @@ public class JOGLViewerTest {
 				{      -1, -golden,       0 },
 		};
 		int[][] edges = {
-				{ 0, 1 }, { 2, 3 }, { 4, 5 }, { 6, 7 }, { 8, 9 }, { 10, 11 },
-				{ 0, 8 }, { 2, 8 }, { 4, 0 }, { 6, 0 }, { 8, 4 }, { 10, 4 },
-				{ 0, 9 }, { 2, 9 }, { 4, 1 }, { 6, 1 }, { 8, 5 }, { 10, 5 },
-				{ 1, 10 }, { 3, 10 }, { 5, 2 }, { 7, 2 }, { 9, 6 }, { 11, 6 },
-				{ 1, 11 }, { 3, 11 }, { 5, 3 }, { 7, 3 }, { 9, 7 }, { 11, 7 },
+				{ 0, 1 },
+				{ 0, 4 },
+				{ 0, 6 },
+				{ 0, 8 },
+				{ 0, 9 },
+				{ 1, 4 },
+				{ 1, 6 },
+				{ 1, 10 },
+				{ 1, 11 },
+				{ 2, 3 }, 
+				{ 2, 5 },
+				{ 2, 7 },
+				{ 2, 8 },
+				{ 2, 9 },
+				{ 3, 5 },
+				{ 3, 7 },
+				{ 3, 10 },
+				{ 3, 11 },
+				{ 4, 5 },
+				{ 4, 8 },
+				{ 4, 10 },
+				{ 5, 8 },
+				{ 5, 10 },
+				{ 6, 7 },
+				{ 6, 9 },
+				{ 6, 11 },
+				{ 7, 9 },
+				{ 7, 11 },
+				{ 8, 9 },
+				{ 10, 11 },
 		};
 		
 		for (int[] edge : edges) {
@@ -137,6 +211,52 @@ public class JOGLViewerTest {
 			double vert2[] = verts[edge[1]];
 			viewer.addSegment(vert1[0], vert1[1], vert1[2], vert2[0], vert2[1],
 					vert2[2], appearance);
+		}
+		
+		for (int[] edge : edges) {
+			double vert1[] = verts[edge[0]];
+			double vert2[] = verts[edge[1]];
+			viewer.addSegment(2*vert1[0], 2*vert1[1], 2*vert1[2], 2*vert2[0], 2*vert2[1],
+					2*vert2[2], appearance);
+		}
+		
+		int[][] triangles = {
+				{0,1,4},{0,1,6},{0,4,8},{0,6,9},{0,8,9},
+				{1,4,10},{1,6,11},{1,10,11},
+				{2,3,5},{2,3,7},{2,5,8},{2,7,9},{2,8,9},
+				{3,5,10},{3,7,11},{3,10,11},
+				{4,5,8},{4,5,10},
+				{6,7,9},{6,7,11}
+		};
+		
+		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.BLACK};
+		
+		appearance.setColor(Color.RED);
+		appearance.setOpacity(0.1);
+		
+		int h=0;
+		for (int[] triangle : triangles) {
+			double[][] v = new double[3][3];
+			for (int i=0; i<3; ++i) {
+				v[i] = verts[triangle[i]];
+			}
+			appearance.setColor(col[(h++)%col.length]);
+			viewer.addPolygon(v, null, appearance);
+		}
+		
+		appearance.setColor(Color.BLUE);
+		appearance.setOpacity(0.1);
+		
+		h=3;
+		for (int[] triangle : triangles) {
+			double[][] v = new double[3][3];
+			for (int i=0; i<3; ++i) {
+				v[i] = verts[triangle[i]].clone();
+				for (int j=0; j<3; ++j)
+					v[i][j] *= 2;
+			}
+			appearance.setColor(col[(h++)%col.length]);
+			viewer.addPolygon(v, null, appearance);
 		}
 	}
 }
