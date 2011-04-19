@@ -76,11 +76,34 @@ public class JOGLViewerTest {
 		
 		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
 		
-		appearance.setOpacity(0.99);
+		
 		
 		viewer.addPolygon(vertices2, null, appearance);
+		
+		appearance.setOpacity(0.25);
 		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
 				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
+		
+		double size = 10;
+		int sizeCount = 50;
+		
+		
+		double[][] vert = new double[sizeCount*sizeCount][3];
+		
+		for (int i=0; i<sizeCount; ++i) {
+			for (int j=0; j<sizeCount; ++j) {
+				double x = -size/2.0 + i*size/sizeCount;
+				double z = -size/2.0 + j*size/sizeCount;
+				
+				vert[i*sizeCount+j][0] = x;
+				vert[i*sizeCount+j][1] = 0.1*(x*x+z*z)-1;
+				vert[i*sizeCount+j][2] = z;
+			}
+		}
+		
+		appearance.setColor(Color.BLUE);
+		appearance.setOpacity(0.5);
+		viewer.addMesh(sizeCount, sizeCount, vert, true, appearance);
 		
 		// viewer.addLineStrip(vertices, appearance, true);
 	}
