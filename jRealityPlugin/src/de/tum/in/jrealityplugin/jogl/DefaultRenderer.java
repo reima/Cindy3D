@@ -35,6 +35,7 @@ public class DefaultRenderer extends JOGLRenderer {
 			gl.glLoadIdentity();
 	
 			gl.glEnable(GL2.GL_DEPTH_TEST);
+			gl.glDepthFunc(GL2.GL_LEQUAL);
 			gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 	
 			gl.glEnable(GL2.GL_LIGHTING);
@@ -140,7 +141,7 @@ public class DefaultRenderer extends JOGLRenderer {
 //		renderPrimitives(jrs, false);
 //		gl.glDepthMask(true);
 //		
-		gl.glEnable(GL2.GL_BLEND);
+		gl.glDisable(GL2.GL_BLEND);
 		
 		renderPrimitives(jrs, true);
 		
@@ -149,10 +150,13 @@ public class DefaultRenderer extends JOGLRenderer {
 		renderPrimitives(jrs, false);
 		renderPrimitives(jrs, false);
 		gl.glDepthMask(true);
+		gl.glDisable(GL2.GL_BLEND);
 		
 		//gl.glColorMask(false, false, false, false);
 		renderPrimitives(jrs, true);
-		renderPrimitives(jrs, false);
+//		gl.glEnable(GL2.GL_BLEND);
+//		renderPrimitives(jrs, false);
+//		gl.glDisable(GL2.GL_BLEND);
 		//gl.glColorMask(true, true, true, true);
 		
 		gl.glEnable(GL2.GL_BLEND);
@@ -161,7 +165,7 @@ public class DefaultRenderer extends JOGLRenderer {
 		//gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 
-		renderPrimitives(jrs, true);
+		//renderPrimitives(jrs, true);
 		
 //		renderPrimitives(jrs, true);
 //		renderPrimitives(jrs, false);
