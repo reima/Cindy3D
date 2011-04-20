@@ -143,7 +143,7 @@ public class DefaultRenderer extends JOGLRenderer {
 //		
 		gl.glDisable(GL2.GL_BLEND);
 		
-		renderPrimitives(jrs, true);
+		//renderPrimitives(jrs, true);
 		
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glDepthMask(false);

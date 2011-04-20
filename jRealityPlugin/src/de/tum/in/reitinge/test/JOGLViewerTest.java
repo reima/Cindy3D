@@ -232,7 +232,7 @@ public class JOGLViewerTest {
 		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.BLACK};
 		
 		appearance.setColor(Color.RED);
-		appearance.setOpacity(1);
+		appearance.setOpacity(0.3);
 		
 		int h=0;
 		for (int[] triangle : triangles) {
@@ -245,7 +245,7 @@ public class JOGLViewerTest {
 		}
 		
 		appearance.setColor(Color.BLUE);
-		appearance.setOpacity(0.5);
+		appearance.setOpacity(0.3);
 		
 		h=3;
 		for (int[] triangle : triangles) {
