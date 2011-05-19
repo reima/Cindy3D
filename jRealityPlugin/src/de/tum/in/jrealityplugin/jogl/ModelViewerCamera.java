@@ -135,6 +135,7 @@ public class ModelViewerCamera {
 	}
 
 	public void mouseWheelMoved(int wheelRotation) {
+		if (wheelRotation == 0) return;
 		Vector3D lookAtToPosition = position.subtract(lookAt);
 		Vector3D newPosition;
 		if (wheelRotation > 0) {
