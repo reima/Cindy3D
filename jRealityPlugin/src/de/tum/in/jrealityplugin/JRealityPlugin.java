@@ -360,8 +360,7 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	
 	@CindyScript("opacity3d")
 	public void opacity3d(double opacity) {
-		if (opacity < 0 || opacity > 1)
-			return;
+		opacity = Math.max(0, Math.min(1, opacity));
 		polygonAppearance.setOpacity(opacity);
 	}
 
