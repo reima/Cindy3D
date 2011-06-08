@@ -2,6 +2,7 @@ package de.tum.in.jrealityplugin.jogl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -38,6 +39,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private FileHandler fh;
 	private boolean mouseDown;
 	private double[] mousePosition = new double[2];
+	
+	private boolean drawPending = false;
 
 	public JOGLViewer() {
 		try {
@@ -68,7 +71,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			GLCapabilities caps = new GLCapabilities(profile);
 			canvas = new GLCanvas(caps);
 			//renderer = new DefaultRenderer(scene, camera);
-			renderer = new SupersampledRenderer(scene, camera);			
+			renderer = new SupersampledRenderer(scene, camera);
 			canvas.addGLEventListener(renderer);
 			canvas.addMouseListener(this);
 			canvas.addMouseMotionListener(this);
@@ -262,7 +265,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 		mousePosition[0] = e.getX();
 		mousePosition[1] = e.getY();
-		canvas.display();
+		
+		drawLater();
 	}
 
 	@Override
@@ -274,6 +278,19 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		camera.mouseWheelMoved(e.getWheelRotation());
-		canvas.display();
+		drawLater();
+	}
+	
+	private void drawLater() {
+		if (!drawPending) {
+			drawPending = true;
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					canvas.display();
+					drawPending = false;
+				}
+			});
+		}
 	}
 }
