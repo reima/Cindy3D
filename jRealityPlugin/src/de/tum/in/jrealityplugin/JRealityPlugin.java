@@ -446,6 +446,11 @@ public class JRealityPlugin extends CindyScriptPlugin {
 				(float)Math.max(0, Math.min(1, vec.get(1))),
 				(float)Math.max(0, Math.min(1, vec.get(2)))));		
 	}
+	
+	@CindyScript("depthrange3d")
+	public void depthrange3d(double near, double far) {
+		cindy3d.setDepthRange(near, far);
+	}
 
 	protected void setColorState(AppearanceState appearance,
 			ArrayList<Double> vec) {

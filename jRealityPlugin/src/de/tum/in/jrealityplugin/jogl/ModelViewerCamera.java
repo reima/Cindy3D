@@ -126,6 +126,22 @@ public class ModelViewerCamera {
 		this.up = up;
 		updateTransform();
 	}
+	
+	public double getFieldOfView() {
+		return fieldOfView;
+	}
+	
+	public double getAspectRatio() {
+		return aspectRatio;
+	}
+	
+	public double getZNear() {
+		return zNear;
+	}
+	
+	public double getZFar() {
+		return zFar;
+	}
 
 	public void mouseDragged(double dx, double dy) {
 		rotation = new Rotation(RotationOrder.XYZ, dy * ROTATE_SENSITIVITY, dx

@@ -424,4 +424,10 @@ public class JRealityViewer implements Cindy3DViewer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setDepthRange(double near, double far) {
+		// TODO Auto-generated method stub
+		
+	}
 }

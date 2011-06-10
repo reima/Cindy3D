@@ -82,7 +82,8 @@ public class DefaultRenderer extends JOGLRenderer {
 		if (height <= 0)
 			height = 1;
 		double aspect = (double) width / height;
-		camera.setPerspective(60.0, aspect, 0.01, 1000.0);
+		camera.setPerspective(camera.getFieldOfView(), aspect, camera
+				.getZNear(), camera.getZFar());
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadMatrixf(Util.matrixToFloatArrayTransposed(camera

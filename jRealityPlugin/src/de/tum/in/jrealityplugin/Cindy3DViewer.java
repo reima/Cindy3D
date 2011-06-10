@@ -45,4 +45,5 @@ public interface Cindy3DViewer {
 	void addMesh(int rows, int columns, double[][] vertices,
 			boolean perVertexNormals, AppearanceState appearance);
 	void setBackgroundColor(Color color);
+	void setDepthRange(double near, double far);
 }

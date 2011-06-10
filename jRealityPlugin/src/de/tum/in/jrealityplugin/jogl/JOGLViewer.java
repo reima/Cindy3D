@@ -293,4 +293,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			});
 		}
 	}
+
+	@Override
+	public void setDepthRange(double near, double far) {
+		camera.setPerspective(camera.getFieldOfView(), camera.getAspectRatio(),
+				near, far);
+	}
 }
