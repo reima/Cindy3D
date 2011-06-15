@@ -7,7 +7,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLException;
 
-public class DefaultRenderer extends JOGLRenderer {
+public class DefaultRenderer extends JOGLRenderer {	
 	private PointRenderer pointRenderer = new PointRenderer();
 	private CircleRenderer circleRenderer = new CircleRenderer();
 	private LineRenderer lineRenderer = new LineRenderer();
@@ -93,11 +93,16 @@ public class DefaultRenderer extends JOGLRenderer {
 	}
 	
 	private void renderPrimitives(JOGLRenderState jrs, boolean opaque) {
+		
+		GL2 gl = jrs.gl.getGL2();
+		gl.glCullFace(GL2.GL_FRONT);
 		pointRenderer.render(jrs, scene.getPoints(), opaque);
 		circleRenderer.render(jrs, scene.getCircles(), opaque);
 		lineRenderer.render(jrs, scene.getLines(), opaque);
 		polygonRenderer.render(jrs, scene.getPolygons(), opaque);
 		meshRenderer.render(jrs, scene.getMeshes(), opaque);
+		gl.glCullFace(GL2.GL_BACK);
+		pointRenderer.render(jrs, scene.getPoints(), opaque);
 	}
 
 	@Override
@@ -170,14 +175,14 @@ public class DefaultRenderer extends JOGLRenderer {
 //		gl.glDisable(GL2.GL_BLEND);
 		//gl.glColorMask(true, true, true, true);
 		
+//		gl.glColorMask(false, false, false, false);
+//		renderPrimitives(jrs, false);
+//		gl.glColorMask(true, true, true, true);
+		
+		
 		gl.glEnable(GL2.GL_BLEND);
 		//gl.glDepthMask(false);
-		gl.glEnable(GL2.GL_CULL_FACE);
-		gl.glCullFace(GL2.GL_FRONT);
 		renderPrimitives(jrs, false);
-		gl.glCullFace(GL2.GL_BACK);
-		renderPrimitives(jrs, false);
-		gl.glDisable(GL2.GL_CULL_FACE);
 		//gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 

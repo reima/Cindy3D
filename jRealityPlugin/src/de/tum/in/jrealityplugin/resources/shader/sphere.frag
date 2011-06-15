@@ -1,6 +1,7 @@
 uniform vec3 sphereCenter;
 uniform float sphereRadius;
 uniform vec4 sphereColor;
+uniform float sphereMode;
 
 varying vec3 pos;
 
@@ -104,13 +105,21 @@ void main() {
     discard;
   } else {
     float sqrtD = sqrt(d);
-    lambda = b - sqrtD;
-    if (lambda < 0.0) {
-      lambda = b + sqrtD;
-      if (lambda < 0.0) {
-        discard;
-      }
-    }
+    if (sphereMode == 0.0)
+    	lambda = b + sqrtD;
+    else
+    	lambda = b - sqrtD;
+    	
+    if (lambda < 0.0)
+    	discard;
+    
+    
+//    if (lambda < 0.0) {
+//      lambda = b + sqrtD;
+//      if (lambda < 0.0) {
+//        discard;
+//      }
+//    }
   }
 
   vec3 pointOnSphere = lambda*dir;

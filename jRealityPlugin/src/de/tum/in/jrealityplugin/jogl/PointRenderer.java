@@ -1,5 +1,7 @@
 package de.tum.in.jrealityplugin.jogl;
 
+import java.nio.IntBuffer;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -11,6 +13,9 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 	private int centerLoc;
 	private int colorLoc;
 	private int radiusLoc;
+	private int modeLoc;
+	
+	private float renderMode;
 
 	public PointRenderer() {
 	}
@@ -45,6 +50,7 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 		centerLoc = gl2.glGetUniformLocation(program.program(), "sphereCenter");
 		colorLoc = gl2.glGetUniformLocation(program.program(), "sphereColor");
 		radiusLoc = gl2.glGetUniformLocation(program.program(), "sphereRadius");
+		modeLoc = gl2.glGetUniformLocation(program.program(), "sphereMode");
 
 		return true;
 	}
@@ -65,6 +71,13 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 	public void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(program.program());
+		
+		IntBuffer intBuffer = IntBuffer.allocate(1);
+		gl2.glGetIntegerv(GL2.GL_CULL_FACE_MODE, intBuffer);
+		if (intBuffer.get(0) == GL2.GL_FRONT)
+			renderMode = 0;
+		else
+			renderMode = 1;
 	}
 
 	@Override
@@ -74,12 +87,26 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 				(float) point.z);
 		gl2.glUniform4fv(colorLoc, 1, point.color.getComponents(null), 0);
 		gl2.glUniform1f(radiusLoc, (float) point.size * 0.05f);
+		
 		// gl2.glFlush();
+		gl2.glUniform1f(modeLoc, renderMode);
+			
 		gl2.glBegin(GL2.GL_QUADS);
 		gl2.glVertex2f(-1, -1);
 		gl2.glVertex2f(1, -1);
 		gl2.glVertex2f(1, 1);
 		gl2.glVertex2f(-1, 1);
 		gl2.glEnd();
+//		}
+//		else {
+//		
+//		gl2.glUniform1f(modeLoc, 1);
+//		gl2.glBegin(GL2.GL_QUADS);
+//		gl2.glVertex2f(-1, -1);
+//		gl2.glVertex2f(1, -1);
+//		gl2.glVertex2f(1, 1);
+//		gl2.glVertex2f(-1, 1);
+//		gl2.glEnd();
+//		}
 	}
 }
