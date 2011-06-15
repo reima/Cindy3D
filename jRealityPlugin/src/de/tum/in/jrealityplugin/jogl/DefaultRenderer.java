@@ -172,7 +172,12 @@ public class DefaultRenderer extends JOGLRenderer {
 		
 		gl.glEnable(GL2.GL_BLEND);
 		//gl.glDepthMask(false);
+		gl.glEnable(GL2.GL_CULL_FACE);
+		gl.glCullFace(GL2.GL_FRONT);
 		renderPrimitives(jrs, false);
+		gl.glCullFace(GL2.GL_BACK);
+		renderPrimitives(jrs, false);
+		gl.glDisable(GL2.GL_CULL_FACE);
 		//gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 
