@@ -122,7 +122,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			AppearanceState appearance) {
 		// log.info("addPoint(" + x + "," + y + "," + z + ")");
 		scene.addPoint(new Point(x, y, z, appearance.getSize(), appearance
-				.getColor()));
+				.getColor(), appearance.getOpacity()));
 	}
 
 	@Override
@@ -196,10 +196,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			scene
 					.addPoint(new Point(vertices[i][0], vertices[i][1],
 							vertices[i][2], appearance.getSize(), appearance
-									.getColor()));
+									.getColor(), 1.0));
 		}
 		scene.addPoint(new Point(vertices[0][0], vertices[0][1],
-				vertices[0][2], appearance.getSize(), appearance.getColor()));
+				vertices[0][2], appearance.getSize(), appearance.getColor(),
+				1.0));
 		if (closed)
 			scene.addLine(new Line(vertices[vertices.length - 1][0],
 					vertices[vertices.length - 1][1],
