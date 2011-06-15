@@ -18,7 +18,8 @@ public class JOGLViewerTest {
 //		colorSpiral(viewer);
 //		circles(viewer);
 		//lines(viewer);
-		icosahedron(viewer);
+		spheres(viewer);
+		//icosahedron(viewer);
 		viewer.end();
 	}
 	
@@ -57,6 +58,44 @@ public class JOGLViewerTest {
 		}
 	}
 	
+	public static void spheres(Cindy3DViewer viewer) {
+		AppearanceState appearance = new AppearanceState(Color.red, 100.0, 0.3);
+		
+		//viewer.addPoint(0, 0, 0, appearance);
+		
+		appearance.setColor(Color.green);
+		appearance.setSize(50);
+		appearance.setOpacity(0.1);
+		viewer.addPoint(0, 0, 0, appearance);
+		
+		appearance.setColor(Color.red);
+		//viewer.addPoint(1, 0, 0, appearance);
+		
+		double size = 10;
+		int sizeCount = 50;
+		
+		
+		double[][] vert = new double[sizeCount*sizeCount][3];
+		
+		vert = new double[sizeCount*sizeCount][3];
+		
+		for (int i=0; i<sizeCount; ++i) {
+			for (int j=0; j<sizeCount; ++j) {
+				double x = -size/2.0 + i*size/sizeCount;
+				double z = -size/2.0 + j*size/sizeCount;
+				
+				vert[i*sizeCount+j][0] = x;
+				vert[i*sizeCount+j][1] = -0.1*(x*x+z*z)+2;
+				vert[i*sizeCount+j][2] = z;
+			}
+		}
+		appearance.setColor(Color.RED);
+		appearance.setOpacity(0.7);
+		viewer.addMesh(sizeCount, sizeCount, vert, true, appearance);
+		
+		//viewer.addPoint(0, 0, 0, appearance);
+	}
+	
 	public static void lines(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
 		
@@ -73,8 +112,6 @@ public class JOGLViewerTest {
 			vertices[i][0] = r*Math.sin(i*2*Math.PI/n);
 			vertices[i][1] = r*Math.cos(i*2*Math.PI/n);
 		}
-		
-		//viewer.addCircle(0, 0, 0.5, 0, 0, 1, r, appearance);
 		
 //		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
 //		
