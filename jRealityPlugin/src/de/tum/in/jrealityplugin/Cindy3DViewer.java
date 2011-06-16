@@ -24,6 +24,9 @@ public interface Cindy3DViewer {
 	void addCircle(double cx, double cy, double cz,
 			       double nx, double ny, double nz, double radius,
 			       AppearanceState appearance);
+	
+	void addSphere(double cx, double cy, double cz, double radius,
+			AppearanceState appearance);
 	/**
 	 * Shuts down the viewer
 	 */

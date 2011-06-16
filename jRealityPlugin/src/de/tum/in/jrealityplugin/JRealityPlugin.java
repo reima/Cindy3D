@@ -259,8 +259,8 @@ public class JRealityPlugin extends CindyScriptPlugin {
 	 * @param normal Orientation
 	 * @param radius Radius
 	 */
-	@CindyScript("drawcircle3d")
-	public void drawcircle3d(ArrayList<Double> center, ArrayList<Double> normal,
+	@CindyScript("fillcircle3d")
+	public void fillcircle3d(ArrayList<Double> center, ArrayList<Double> normal,
 			double radius) {
 		if (center.size() != 3 || normal.size() != 3) return;
 		cindy3d.addCircle(center.get(0), center.get(1), center.get(2),
@@ -330,6 +330,14 @@ public class JRealityPlugin extends CindyScriptPlugin {
 			
 		}
 		cindy3d.addMesh(rows, columns, vertices, perVertex, polygonAppearance);
+	}
+	
+	@CindyScript("drawsphere3d")
+	public void sphere3d(ArrayList<Double> center, double radius) {
+		if (center.size() != 3)
+			return;
+		cindy3d.addSphere(center.get(0), center.get(1), center.get(2),
+				radius, polygonAppearance);
 	}
 	
 	/**

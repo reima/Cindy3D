@@ -397,6 +397,13 @@ public class JRealityViewer implements Cindy3DViewer {
 		
 		ifsf.update();
 	}
+	
+	@Override
+	public void addSphere(double cx, double cy, double cz, double radius,
+			AppearanceState appearance)
+	{
+		// TODO Auto-genrated method stub
+	}
 
 	@Override
 	public void addLineStrip(double[][] vertices, AppearanceState appearance,
