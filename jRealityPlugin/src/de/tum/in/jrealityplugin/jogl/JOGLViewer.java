@@ -27,6 +27,8 @@ import de.tum.in.jrealityplugin.jogl.Line.LineType;
 
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
+	private static final double POINT_SCALE = 0.05;
+	
 	private JFrame frame;
 	private GLCanvas canvas;
 	
@@ -122,8 +124,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
 		// log.info("addPoint(" + x + "," + y + "," + z + ")");
-		scene.addPoint(new Point(x, y, z, appearance.getSize()*0.05, appearance
-				.getColor(), 1));
+		scene.addPoint(new Point(x, y, z, appearance.getSize() * POINT_SCALE,
+				appearance.getColor(), 1));
 	}
 
 	@Override
@@ -144,8 +146,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		addPoint(x1, y1, z1, appearance);
 		addPoint(x2, y2, z2, appearance);
 		
-		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
-				appearance.getColor(), LineType.SEGMENT));
+		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
+				* POINT_SCALE, appearance.getColor(), LineType.SEGMENT));
 	}
 
 	@Override
@@ -153,8 +155,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			double z2, AppearanceState appearance) {
 		log.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 				+ "," + z2 + ")");
-		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
-				appearance.getColor(), LineType.LINE));
+		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
+				* POINT_SCALE, appearance.getColor(), LineType.LINE));
 	}
 
 	@Override
@@ -165,8 +167,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		
 		addPoint(x1, y1, z1, appearance);
 		
-		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()*0.05,
-				appearance.getColor(), LineType.RAY));
+		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
+				* POINT_SCALE, appearance.getColor(), LineType.RAY));
 	}
 
 	@Override
@@ -192,23 +194,23 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		for (int i = 1; i < vertices.length; ++i) {
 			scene.addLine(new Line(vertices[i - 1][0], vertices[i - 1][1],
 					vertices[i - 1][2], vertices[i][0], vertices[i][1],
-					vertices[i][2], appearance.getSize() * 0.05, appearance
-							.getColor(), LineType.SEGMENT));
-			scene
-					.addPoint(new Point(vertices[i][0], vertices[i][1],
-							vertices[i][2], appearance.getSize(), appearance
-									.getColor(), 1.0));
+					vertices[i][2], appearance.getSize() * POINT_SCALE,
+					appearance.getColor(), LineType.SEGMENT));
+			scene.addPoint(new Point(vertices[i][0], vertices[i][1],
+					vertices[i][2], appearance.getSize() * POINT_SCALE,
+					appearance.getColor(), 1.0));
 		}
 		scene.addPoint(new Point(vertices[0][0], vertices[0][1],
-				vertices[0][2], appearance.getSize(), appearance.getColor(),
-				1.0));
-		if (closed)
+				vertices[0][2], appearance.getSize() * POINT_SCALE, appearance
+						.getColor(), 1.0));
+		if (closed) {
 			scene.addLine(new Line(vertices[vertices.length - 1][0],
 					vertices[vertices.length - 1][1],
 					vertices[vertices.length - 1][2], vertices[0][0],
-					vertices[0][1], vertices[0][2],
-					appearance.getSize() * 0.05, appearance.getColor(),
+					vertices[0][1], vertices[0][2], appearance.getSize()
+							* POINT_SCALE, appearance.getColor(),
 					LineType.SEGMENT));
+		}
 	}
 
 	@Override
