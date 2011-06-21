@@ -1,11 +1,8 @@
 package de.tum.in.jrealityplugin.jogl;
 
-import java.net.URL;
 import java.util.Collection;
 
 import javax.media.opengl.GL;
-
-import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public abstract class PrimitiveRenderer<T extends Primitive> {
 	public abstract boolean init(GL gl);
@@ -21,20 +18,10 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 		if (c.isEmpty())
 			return;
 		
-		
 		preRender(jrs);
 		for (T primitive : c)
 			if (primitive.isOpaque() == renderOpaque)
 				render(jrs, primitive);
 		postRender(jrs);
-	}
-	
-	protected ShaderCode loadShader(int type, URL path) {
-		StringBuffer buffer = new StringBuffer();
-		ShaderCode.readShaderSource(getClass().getClassLoader(), "", path,
-				buffer);
-		ShaderCode shader = new ShaderCode(type, 1,
-				new String[][] { { buffer.toString() } });
-		return shader;
 	}
 }

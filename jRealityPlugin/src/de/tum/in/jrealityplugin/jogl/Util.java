@@ -1,7 +1,16 @@
 package de.tum.in.jrealityplugin.jogl;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
+
+import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public class Util {
 	public static float[] matrixToFloatArray(RealMatrix m) {
@@ -38,5 +47,53 @@ public class Util {
 	
 	public static double[] vectorToDoubleArray(Vector3D v) {
 		return new double[] {v.getX(), v.getY(), v.getZ()};
+	}
+		
+	public static void readShaderSource(ClassLoader context, URL url,
+			StringBuffer result) {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				if (line.startsWith("#pragma include ")) {
+					String includeFile = line.substring(16).trim();
+					// Try relative path first
+					URL nextURL = null;
+					try {
+						nextURL = new URL(url, includeFile);
+					} catch (MalformedURLException e) {
+					}
+					if (nextURL == null) {
+						// Try absolute path
+						try {
+							nextURL = new URL(includeFile);
+						} catch (MalformedURLException e) {
+						}
+					}
+					if (nextURL == null) {
+						// Fail
+						throw new FileNotFoundException(
+								"Can't find include file " + includeFile);
+					}
+					readShaderSource(context, nextURL, result);
+				} else {
+					result.append(line + "\n");
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private static final String SHADER_PATH = "/de/tum/in/jrealityplugin/resources/shader/"; 
+	
+	public static ShaderCode loadShader(int type, String name) {		
+		StringBuffer buffer = new StringBuffer();
+		URL url = Util.class.getResource(SHADER_PATH + name);
+		readShaderSource(Util.class.getClassLoader(), url, buffer);
+		ShaderCode shader = new ShaderCode(type, 1,
+				new String[][] { { buffer.toString() } });
+		return shader;
 	}
 }

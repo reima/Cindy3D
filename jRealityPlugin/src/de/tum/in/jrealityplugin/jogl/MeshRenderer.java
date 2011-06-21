@@ -38,18 +38,12 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();
-		ShaderCode vertexShader = loadShader(
-				GL2.GL_VERTEX_SHADER,
-				getClass()
-						.getResource(
-								"/de/tum/in/jrealityplugin/resources/shader/polygon.vert"));
+		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
+				"polygon.vert");
 		if (!vertexShader.compile(gl2))
 			return false;
-		ShaderCode fragmentShader = loadShader(
-				GL2.GL_FRAGMENT_SHADER,
-				getClass()
-						.getResource(
-								"/de/tum/in/jrealityplugin/resources/shader/polygon.frag"));
+		ShaderCode fragmentShader = Util.loadShader(GL2.GL_FRAGMENT_SHADER,
+				"polygon.frag");
 		if (!fragmentShader.compile(gl2))
 			return false;
 

@@ -24,18 +24,12 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();
-		ShaderCode vertexShader = loadShader(
-				GL2.GL_VERTEX_SHADER,
-				getClass()
-						.getResource(
-								"/de/tum/in/jrealityplugin/resources/shader/circle.vert"));
+		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
+				"circle.vert");
 		if (!vertexShader.compile(gl2))
 			return false;
-		ShaderCode fragmentShader = loadShader(
-				GL2.GL_FRAGMENT_SHADER,
-				getClass()
-						.getResource(
-								"/de/tum/in/jrealityplugin/resources/shader/circle.frag"));
+		ShaderCode fragmentShader = Util.loadShader(GL2.GL_FRAGMENT_SHADER,
+				"circle.frag");
 		if (!fragmentShader.compile(gl2))
 			return false;
 

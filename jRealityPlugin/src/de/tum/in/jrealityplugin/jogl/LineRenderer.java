@@ -37,18 +37,12 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();
-		ShaderCode vertexShader = loadShader(
-				GL2.GL_VERTEX_SHADER,
-				getClass()
-						.getResource(
-								"/de/tum/in/jrealityplugin/resources/shader/cylinder.vert"));
+		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
+				"cylinder.vert");
 		if (!vertexShader.compile(gl2))
 			return false;
-		ShaderCode fragmentShader = loadShader(
-				GL2.GL_FRAGMENT_SHADER,
-				getClass()
-						.getResource(
-								"/de/tum/in/jrealityplugin/resources/shader/cylinder.frag"));
+		ShaderCode fragmentShader = Util.loadShader(GL2.GL_FRAGMENT_SHADER,
+				"cylinder.frag");
 		if (!fragmentShader.compile(gl2))
 			return false;
 
