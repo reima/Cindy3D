@@ -59,10 +59,12 @@
 
     <target name="copy" depends="build" description="Copy plugin to Plugins folder">
         <copy file="${plugin}" todir="${pluginfolder}"/>
+    	<!--
         <copy file="${jrealityjar}" todir="${pluginfolder}"/>
         <copy todir="${pluginfolder}">
             <fileset dir="${jreality3rdpartydir}" includes="*.jar"/>
         </copy>
+        -->
     </target>
 
     <target name="doc" description="Generate Javadoc">
