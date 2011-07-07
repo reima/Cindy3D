@@ -8,6 +8,7 @@ import org.apache.commons.math.linear.RealMatrix;
 
 public class ModelViewerCamera {
 	private static final double ROTATE_SENSITIVITY = 0.01;
+	private static final double PAN_SENSITIVITY = 0.05;
 	
 	private Rotation rotation;
 	private Vector3D position;
@@ -143,10 +144,24 @@ public class ModelViewerCamera {
 		return zFar;
 	}
 
-	public void mouseDragged(double dx, double dy) {
+	public void mouseDragged1(double dx, double dy) {
 		rotation = new Rotation(RotationOrder.XYZ, dy * ROTATE_SENSITIVITY, dx
 				* ROTATE_SENSITIVITY, 0).applyTo(rotation);
 
+		updateTransform();
+	}
+
+	public void mouseDragged2(double dx, double dy) {
+		Vector3D forward = lookAt.subtract(position).normalize();
+		Vector3D right = Vector3D.crossProduct(forward, up).normalize();
+		
+		Vector3D movement = new Vector3D(0, 0, 0)
+			.add(-dx * PAN_SENSITIVITY, right)
+			.add(dy * PAN_SENSITIVITY, up);
+		
+		position = position.add(movement);
+		lookAt = lookAt.add(movement);
+		
 		updateTransform();
 	}
 

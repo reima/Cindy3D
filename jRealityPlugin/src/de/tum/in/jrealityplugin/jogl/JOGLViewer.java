@@ -39,7 +39,6 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	
 	private Logger log;
 	private FileHandler fh;
-	private boolean mouseDown;
 	private double[] mousePosition = new double[2];
 	
 	private boolean drawPending = false;
@@ -253,32 +252,28 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			mouseDown = true;
-			mousePosition[0] = e.getX();
-			mousePosition[1] = e.getY();
-		}
+		mousePosition[0] = e.getX();
+		mousePosition[1] = e.getY();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			mouseDown = false;
-		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (!mouseDown)
-			return;
-		
-		camera.mouseDragged(e.getX() - mousePosition[0],
-				e.getY() - mousePosition[1]);
+		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+			camera.mouseDragged1(e.getX() - mousePosition[0],
+					e.getY() - mousePosition[1]);
+			drawLater();
+		} else if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
+			camera.mouseDragged2(e.getX() - mousePosition[0],
+					e.getY() - mousePosition[1]);
+			drawLater();
+		}
 
 		mousePosition[0] = e.getX();
 		mousePosition[1] = e.getY();
-		
-		drawLater();
 	}
 
 	@Override
