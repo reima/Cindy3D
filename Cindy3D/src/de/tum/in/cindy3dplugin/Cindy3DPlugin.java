@@ -14,7 +14,7 @@ import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 /**
  * Implementation of the plugin interface
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class Cindy3DPlugin extends CindyScriptPlugin {
 	private Cindy3DViewer cindy3d = null;
 	
@@ -55,7 +55,6 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Modifiers for the current CindyScript function call
 	 */
 	private Hashtable modifiers;
-	
 
 	public Cindy3DPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
@@ -69,7 +68,6 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@Override
 	public void register() {
 		if (cindy3d == null)
-			//cindy3d = new JRealityViewer();
 			cindy3d = new JOGLViewer();
 	}
 

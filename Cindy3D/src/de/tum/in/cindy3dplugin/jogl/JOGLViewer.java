@@ -28,6 +28,7 @@ import de.tum.in.cindy3dplugin.jogl.Line.LineType;
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
 	private static final double POINT_SCALE = 0.05;
+	private static final boolean FILE_LOGGING = false;
 	
 	private JFrame frame;
 	private GLCanvas canvas;
@@ -38,28 +39,27 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private ModelViewerCamera camera = new ModelViewerCamera();
 	
 	private Logger log;
-	private FileHandler fh;
 	private double[] mousePosition = new double[2];
 	
 	private boolean drawPending = false;
 
 	public JOGLViewer() {
 		try {
-			//fh = new FileHandler("C:\\tmp\\cindy.log", false);
 			log = Logger.getLogger("log");
-			//log.addHandler(fh);
+			if (FILE_LOGGING) {
+				FileHandler fh = new FileHandler("C:\\tmp\\cindy.log", false);
+				fh.setFormatter(new SimpleFormatter());
+				log.addHandler(fh);
+			}
 			log.setLevel(Level.ALL);
-			SimpleFormatter formatter = new SimpleFormatter();
-			//fh.setFormatter(formatter);
 			log.log(Level.INFO, "Log started");
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 
 		frame = new JFrame("Cindy3D (JOGL)");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

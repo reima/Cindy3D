@@ -72,8 +72,7 @@ public class JOGLViewerTest {
 		appearance.setColor(Color.red);
 		//viewer.addPoint(1, 0, 0, appearance);
 		
-		//double size = 10;
-		int sizeCount = 10;
+//		double size = 10;
 		int rings = 20;
 		int segments = rings;
 		
