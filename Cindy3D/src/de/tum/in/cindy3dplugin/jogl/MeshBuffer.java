@@ -5,9 +5,10 @@ import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
 
-import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
-
 public class MeshBuffer {
+	private static final int SIZEOF_DOUBLE = 8;
+	private static final int SIZEOF_INT = 4;
+	
 	int vertexBuffer;
 	int indexBuffer;
 
@@ -17,223 +18,107 @@ public class MeshBuffer {
 	int vertexCount;
 
 	public MeshBuffer(GL2 gl2, Mesh m) {
-		if (m.perVertexNormals)
-			createBuffersPerVertex(gl2, m);
-		else
-			createBuffersPerFace(gl2, m);
+		createBuffers(gl2, m);
 	}
 
-	private void createBuffersPerFace(GL2 gl2, Mesh m) {
-		int faceCount = (m.m - 1) * (m.n - 1) * 2;
+	private void createBuffers(GL2 gl2, Mesh m) {
+		if (m.perVertexNormals) {
+			vertexCount = m.gridWidth * m.gridHeight;
+			indexCount = m.faceCount * 3;
+			hasIndexBuffer = true;
+		} else {
+			vertexCount = m.faceCount * 3;
+			indexCount = 0;
+			hasIndexBuffer = false;
+		}
+
+		DoubleBuffer vertices = DoubleBuffer.allocate(vertexCount * 3 * 2);
+
+		IntBuffer indices = null;
+		if (m.perVertexNormals) {
+			indices = IntBuffer.allocate(indexCount);
+			for (int i = 0; i < vertexCount; ++i) {
+				vertices.put(m.positions[i]);
+				vertices.put(m.normals[i]);
+			}
+		}
 		
-		if (m.topology != MeshTopology.OPEN)
-			faceCount += 2*(m.m-1);
-		
-		if (m.topology == MeshTopology.TWO_SIDED)
-			faceCount += 2*m.n;
-
-		int sizeofDouble = 8;
-
-		int[] buffers = new int[1];
-		gl2.glGenBuffers(1, buffers, 0);
-		vertexBuffer = buffers[0];
-		
-		vertexCount = faceCount * 6;
-
-		DoubleBuffer vertices = DoubleBuffer.allocate(faceCount * 36);
-
-		for (int i = 0; i < m.m - 1; ++i) {
-			for (int j = 0; j < m.n - 1; ++j) {
-
-				int[] vertexIDs = new int[] { i * m.n + j,
-											  i * m.n + j + 1,
-											  (i + 1) * m.n + j + 1, 
-											  i * m.n + j,
-											  (i + 1) * m.n + j + 1,
-											  (i + 1) * m.n + j };
-
-				int normalID = 2 * (i * (m.n - 1) + j);
-
-				for (int k = 0; k < 6; ++k) {
-					vertices.put(m.vertices[vertexIDs[k]]);
-					if (k < 3)
-						vertices.put(m.normals[normalID]);
-					else
-						vertices.put(m.normals[normalID+1]);
+		// Iterate over all grid cells (each of which consists of two faces)
+		int faceIndex = 0;
+		for (int gridY = 0; gridY < m.gridYMax; ++gridY) {
+			for (int gridX = 0; gridX < m.gridXMax; ++gridX) {
+				/*
+				 *    v1----v2
+				 *    |    / |
+				 *    |f1 /  |
+				 *    |  / f2|
+				 *    | /    |
+				 *    v3----v4
+				 */
+				int gridXPlus1 = (gridX + 1) % m.gridWidth;
+				int gridYPlus1 = (gridY + 1) % m.gridHeight;
+				
+				int v1Index = m.getVertexIndex(gridX,      gridY);
+				int v2Index = m.getVertexIndex(gridXPlus1, gridY);
+				int v3Index = m.getVertexIndex(gridX,      gridYPlus1);
+				int v4Index = m.getVertexIndex(gridXPlus1, gridYPlus1);
+				
+				if (m.perVertexNormals) {
+					// f1
+					indices.put(v1Index);
+					indices.put(v2Index);
+					indices.put(v3Index);
+					
+					// f2
+					indices.put(v2Index);
+					indices.put(v3Index);
+					indices.put(v4Index);
+				} else {
+					// f1
+					int f1Index = faceIndex++;
+					vertices.put(m.positions[v1Index]);
+					vertices.put(m.normals[f1Index]);
+					vertices.put(m.positions[v2Index]);
+					vertices.put(m.normals[f1Index]);
+					vertices.put(m.positions[v3Index]);
+					vertices.put(m.normals[f1Index]);
+					
+					// f2
+					int f2Index = faceIndex++;
+					vertices.put(m.positions[v2Index]);
+					vertices.put(m.normals[f2Index]);
+					vertices.put(m.positions[v3Index]);
+					vertices.put(m.normals[f2Index]);
+					vertices.put(m.positions[v4Index]);
+					vertices.put(m.normals[f2Index]);
 				}
 			}
 		}
 		
-		if (m.topology != MeshTopology.OPEN) {
-			for (int i = 0; i < m.m - 1; ++i) {
-				int[] vertexIDs = new int[] { i * m.n + m.n - 1,
-											  i * m.n,
-											  (i + 1) * m.n,
-											  i * m.n + m.n - 1,
-											  (i + 1) * m.n,
-											  (i + 1) * m.n + m.n - 1 };
-				
-				int normalID = (m.m-1)*(m.n-1)*2+2*i;
-				
-				for (int k=0; k<6; ++k) {
-					vertices.put(m.vertices[vertexIDs[k]]);
-					if (k < 3)
-						vertices.put(m.normals[normalID]);
-					else
-						vertices.put(m.normals[normalID+1]);
-				}
-			}
-		}
-		
-		if (m.topology == MeshTopology.TWO_SIDED) {
-			for (int i=0; i<m.n-1; ++i) {
-				int[] vertexIDs = new int[] { m.n*(m.m-1)+i,
-											  m.n*(m.m-1)+i+1,
-											  i+1,
-											  m.n*(m.m-1)+i,
-											  i+1,
-											  i};
-				
-				int normalID = (m.m-1)*(m.n-1)*2+2*(m.m-1)+2*i;
-				
-				for (int k=0; k<6; ++k) {
-					vertices.put(m.vertices[vertexIDs[k]]);
-					if (k < 3)
-						vertices.put(m.normals[normalID]);
-					else
-						vertices.put(m.normals[normalID+1]);
-				}
-			}
-			
-			int[] vertexIDs = new int[] {m.n*m.m-1,
-										 m.n*(m.m-1),
-										 0,
-										 m.n*m.m-1,
-										 0,
-										 m.n-1};
-			
-			int normalID = (m.m-1)*(m.n-1)*2+2*(m.m-1)+2*(m.n-1);
-			for (int k=0; k<6; ++k) {
-				vertices.put(m.vertices[vertexIDs[k]]);
-				if (k<3)
-					vertices.put(m.normals[normalID]);
-				else
-					vertices.put(m.normals[normalID+1]);
-			}
-		}
+		int tmp[] = new int[1];
 		
 		vertices.flip();
-
+		gl2.glGenBuffers(1, tmp, 0);
+		vertexBuffer = tmp[0];
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
-
 		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()
-				* sizeofDouble, vertices, GL2.GL_STATIC_DRAW);
-
-		hasIndexBuffer = false;
-
+				* SIZEOF_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
-	}
-
-	private void createBuffersPerVertex(GL2 gl2, Mesh m) {
-		int sizeofDouble = 8;
-		int sizeofInt = 4;
-		int faceCount = (m.m - 1) * (m.n - 1) * 2;
 		
-		if (m.topology != MeshTopology.OPEN)
-			faceCount += (m.m-1)*2;
-		if (m.topology == MeshTopology.TWO_SIDED)
-			faceCount += m.n*2;
-		
-		indexCount = faceCount * 3;
-		vertexCount = m.vertices.length;
-
-		IntBuffer buffers = IntBuffer.allocate(2);
-
-		gl2.glGenBuffers(2, buffers);
-
-		vertexBuffer = buffers.get(0);
-		indexBuffer = buffers.get(1);
-
-		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
-
-		DoubleBuffer vertices = DoubleBuffer
-				.allocate(m.vertices.length * 3 * 2);
-		for (int i = 0; i < m.vertices.length; ++i) {
-			vertices.put(m.vertices[i]);
-			vertices.put(m.normals[i]);
+		if (hasIndexBuffer) {
+			indices.flip();
+			gl2.glGenBuffers(1, tmp, 0);
+			indexBuffer = tmp[0];
+			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+			gl2.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
+					* SIZEOF_INT, indices, GL2.GL_STATIC_DRAW);
+			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
+		} else {
+			indexBuffer = 0;
 		}
-
-		vertices.flip();
-
-		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()
-				* sizeofDouble, vertices, GL2.GL_STATIC_DRAW);
-
-		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
-
-		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-		IntBuffer indices = IntBuffer.allocate(faceCount * 3);
-
-		for (int i = 0; i < m.m - 1; ++i) {
-			for (int j = 0; j < m.n - 1; ++j) {
-				// Vertices of first triangle in quad
-				indices.put(i * m.n + j);
-				indices.put(i * m.n + j + 1);
-				indices.put((i + 1) * m.n + j + 1);
-
-				// Vertices of second triangle in quad
-				indices.put(i * m.n + j);
-				indices.put((i + 1) * m.n + j + 1);
-				indices.put((i + 1) * m.n + j);
-			}
-		}
-
-		if (m.topology != MeshTopology.OPEN) {
-			for (int i = 0; i < m.m-1; ++i) {
-				indices.put(i*m.n + m.m - 1);
-				indices.put(i*m.n);
-				indices.put((i+1)*m.n);
-				
-				indices.put(i*m.n + m.m-1);
-				indices.put((i+1)*m.n);
-				indices.put((i+1)*m.n + m.m-1);
-			}
-		}
-		
-		if (m.topology == MeshTopology.TWO_SIDED) {
-			for (int i=0; i<m.n-1; ++i) {
-				indices.put(m.n*(m.m-1)+i);
-				indices.put(m.n*(m.m-1)+i+1);
-				indices.put(i+1);
-				
-				indices.put(m.n*(m.m-1)+i);
-				indices.put(i+1);
-				indices.put(i);
-			}
-			
-			indices.put(m.n*m.m-1);
-			indices.put(m.n*(m.m-1));
-			indices.put(0);
-			
-			indices.put(m.n*m.m-1);
-			indices.put(0);
-			indices.put(m.n-1);
-		}
-
-		indices.flip();
-		
-		System.out.println("CAPACITY: " + indices.capacity());
-
-		gl2.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
-				* sizeofInt, indices, GL2.GL_STATIC_DRAW);
-
-		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		hasIndexBuffer = true;
 	}
 
 	public void dispose(GL2 gl2) {
-		gl2.glDeleteBuffers(1, new int[] { vertexBuffer }, 0);
-		gl2.glDeleteBuffers(1, new int[] { indexBuffer }, 0);
+		gl2.glDeleteBuffers(2, new int[] { vertexBuffer, indexBuffer }, 0);
 	}
 }

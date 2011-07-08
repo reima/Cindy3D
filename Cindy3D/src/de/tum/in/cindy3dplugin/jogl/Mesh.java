@@ -7,162 +7,150 @@ import org.apache.commons.math.geometry.Vector3D;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 
 public class Mesh extends Primitive {
-	int n, m;
+	private static int meshCounter = 0;
+	
+	int gridWidth, gridHeight;
 
-	double[][] vertices;
+	double[][] positions;
 	double[][] normals;
 
 	boolean perVertexNormals;
 
-	private static int meshCounter = 0;
-
 	int identifier;
 	MeshTopology topology;
 
-	public Mesh(int m, int n, double[][] vertices, double[][] normals,
+	int gridXMax, gridYMax;
+	int faceCount;
+
+	public Mesh(int height, int width, double[][] positions, double[][] normals,
 			Color color, double opacity, MeshTopology topology) {
 		super(color, opacity);
-		this.n = n;
-		this.m = m;
-		this.topology = topology;
-		perVertexNormals = (normals != null);
-		identifier = meshCounter++;
-		this.vertices = vertices;
-		this.normals = normals;
+		init(width, height, positions, normals, normals != null, topology);
 		if (normals == null)
 			computeNormals();
 	}
 
-	public Mesh(int m, int n, double[][] vertices, boolean perVertexNormals,
-			Color color, double opacity, MeshTopology topology) {
+	public Mesh(int height, int width, double[][] positions,
+			boolean perVertexNormals, Color color, double opacity,
+			MeshTopology topology) {
 		super(color, opacity);
-		this.n = n;
-		this.m = m;
-		this.topology = topology;
-		this.perVertexNormals = perVertexNormals;
-		identifier = meshCounter++;
-		this.vertices = vertices;
-		this.normals = null;
+		init(width, height, positions, null, perVertexNormals, topology);
 		computeNormals();
 	}
-
+	
+	private void init(int width, int height, double[][] positions,
+			double[][] normals, boolean perVertexNormals, MeshTopology topology) {
+		this.gridWidth = width;
+		this.gridHeight = height;
+		this.positions = positions;
+		this.normals = normals;
+		this.perVertexNormals = perVertexNormals;
+		this.topology = topology;
+		identifier = meshCounter++;
+		
+		switch (topology) {
+		case OPEN:
+			gridXMax = gridWidth - 1;
+			gridYMax = gridHeight - 1;
+			break;
+		case ONE_SIDED:
+			gridXMax = gridWidth;
+			gridYMax = gridHeight - 1;
+			break;
+		case TWO_SIDED:
+			gridXMax = gridWidth;
+			gridYMax = gridHeight;
+			break;
+		default:
+			return;
+		}
+		
+		faceCount = gridXMax * gridYMax * 2;
+	}
+	
+	public int getVertexIndex(int x, int y) {
+		return y * gridWidth + x;
+	}
+	
 	private void computeNormals() {
 		normals = null;
+		
+		Vector3D[] faceNormals = new Vector3D[faceCount];
+		Vector3D[] vertexNormals = null;
 
-		int faceNormalCount = (m - 1) * (n - 1) * 2;
-
-		if (topology != MeshTopology.OPEN)
-			faceNormalCount += (m - 1) * 2;
-		if (topology == MeshTopology.TWO_SIDED)
-			faceNormalCount += n*2;
-
-		Vector3D[] perFace = new Vector3D[faceNormalCount];
-
-		Vector3D[] positions = new Vector3D[m * n];
-		for (int i = 0; i < m * n; ++i)
-			positions[i] = new Vector3D(vertices[i][0], vertices[i][1],
-					vertices[i][2]);
-
-		for (int i = 0; i < m - 1; ++i) {
-			for (int j = 0; j < n - 1; ++j) {
-				Vector3D v1 = positions[i * n + j + 1].subtract(positions[i * n
-						+ j]);
-				Vector3D v2 = positions[(i + 1) * n + j + 1]
-						.subtract(positions[i * n + j]);
-				Vector3D v3 = positions[(i + 1) * n + j].subtract(positions[i
-						* n + j]);
-
-				perFace[2 * (i * (n - 1) + j) + 0] = Vector3D.crossProduct(v1,
-						v2);
-				perFace[2 * (i * (n - 1) + j) + 0].normalize();
-				perFace[2 * (i * (n - 1) + j) + 1] = Vector3D.crossProduct(v2,
-						v3);
-				perFace[2 * (i * (n - 1) + j) + 1].normalize();
-			}
-		}		  
-		  
-		if (topology != MeshTopology.OPEN) {
-			int offset = (m-1)*(n-1)*2;
-			for (int i = 0; i < m - 1; ++i) {
-				Vector3D v1 = positions[i * n]
-						.subtract(positions[i * n + n - 1]);
-				Vector3D v2 = positions[(i + 1) * n].subtract(positions[i * n
-						+ n - 1]);
-				Vector3D v3 = positions[(i + 1) * n + n - 1]
-						.subtract(positions[i * n + n - 1]);
-
-				perFace[offset + 2 * i] = Vector3D.crossProduct(
-						v1, v2);
-				perFace[offset + 2 * i].normalize();
-				perFace[offset + 2 * i + 1] = Vector3D
-						.crossProduct(v2, v3);
-				perFace[offset + 2 * i + 1].normalize();
+		if (perVertexNormals) {
+			vertexNormals = new Vector3D[gridWidth * gridHeight];
+			for (int i = 0; i < vertexNormals.length; ++i) {
+				vertexNormals[i] = Vector3D.ZERO;
 			}
 		}
 		
-		if (topology == MeshTopology.TWO_SIDED) {
-			int offset = (m-1)*(n-1)*2+2*(m-1);
-			for (int i=0; i<n-1;++i) {
-				Vector3D v1 = positions[n*(m-1)+i+1].subtract(positions[n*(m-1)+i]);
-				Vector3D v2 = positions[i+1].subtract(positions[n*(m-1)+i]);
-				Vector3D v3 = positions[i].subtract(positions[n*(m-1)+i]);
+		Vector3D[] positions = new Vector3D[gridWidth * gridHeight];
+		for (int i = 0; i < positions.length; ++i) {
+			positions[i] = new Vector3D(this.positions[i][0],
+					this.positions[i][1], this.positions[i][2]);
+		}
+		
+		// Iterate over all grid cells (each of which consists of two faces)
+		int faceIndex = 0;
+		for (int gridY = 0; gridY < gridYMax; ++gridY) {
+			for (int gridX = 0; gridX < gridXMax; ++gridX) {
+				/*
+				 *    v1----v2
+				 *    |    / |
+				 *    |f1 /  |
+				 *    |  / f2|
+				 *    | /    |
+				 *    v3----v4
+				 */
+				int gridXPlus1 = (gridX + 1) % gridWidth;
+				int gridYPlus1 = (gridY + 1) % gridHeight;
 				
-				perFace[offset+2*i] = Vector3D.crossProduct(
-						v1, v2);
-				perFace[offset+2*i].normalize();
-				perFace[offset+2*i + 1] = Vector3D
-						.crossProduct(v2, v3);
-				perFace[offset+2*i + 1].normalize();
-			}
-				 
-			Vector3D v1 = positions[m*(m-1)].subtract(positions[m*n-1]);
-			Vector3D v2 = positions[0].subtract(positions[m*n-1]);
-			Vector3D v3 = positions[m-1].subtract(positions[m*n-1]);
-			
-			offset += 2*(n-1);
-			
-			perFace[offset] = Vector3D.crossProduct(
-					v1, v2);
-			perFace[offset].normalize();
-			perFace[offset + 1] = Vector3D
-					.crossProduct(v2, v3);
-			perFace[offset + 1].normalize();
-			
-		}
-
-		if (!perVertexNormals) {
-			normals = new double[faceNormalCount][3];
-			for (int i = 0; i < normals.length; ++i)
-				normals[i] = Util.vectorToDoubleArray(perFace[i]);
-			return;
-		}
-
-		Vector3D[] perVertex = new Vector3D[m * n];
-		for (int i = 0; i < perVertex.length; ++i)
-			perVertex[i] = new Vector3D(0, 0, 0);
-
-		for (int i = 0; i < m - 1; ++i) {
-			for (int j = 0; j < n - 1; ++j) {
-				perVertex[i * n + j] = perVertex[i * n + j].add(perFace[2 * (i
-						* (n - 1) + j)]);
-				perVertex[i * n + j + 1] = perVertex[i * n + j + 1]
-						.add(perFace[2 * (i * (n - 1) + j)]);
-				perVertex[(i + 1) * n + j + 1] = perVertex[(i + 1) * n + j + 1]
-						.add(perFace[2 * (i * (n - 1) + j)]);
-
-				perVertex[i * n + j] = perVertex[i * n + j].add(perFace[2 * (i
-						* (n - 1) + j) + 1]);
-				perVertex[(i + 1) * n + j + 1] = perVertex[(i + 1) * n + j + 1]
-						.add(perFace[2 * (i * (n - 1) + j) + 1]);
-				perVertex[(i + 1) * n + j] = perVertex[(i + 1) * n + j]
-						.add(perFace[2 * (i * (n - 1) + j) + 1]);
+				int v1Index = getVertexIndex(gridX,      gridY);
+				int v2Index = getVertexIndex(gridXPlus1, gridY);
+				int v3Index = getVertexIndex(gridX,      gridYPlus1);
+				int v4Index = getVertexIndex(gridXPlus1, gridYPlus1);
+				
+				Vector3D v1 = positions[v1Index];
+				Vector3D v2 = positions[v2Index];
+				Vector3D v3 = positions[v3Index];
+				Vector3D v4 = positions[v4Index];
+				
+				int f1Index = faceIndex++;
+				int f2Index = faceIndex++;
+				
+				faceNormals[f1Index] = Vector3D
+						.crossProduct(v2.subtract(v1), v3.subtract(v1))
+						.normalize();
+				faceNormals[f2Index] = Vector3D
+						.crossProduct(v3.subtract(v4), v2.subtract(v4))
+						.normalize();
+				
+				if (perVertexNormals) {
+					vertexNormals[v1Index] = vertexNormals[v1Index]
+							.add(faceNormals[f1Index]);
+					vertexNormals[v2Index] = vertexNormals[v2Index]
+							.add(faceNormals[f1Index])
+							.add(faceNormals[f2Index]);
+					vertexNormals[v3Index] = vertexNormals[v3Index]
+							.add(faceNormals[f1Index])
+							.add(faceNormals[f2Index]);
+					vertexNormals[v4Index] = vertexNormals[v4Index]
+							.add(faceNormals[f2Index]);
+				}
 			}
 		}
-
-		normals = new double[m * n][3];
-		for (int i = 0; i < perVertex.length; ++i) {
-			perVertex[i].normalize();
-			normals[i] = Util.vectorToDoubleArray(perVertex[i]);
+		
+		if (perVertexNormals) {
+			normals = new double[gridWidth * gridHeight][3];
+			for (int i = 0; i < vertexNormals.length; ++i) {
+				normals[i] = Util.vectorToDoubleArray(vertexNormals[i].normalize());
+			}
+		} else {
+			normals = new double[faceCount][3];
+			for (int i = 0; i < normals.length; ++i) {
+				normals[i] = Util.vectorToDoubleArray(faceNormals[i]);
+			}
 		}
 	}
 }
