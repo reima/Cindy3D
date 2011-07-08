@@ -1,3 +1,0 @@
-jRworkspaceSDK from http://www.sechel.de
-can be licensed with the BSD:
-http://creativecommons.org/licenses/BSD/

@@ -1,0 +1,160 @@
+//
+// Color spiral
+//
+
+height = 2;
+radius = 1;
+segments = 100;
+rings = 20;
+
+begin3d();
+pointsize3d(1);
+forall(1..segments, segment,
+  frac = segment/segments;
+  pointcolor3d(hue(frac));
+  forall(1..rings, ring,
+    rad = ring/rings * radius;
+    draw3d((cos(frac*2*pi)*rad,
+            sin(frac*2*pi)*rad,
+            frac*height));
+  )
+);
+end3d()
+
+
+//
+// Color lines
+//
+
+n = 72;
+phase = pi/2; // also try = A.x with a point A
+height = 2;   //     "      A.y       "
+begin3d();
+forall(1..n, i,
+  rad = i/n*2*pi;
+  color3d(hue(i/n));
+  draw3d((cos(rad), 0, sin(rad)),
+         (cos(rad+phase), height, sin(rad+phase)));
+);
+end3d()
+
+
+//
+// Butterfly with lines
+//
+
+x = sin(A.x);
+
+begin3d();
+color3d((1,0,0));
+size3d(1);
+connect3d([(-1,-1,x),(0,0,0),(1,1,x),(1,-1,x),(0,0,0),(-1,1,x),(-1,-1,x)]);
+color3d((1,1,1));
+size3d(3);
+draw3d((0,-0.5,0),(0,0.5,0));
+end3d();
+
+
+//
+// Butterfly with polygons
+//
+
+x = sin(A.x);
+
+begin3d();
+color3d((1,0,0));
+size3d(1);
+drawpoly3d([(-1,-1,x),(0,0,0),(-1,1,x)]);
+drawpoly3d([(1,-1,x),(0,0,0),(1,1,x)]);
+color3d((1,1,1));
+size3d(3);
+draw3d((0,-0.5,0),(0,0.5,0));
+end3d();
+
+
+//
+// Circles
+//
+
+begin3d();
+pointcolor3d((1,0,0));
+drawcircle3d((0,0,0),(1,0,0),3);
+pointcolor3d((0,1,0));
+drawcircle3d((0,0,0),(0,1,0),3);
+pointcolor3d((0,0,1));
+drawcircle3d((0,0,0),(0,0,1),3);
+end3d();
+
+//
+// MiMa Kristallgitter
+//
+
+background3d([0,0,0]);
+begin3d();
+linesize3d(0.6);
+size = [1,1,1];
+forall(-size_1..size_1,x,
+	forall(-size_2..size_2,y,
+		forall(-size_3..size_3,z,
+			if (mod((x+y+z),2)==0,
+				pointcolor3d([0.5,0.5,0.5]);
+				pointsize3d(1.2),
+				pointcolor3d([0,0.8,0]);
+				pointsize3d(3));
+			draw3d([x,y,z]);
+			if(x+1<=size_1,draw3d([x,y,z],[x+1,y,z]));
+			if(y+1<=size_2,draw3d([x,y,z],[x,y+1,z]));
+			if(z+1<=size_3,draw3d([x,y,z],[x,y,z+1]));
+		)
+	)
+);
+polygoncolor3d([0.85,0.5,0.4]);
+opacity3d(B.x/10.0);
+soffset = size+[0.2,0.2,0.2];
+quad = concat(soffset, reverse(-soffset));
+fillpoly3d([quad_[-1,-2,-3],quad_[ 1,-2,-3],quad_[ 1, 2,-3],quad_[-1, 2,-3]]);
+fillpoly3d([quad_[-1,-2, 3],quad_[ 1,-2, 3],quad_[ 1, 2, 3],quad_[-1, 2, 3]]);
+fillpoly3d([quad_[-1,-2,-3],quad_[-1,-2, 3],quad_[-1, 2, 3],quad_[-1, 2,-3]]);
+fillpoly3d([quad_[ 1,-2,-3],quad_[ 1,-2, 3],quad_[ 1, 2, 3],quad_[ 1, 2,-3]]);
+fillpoly3d([quad_[-1, 2,-3],quad_[-1, 2, 3],quad_[ 1, 2, 3],quad_[ 1, 2,-3]]);
+fillpoly3d([quad_[-1,-2,-3],quad_[-1,-2, 3],quad_[ 1,-2, 3],quad_[ 1,-2,-3]]);
+
+polygoncolor3d([1,1,1]);
+size3d(0.5);
+drawpoly3d([quad_[-1,-2,-3],quad_[ 1,-2,-3],quad_[ 1, 2,-3],quad_[-1, 2,-3]]);
+drawpoly3d([quad_[-1,-2, 3],quad_[ 1,-2, 3],quad_[ 1, 2, 3],quad_[-1, 2, 3]]);
+drawpoly3d([quad_[-1,-2,-3],quad_[-1,-2, 3],quad_[-1, 2, 3],quad_[-1, 2,-3]]);
+drawpoly3d([quad_[ 1,-2,-3],quad_[ 1,-2, 3],quad_[ 1, 2, 3],quad_[ 1, 2,-3]]);
+drawpoly3d([quad_[-1, 2,-3],quad_[-1, 2, 3],quad_[ 1, 2, 3],quad_[ 1, 2,-3]]);
+drawpoly3d([quad_[-1,-2,-3],quad_[-1,-2, 3],quad_[ 1,-2, 3],quad_[ 1,-2,-3]]);
+end3d()
+
+
+//
+// Torus (demo of mesh topology)
+//
+
+begin3d();
+
+rings = 5;
+segments = rings;
+
+innerRadius = 0.25;
+outerRadius = 1;
+
+m = apply(1..rings, i, u = i * 2 * pi / rings;
+    apply(1..segments, j, v = j * 2 * pi / segments;
+    x = sin(v) * innerRadius + outerRadius;
+    z = cos(v) * 0.25;
+    y = sin(u) * x;
+    x = x * cos(u);
+    (x, y, z)
+    ));
+m = flatten(m, levels->1);
+
+color3d((1, 0, 0));
+//mesh3d(rings, segments, m, normaltype->"pervertex", topology->"open");
+mesh3d(rings, segments, m, normaltype->"pervertex", topology->"onesided");
+//mesh3d(segments, rings, m, normaltype->"pervertex", topology->"twosided");
+
+end3d()
