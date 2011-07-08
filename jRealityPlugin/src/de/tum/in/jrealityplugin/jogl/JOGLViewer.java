@@ -24,6 +24,7 @@ import org.apache.commons.math.geometry.Vector3D;
 import de.tum.in.jrealityplugin.AppearanceState;
 import de.tum.in.jrealityplugin.Cindy3DViewer;
 import de.tum.in.jrealityplugin.jogl.Line.LineType;
+import de.tum.in.jrealityplugin.jogl.Mesh.MeshTopology;
 
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
@@ -216,14 +217,15 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
-				.getColor(), appearance.getOpacity()));
+				.getColor(), appearance.getOpacity(), MeshTopology.BOTHSIDED));
 	}
 	
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			boolean perVertexNormals, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, perVertexNormals,
-				appearance.getColor(), appearance.getOpacity()));
+				appearance.getColor(), appearance.getOpacity(),
+				MeshTopology.BOTHSIDED));
 	}
 	
 	@Override
