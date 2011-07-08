@@ -72,21 +72,33 @@ public class JOGLViewerTest {
 		//viewer.addPoint(1, 0, 0, appearance);
 		
 		double size = 10;
-		int sizeCount = 50;
-		
+		int sizeCount = 10;
 		
 		double[][] vert = new double[sizeCount*sizeCount][3];
 		
 		vert = new double[sizeCount*sizeCount][3];
 		
+		double degree = 2.0 * Math.PI / sizeCount;
+		
 		for (int i=0; i<sizeCount; ++i) {
 			for (int j=0; j<sizeCount; ++j) {
-				double x = -size/2.0 + i*size/sizeCount;
-				double z = -size/2.0 + j*size/sizeCount;
+				
+				double x = Math.sin(j*degree) * 0.25 + 1;
+				double z = Math.cos(j*degree) * 0.25;
+				double y = Math.sin(i*degree)*x;
+				
+				x *= Math.cos(i*degree);
 				
 				vert[i*sizeCount+j][0] = x;
-				vert[i*sizeCount+j][1] = -0.1*(x*x+z*z)+2;
+				vert[i*sizeCount+j][1] = y;
 				vert[i*sizeCount+j][2] = z;
+				
+//				double x = -size/2.0 + i*size/sizeCount;
+//				double z = -size/2.0 + j*size/sizeCount;
+//				
+//				vert[i*sizeCount+j][0] = x;
+//				vert[i*sizeCount+j][1] = -0.1*(x*x+z*z)+2;
+//				vert[i*sizeCount+j][2] = z;
 			}
 		}
 		appearance.setColor(Color.RED);

@@ -4,14 +4,14 @@ import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-public class Line extends Primitive{
+public class Line extends Primitive {
 	
 	public enum LineType {
 		SEGMENT,
 		RAY,
 		LINE
 	}
-	
+
 	Vector3D p1;
 	Vector3D p2;
 	double radius;
