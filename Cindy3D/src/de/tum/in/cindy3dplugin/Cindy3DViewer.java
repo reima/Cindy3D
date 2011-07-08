@@ -5,8 +5,9 @@ import java.awt.Color;
 public interface Cindy3DViewer {
 	enum MeshTopology {
 		OPEN,
-		ONE_SIDED,
-		TWO_SIDED
+		CLOSE_X,
+		CLOSE_Y,
+		CLOSE_XY
 	};
 	
 	/**

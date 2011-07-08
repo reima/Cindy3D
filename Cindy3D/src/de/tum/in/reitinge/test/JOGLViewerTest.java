@@ -73,8 +73,8 @@ public class JOGLViewerTest {
 		//viewer.addPoint(1, 0, 0, appearance);
 		
 //		double size = 10;
-		int rings = 20;
-		int segments = rings;
+		int rings = 10;
+		int segments = 20;
 		
 		double[][] vert = new double[rings*segments][3];
 		
@@ -102,7 +102,7 @@ public class JOGLViewerTest {
 		}
 		appearance.setColor(Color.RED);
 		//appearance.setOpacity(0.7);
-		viewer.addMesh(rings, segments, vert, true, MeshTopology.TWO_SIDED, appearance);		
+		viewer.addMesh(rings, segments, vert, true, MeshTopology.CLOSE_XY, appearance);
 		
 		//viewer.addPoint(0, 0, 0, appearance);
 	}

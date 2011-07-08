@@ -53,11 +53,15 @@ public class Mesh extends Primitive {
 			gridXMax = gridWidth - 1;
 			gridYMax = gridHeight - 1;
 			break;
-		case ONE_SIDED:
+		case CLOSE_X:
 			gridXMax = gridWidth;
 			gridYMax = gridHeight - 1;
 			break;
-		case TWO_SIDED:
+		case CLOSE_Y:
+			gridXMax = gridWidth - 1;
+			gridYMax = gridHeight;
+			break;
+		case CLOSE_XY:
 			gridXMax = gridWidth;
 			gridYMax = gridHeight;
 			break;

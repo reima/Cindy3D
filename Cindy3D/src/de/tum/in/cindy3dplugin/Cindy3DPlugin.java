@@ -304,10 +304,12 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		MeshTopology topology = MeshTopology.OPEN;
 		if (topologyStr.equals("open")) {
 			topology = MeshTopology.OPEN;
-		} else if (topologyStr.equals("onesided")) {
-			topology = MeshTopology.ONE_SIDED;
-		} else if (topologyStr.equals("twosided")) {
-			topology = MeshTopology.TWO_SIDED;
+		} else if (topologyStr.equals("closex")) {
+			topology = MeshTopology.CLOSE_X;
+		} else if (topologyStr.equals("closey")) {
+			topology = MeshTopology.CLOSE_Y;
+		} else if (topologyStr.equals("closexy")) {
+			topology = MeshTopology.CLOSE_XY;
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
@@ -353,9 +355,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (topologyStr.equals("open")) {
 			topology = MeshTopology.OPEN;
 		} else if (topologyStr.equals("onesided")) {
-			topology = MeshTopology.ONE_SIDED;
+			topology = MeshTopology.CLOSE_X;
 		} else if (topologyStr.equals("twosided")) {
-			topology = MeshTopology.TWO_SIDED;
+			topology = MeshTopology.CLOSE_XY;
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
