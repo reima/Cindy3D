@@ -86,7 +86,7 @@ public class Util {
 		}
 	}
 	
-	private static final String SHADER_PATH = "/de/tum/in/jrealityplugin/resources/shader/"; 
+	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
 	
 	public static ShaderCode loadShader(int type, String name) {		
 		StringBuffer buffer = new StringBuffer();
