@@ -108,6 +108,26 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		return "Cindy3D";
 	}
 
+	public AppearanceState getModifiedAppearance(AppearanceState initialState,
+			Hashtable modifiers) {
+		AppearanceState result = new AppearanceState(initialState);
+		Object value = null;
+		value = modifiers.get("color");
+		if (value instanceof double[]) {
+			setColorState(result, (double[])value);
+		}
+		value = modifiers.get("size");
+		if (value instanceof Double) {
+			result.setSize((Double)value);
+		}
+		value = modifiers.get("opacity");
+		if (value instanceof Double) {
+			double opacity = Math.max(0, Math.min(1, (Double)value));
+			result.setOpacity(opacity);
+		}
+		return result;
+	}
+
 	/**
 	 * Squares the given number
 	 * 
@@ -146,7 +166,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (vec.size() != 3)
 			return;
 
-		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2), pointAppearance);
+		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2),
+				getModifiedAppearance(pointAppearance, getModifiers()));
 	}
 
 	/**
@@ -168,15 +189,18 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		
 		String type = modifiers.get("type").toString();
 		
+		AppearanceState appearance = getModifiedAppearance(lineAppearance,
+				getModifiers());
+		
 		if (type.equals("Segment")) {
 			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
-					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
 		} else if (type.equals("Line")) {
 			cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2),
-					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
 		} else if (type.equals("Ray")) {
 			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2),
-					vec2.get(0), vec2.get(1), vec2.get(2), lineAppearance);
+					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
 		}
 	}
 	
@@ -194,7 +218,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			vertices[i][2] = points.get(i).getZR();
 		}
 
-		cindy3d.addLineStrip(vertices, lineAppearance, false);
+		cindy3d.addLineStrip(vertices,
+				getModifiedAppearance(lineAppearance, getModifiers()), false);
 	}
 
 	/**
@@ -211,7 +236,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			vertices[i][2] = points.get(i).getZR();
 		}
 
-		cindy3d.addLineStrip(vertices, polygonAppearance, true);
+		cindy3d.addLineStrip(vertices,
+				getModifiedAppearance(polygonAppearance, getModifiers()), true);
 	}
 
 	/**
@@ -249,7 +275,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 				normal[i][2] = normals.get(i).getZR();
 			}
 		}
-		cindy3d.addPolygon(vertices, normal, polygonAppearance);
+		cindy3d.addPolygon(vertices, normal,
+				getModifiedAppearance(polygonAppearance, getModifiers()));
 	}
 	
 	/**
@@ -263,8 +290,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			double radius) {
 		if (center.size() != 3 || normal.size() != 3) return;
 		cindy3d.addCircle(center.get(0), center.get(1), center.get(2),
-				normal.get(0), normal.get(1), normal.get(2),
-				radius, pointAppearance);
+				normal.get(0), normal.get(1), normal.get(2), radius,
+				getModifiedAppearance(pointAppearance, getModifiers()));
 	}
 	
 	/**
@@ -313,7 +340,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
-				polygonAppearance);
+				getModifiedAppearance(polygonAppearance, getModifiers()));
 	}
 	
 	/**
@@ -363,15 +390,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
-				polygonAppearance);
+				getModifiedAppearance(polygonAppearance, getModifiers()));
 	}
 	
 	@CindyScript("drawsphere3d")
 	public void sphere3d(ArrayList<Double> center, double radius) {
 		if (center.size() != 3)
 			return;
-		cindy3d.addSphere(center.get(0), center.get(1), center.get(2),
-				radius, polygonAppearance);
+		cindy3d.addSphere(center.get(0), center.get(1), center.get(2), radius,
+				getModifiedAppearance(polygonAppearance, getModifiers()));
 	}
 	
 	/**
@@ -502,5 +529,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 				(float)Math.max(0, Math.min(1, vec.get(0))),
 				(float)Math.max(0, Math.min(1, vec.get(1))),
 				(float)Math.max(0, Math.min(1, vec.get(2)))));
+	}
+	
+	protected void setColorState(AppearanceState appearance,
+			double[] vec) {
+		if (vec.length != 3)
+			return;
+		appearance.setColor(new Color(
+				(float)Math.max(0, Math.min(1, vec[0])),
+				(float)Math.max(0, Math.min(1, vec[1])),
+				(float)Math.max(0, Math.min(1, vec[2]))));
 	}
 }
