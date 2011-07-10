@@ -20,26 +20,34 @@ void main() {
 	
 	float lambda = -1.0;
 	float d = b*b-4.0*a*c;
-	if (d < 0.0)
-		discard;
-	else {
+	float hit = 0.0;
+	if (d > 0.0) {
 		float sqrtD = sqrt(d);
 		lambda = (-b - sqrtD) / (2.0*a);
-		if (lambda < 0.0) {
+		if (lambda > 0.0) {
+			hit = 1.0;
+		} else {
 			lambda = (-b + sqrtD) / (2.0*a);
-			if (lambda < 0.0)
-				discard;
+			if (lambda > 0.0) {
+				hit = 1.0;
+			}
 		}
 	}
-		
-	vec3 pointOnCylinder = lambda*dir;
-  
-  	float dist = dot(cylinderDirection, pointOnCylinder-cylinderPoint);
-  	if (cylinderLength >= 0.0) {
-  		if (dist < 0.0 || (cylinderLength > 0.0 && dist > cylinderLength))
-  			discard;
-  	}
-  
+	
+	if (hit == 1.0) {
+		vec3 pointOnCylinder = lambda*dir;
+		float dist = dot(cylinderDirection, pointOnCylinder-cylinderPoint);
+		if (cylinderLength >= 0.0) {
+			if (dist < 0.0 || (cylinderLength > 0.0 && dist > cylinderLength)) {
+				hit = 0.0;
+			}
+		}
+	}
+	
+	if (hit == 0.0) {
+		discard;
+	}
+
 	vec3 normal = normalize(cross(cross(cylinderDirection,
 						pointOnCylinder-cylinderPoint), cylinderDirection));
 

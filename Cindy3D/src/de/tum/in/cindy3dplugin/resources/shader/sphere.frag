@@ -16,34 +16,28 @@ void main() {
   float c = dot(camSpaceCenter, camSpaceCenter) - sphereRadius*sphereRadius;
   float d = b*b - c;
   float lambda = 0.0;
-  if (d < 0.0) {
-    discard;
-  } else {
+  float hit = 0.0;
+  if (d > 0.0) {
     float sqrtD = sqrt(d);
-    if (sphereMode == 0.0)
-    	lambda = b + sqrtD;
-    else
-    	lambda = b - sqrtD;
-    	
-    if (lambda < 0.0)
-    	discard;
-    
-    
-//    if (lambda < 0.0) {
-//      lambda = b + sqrtD;
-//      if (lambda < 0.0) {
-//        discard;
-//      }
-//    }
+    if (sphereMode == 0.0) {
+      lambda = b + sqrtD;
+    } else {
+      lambda = b - sqrtD;
+    }
+
+    if (lambda > 0) {
+      hit = 1.0;
+    }
+  }
+  
+  if (hit == 0.0) {
+    discard;
   }
 
   vec3 pointOnSphere = lambda*dir;
   vec3 normal = normalize(pointOnSphere - camSpaceCenter);
-  
-  //gl_FragColor = sphereColor;
-  
   shade(normal, pointOnSphere, sphereColor);
-   
+
   vec4 projPoint = gl_ProjectionMatrix * vec4(pointOnSphere, 1);
   gl_FragDepth = (projPoint.z / projPoint.w + 1.0) / 2.0;
 }
