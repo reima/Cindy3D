@@ -92,17 +92,16 @@ public class DefaultRenderer extends JOGLRenderer {
 		display(drawable);
 	}
 	
-	private void renderPrimitives(JOGLRenderState jrs, boolean opaque) {
-		
+	private void renderPrimitives(JOGLRenderState jrs) {
 		GL2 gl = jrs.gl.getGL2();
 		gl.glCullFace(GL2.GL_FRONT);
-		pointRenderer.render(jrs, scene.getPoints(), opaque);
-		circleRenderer.render(jrs, scene.getCircles(), opaque);
-		lineRenderer.render(jrs, scene.getLines(), opaque);
-		polygonRenderer.render(jrs, scene.getPolygons(), opaque);
-		meshRenderer.render(jrs, scene.getMeshes(), opaque);
+		pointRenderer.render(jrs, scene.getPoints());
+		circleRenderer.render(jrs, scene.getCircles());
+		lineRenderer.render(jrs, scene.getLines());
+		polygonRenderer.render(jrs, scene.getPolygons());
+		meshRenderer.render(jrs, scene.getMeshes());
 		gl.glCullFace(GL2.GL_BACK);
-		pointRenderer.render(jrs, scene.getPoints(), opaque);
+		pointRenderer.render(jrs, scene.getPoints());
 	}
 
 	@Override
@@ -120,7 +119,7 @@ public class DefaultRenderer extends JOGLRenderer {
 		gl.glLoadMatrixf(
 				Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
 			
-		JOGLRenderState jrs = new JOGLRenderState(gl, camera);
+		JOGLRenderState jrs = new JOGLRenderState(gl, camera, true);
 		
 		
 		/*
@@ -163,13 +162,15 @@ public class DefaultRenderer extends JOGLRenderer {
 		
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glDepthMask(false);
-		renderPrimitives(jrs, false);
-		renderPrimitives(jrs, false);
+		jrs.renderOpaque = false;
+		renderPrimitives(jrs);
+		renderPrimitives(jrs);
 		gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 		
 		//gl.glColorMask(false, false, false, false);
-		renderPrimitives(jrs, true);
+		jrs.renderOpaque = true;
+		renderPrimitives(jrs);
 //		gl.glEnable(GL2.GL_BLEND);
 //		renderPrimitives(jrs, false);
 //		gl.glDisable(GL2.GL_BLEND);
@@ -182,7 +183,8 @@ public class DefaultRenderer extends JOGLRenderer {
 		
 		gl.glEnable(GL2.GL_BLEND);
 		//gl.glDepthMask(false);
-		renderPrimitives(jrs, false);
+		jrs.renderOpaque = false;
+		renderPrimitives(jrs);
 		//gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 
