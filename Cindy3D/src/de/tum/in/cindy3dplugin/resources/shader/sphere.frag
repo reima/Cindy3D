@@ -20,12 +20,20 @@ void main() {
   if (d > 0.0) {
     float sqrtD = sqrt(d);
     if (sphereMode == 0.0) {
+      // Cull front
       lambda = b + sqrtD;
-    } else {
+    } else if (sphereMode == 1.0) {
+      // Cull back
       lambda = b - sqrtD;
+    } else {
+      // Cull none
+      lambda = b - sqrtD;
+      if (lambda <= 0.0) {
+        lambda = b + sqrtD;
+      }
     }
 
-    if (lambda > 0) {
+    if (lambda > 0.0) {
       hit = 1.0;
     }
   }

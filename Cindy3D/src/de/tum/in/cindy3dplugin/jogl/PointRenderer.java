@@ -8,6 +8,8 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState.CullMode;
+
 class PointRenderer extends PrimitiveRenderer<Point> {
 	private ShaderProgram program = null;
 	private int centerLoc;
@@ -68,10 +70,13 @@ class PointRenderer extends PrimitiveRenderer<Point> {
 		
 		IntBuffer intBuffer = IntBuffer.allocate(1);
 		gl2.glGetIntegerv(GL2.GL_CULL_FACE_MODE, intBuffer);
-		if (intBuffer.get(0) == GL2.GL_FRONT)
+		if (jrs.cullMode == CullMode.CULL_FRONT) {
 			renderMode = 0;
-		else
+		} else if (jrs.cullMode == CullMode.CULL_BACK) {
 			renderMode = 1;
+		} else if (jrs.cullMode == CullMode.CULL_NONE) {
+			renderMode = 2;
+		}
 	}
 
 	@Override

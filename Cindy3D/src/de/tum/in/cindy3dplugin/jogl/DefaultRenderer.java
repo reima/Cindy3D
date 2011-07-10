@@ -7,6 +7,8 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLException;
 
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState.CullMode;
+
 public class DefaultRenderer extends JOGLRenderer {	
 	private PointRenderer pointRenderer = new PointRenderer();
 	private CircleRenderer circleRenderer = new CircleRenderer();
@@ -93,15 +95,20 @@ public class DefaultRenderer extends JOGLRenderer {
 	}
 	
 	private void renderPrimitives(JOGLRenderState jrs) {
-		GL2 gl = jrs.gl.getGL2();
-		gl.glCullFace(GL2.GL_FRONT);
-		pointRenderer.render(jrs, scene.getPoints());
+		if (!jrs.renderOpaque) {
+			jrs.cullMode = CullMode.CULL_FRONT;
+			pointRenderer.render(jrs, scene.getPoints());
+			jrs.cullMode = CullMode.CULL_NONE;
+		}
+		
 		circleRenderer.render(jrs, scene.getCircles());
 		lineRenderer.render(jrs, scene.getLines());
 		polygonRenderer.render(jrs, scene.getPolygons());
 		meshRenderer.render(jrs, scene.getMeshes());
-		gl.glCullFace(GL2.GL_BACK);
+
+		jrs.cullMode = CullMode.CULL_BACK;
 		pointRenderer.render(jrs, scene.getPoints());
+		jrs.cullMode = CullMode.CULL_NONE;
 	}
 
 	@Override
@@ -119,7 +126,8 @@ public class DefaultRenderer extends JOGLRenderer {
 		gl.glLoadMatrixf(
 				Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
 			
-		JOGLRenderState jrs = new JOGLRenderState(gl, camera, true);
+		JOGLRenderState jrs = new JOGLRenderState(gl, camera, true,
+				CullMode.CULL_NONE);
 		
 		
 		/*
