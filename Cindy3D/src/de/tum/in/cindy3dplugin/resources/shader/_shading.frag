@@ -51,8 +51,8 @@ void directionalLight(in int i, in vec3 normal)
    float nDotHV;         // normal . light half vector
    float pf;             // power factor
 
-   nDotVP = abs(dot(normal, normalize(vec3 (gl_LightSource[i].position))));
-   nDotHV = abs(dot(normal, vec3 (gl_LightSource[i].halfVector)));
+   nDotVP = max(0.0, dot(normal, normalize(vec3 (gl_LightSource[i].position))));
+   nDotHV = max(0.0, dot(normal, vec3 (gl_LightSource[i].halfVector)));
 
    if (nDotVP == 0.0)
    {
@@ -78,7 +78,7 @@ void shade(in vec3 normal, in vec3 ecPoint, in vec4 materialColor) {
   //pointLight(1, normal, -normalize(ecPoint), ecPoint);
   //directionalLight(2, normal);
  
-  vec4 color = gl_FrontLightModelProduct.sceneColor +
+  vec4 color = //gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
     Diffuse  * vec4(materialColor.rgb, 1.0);
   color += Specular * gl_FrontMaterial.specular;
