@@ -54,12 +54,12 @@ public class DefaultRenderer extends JOGLRenderer {
 					0.2f, 0.2f, 0.2f }, 0);
 			gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 60.0f);
 	
-			gl.glEnable(GL2.GL_LIGHTING);
-			gl.glEnable(GL2.GL_LIGHT0);
-			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 5.0f,
-					5.0f, 5.0f, 1.0f }, 0);
-			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, new float[] { 1.0f,
-					1.0f, 1.0f, 1.0f }, 0);
+//			gl.glEnable(GL2.GL_LIGHTING);
+//			gl.glEnable(GL2.GL_LIGHT0);
+//			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 5.0f,
+//					5.0f, 5.0f, 1.0f }, 0);
+//			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, new float[] { 1.0f,
+//					1.0f, 1.0f, 1.0f }, 0);
 	
 //			gl.glEnable(GL2.GL_LIGHT1);
 //			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[] { 0.0f,
@@ -67,16 +67,6 @@ public class DefaultRenderer extends JOGLRenderer {
 //			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, new float[] { 1.0f,
 //					1.0f, 1.0f, 1.0f }, 0);
 	
-			if (!pointRenderer.init(gl))
-				log.severe("Point renderer initialization failed");
-			if (!circleRenderer.init(gl))
-				log.severe("Circle renderer initialization failed");
-			if (!lineRenderer.init(gl))
-				log.severe("Line renderer initialization failed");
-			if (!polygonRenderer.init(gl))
-				log.severe("Polygon renderer initialization failed");
-			if (!meshRenderer.init(gl))
-				log.severe("Mesh renderer initialization failed");
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
@@ -136,7 +126,26 @@ public class DefaultRenderer extends JOGLRenderer {
 			
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera, true,
 				CullMode.CULL_NONE);
+
+		if (lightManager.getCompileShader()) {
+			
+			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
+			
+			if (!pointRenderer.loadShader(gl))
+				log.severe("Point renderer initialization failed");
+			if (!circleRenderer.loadShader(gl))
+				log.severe("Circle renderer initialization failed");
+			if (!lineRenderer.loadShader(gl))
+				log.severe("Line renderer initialization failed");
+			if (!polygonRenderer.loadShader(gl))
+				log.severe("Polygon renderer initialization failed");
+			if (!meshRenderer.loadShader(gl))
+				log.severe("Mesh renderer initialization failed");
+			
+			lightManager.setCompileShader(false);
+		}
 		
+		lightManager.setGLState(gl);
 		
 		/*
 		 * gl.glEnable(GL.GL_BLEND);

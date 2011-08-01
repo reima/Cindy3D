@@ -2,28 +2,40 @@ package de.tum.in.reitinge.test;
 
 import java.awt.Color;
 
+import org.apache.commons.math.geometry.Vector3D;
+
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightManager.LightType;
 
 public class JOGLViewerTest {
 	public static void main(String[] args) {
 		JOGLViewer viewer = new JOGLViewer();
 		
-		viewer.setBackgroundColor(Color.white);
+		//viewer.setBackgroundColor(Color.white);
+		viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
 //		colorSpiral(viewer);
-		circles(viewer);
+//		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
-//		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 0.5);
-//		viewer.addSphere(0, 0, 0, 1, appearance);
+		AppearanceState appearance = new AppearanceState(Color.white, 1.0, 1);
+		viewer.addSphere(0, 0, 0, 1, appearance);
+		
+		LightInfo info = new LightInfo();
+		
+		info.type = LightType.POINT_LIGHT;
+		info.position = new Vector3D(10,0,0);
+		viewer.setLight(0, info);
+		
 //		appearance.setColor(Color.green);
 //		appearance.setAlpha(1.0);
-//		viewer.addSphere(0, 0, 0, 0.25, appearance);
+//		viewer.addSphere(-1, 0, 0, 0.25, appearance);
 		viewer.end();
 	}
 	

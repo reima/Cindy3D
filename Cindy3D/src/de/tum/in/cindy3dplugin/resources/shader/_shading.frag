@@ -28,8 +28,8 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 
    halfVector = normalize(VP + eye);
 
-   nDotVP = abs(dot(normal, VP));
-   nDotHV = abs(dot(normal, halfVector));
+   nDotVP = max(0.0, dot(normal, VP));
+   nDotHV = max(0.0, dot(normal, halfVector));
 
    if (nDotVP == 0.0)
    {
@@ -73,9 +73,10 @@ void shade(in vec3 normal, in vec3 ecPoint, in vec4 materialColor) {
   Diffuse = vec4(0.0);
   Specular = vec4(0.0);
   
-  pointLight(0, normal, -ecPoint, ecPoint);
-  pointLight(1, normal, -ecPoint, ecPoint);
-  directionalLight(2, normal);
+#pragma lights
+  //pointLight(0, normal, -normalize(ecPoint), ecPoint);
+  //pointLight(1, normal, -normalize(ecPoint), ecPoint);
+  //directionalLight(2, normal);
  
   vec4 color = gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
