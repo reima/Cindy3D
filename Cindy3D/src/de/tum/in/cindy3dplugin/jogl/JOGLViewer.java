@@ -26,11 +26,11 @@ import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
+import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 import de.tum.in.cindy3dplugin.jogl.primitives.Point;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
-import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
 
@@ -69,7 +69,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		Util.setupGluegenClassLoading();
+		
 		frame = new JFrame("Cindy3D (JOGL)");
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setLayout(new BorderLayout());

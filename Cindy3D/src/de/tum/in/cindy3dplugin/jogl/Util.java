@@ -2,16 +2,23 @@ package de.tum.in.cindy3dplugin.jogl;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
 
+import com.jogamp.common.jvm.JNILibLoaderBase;
+import com.jogamp.common.jvm.JNILibLoaderBase.LoaderAction;
+import com.jogamp.gluegen.runtime.NativeLibLoader;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public class Util {
@@ -104,7 +111,7 @@ public class Util {
 	}
 	
 	public static Color toColor(double[] vec) {
-		
+
 		if (vec.length != 3) {
 			return null;
 		}
@@ -133,6 +140,70 @@ public class Util {
 
 	public static void setShaderLightFillIn(String shaderLightFillIn) {
 		Util.shaderLightFillIn = shaderLightFillIn;
-		
+	}
+
+	/**
+	 * Modifies gluegen's class loading to load native libraries from the
+	 * current JAR's directory.  
+	 */
+	public static void setupGluegenClassLoading() {
+		// Try to get JAR path
+		ProtectionDomain pd = Util.class.getProtectionDomain();
+		CodeSource cs = pd.getCodeSource();
+		URL jarURL = cs.getLocation();
+		String jarPath = null;
+		try {
+			jarPath = jarURL.toURI().getPath();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			return;
+		}
+		File jarFile = new File(jarPath);
+
+		if (!jarFile.isFile()) {
+			// Not loaded from JAR file, do nothing
+			return;
+		}
+		final String basePath = jarFile.getParent();
+
+		// Prevent gluegen from trying to load native library via
+		// System.loadLibrary("gluegen-rt").
+		NativeLibLoader.disableLoading();
+
+		// Instead, (try to) load it ourselves from JAR directory
+		String path = basePath + File.separator
+				+ System.mapLibraryName("gluegen-rt");
+		System.load(path);
+
+		// Next, override the gluegen JNI library loader action
+		JNILibLoaderBase.setLoadingAction(new LoaderAction() {
+			@Override
+			public void loadLibrary(String libname, String[] preload,
+					boolean preloadIgnoreError) {
+				if (preload != null) {
+					for (String preloadLibname : preload) {
+						loadLibrary(preloadLibname, preloadIgnoreError);
+					}
+				}
+				loadLibrary(libname, false);
+			}
+
+			@Override
+			public boolean loadLibrary(String libname, boolean ignoreError) {
+				boolean result = true;
+				try {
+					// Load JNI library from JAR directory
+					String path = basePath + File.separator
+							+ System.mapLibraryName(libname);
+					System.load(path);
+				} catch (UnsatisfiedLinkError e) {
+					result = false;
+					if (!ignoreError) {
+						throw e;
+					}
+				}
+				return result;
+			}
+		});
 	}
 }
