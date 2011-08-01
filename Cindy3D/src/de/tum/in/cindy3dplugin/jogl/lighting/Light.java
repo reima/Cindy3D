@@ -11,8 +11,14 @@ public abstract class Light {
 	private Color diffuseColor = new Color(1.0f, 1.0f, 1.0f);
 	private Color specularColor = new Color(1.0f, 1.0f, 1.0f);
 	
+	protected boolean enabled = false;
+	
 	public void setGLState(GL2 gl, int light) {
-		gl.glEnable(light);
+		if (enabled) {
+			gl.glEnable(GL2.GL_LIGHT0 + light);
+		}
+		else
+			gl.glDisable(GL2.GL_LIGHT0 + light);
 
 		gl.glLightfv(light, GL2.GL_AMBIENT,
 				ambientColor.getComponents(null), 0);
@@ -34,6 +40,14 @@ public abstract class Light {
 	
 	public void setSpecularColor(Color specular) {
 		specularColor = specular;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
 	}
 	
 	public abstract String getShaderFillIn(int light);

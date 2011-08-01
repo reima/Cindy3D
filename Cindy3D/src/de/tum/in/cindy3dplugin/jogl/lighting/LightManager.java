@@ -6,7 +6,7 @@ import org.apache.commons.math.geometry.Vector3D;
 
 public class LightManager {
 	
-	static final int MAX_LIGHTS = 8;
+	public static final int MAX_LIGHTS = 8;
 	
 	public enum LightType {
 		POINT_LIGHT,
@@ -26,6 +26,7 @@ public class LightManager {
 	}
 	
 	public void setLight(int light, LightInfo info) {
+		
 		if (lights[light] == null || lights[light].getType() != info.type) {
 			compileShader = true;
 			
@@ -41,6 +42,11 @@ public class LightManager {
 					lights[light] = new SpotLight();
 					break;
 			}
+		}
+		
+		if (!lights[light].isEnabled()) {
+			lights[light].setEnabled(true);
+			compileShader = true;
 		}
 		
 		if (info.ambient != null) {
@@ -75,8 +81,8 @@ public class LightManager {
 	public String getShaderFillIn() {
 		String str = "vec3 eye = -normalize(ecPoint);\n";
 		for (int i=0; i<MAX_LIGHTS; ++i) {
-			if (lights[i] != null) {
-				str += lights[i].getShaderFillIn(i);
+			if (lights[i] != null && lights[i].isEnabled()) {
+				str += lights[i].getShaderFillIn(i) + "\n";
 			}
 		}
 		return str;
@@ -104,6 +110,15 @@ public class LightManager {
 			}
 		}
 		gl.glPopMatrix();
+	}
+
+	public void disableLight(int light) {
+		if (!lights[light].isEnabled()) {
+			return;
+		}
+		
+		lights[light].setEnabled(false);
+		compileShader = true;
 	}
 
 }
