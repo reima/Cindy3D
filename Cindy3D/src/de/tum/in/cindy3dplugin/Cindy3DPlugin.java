@@ -10,6 +10,9 @@ import de.cinderella.api.cs.CindyScriptPlugin;
 import de.cinderella.math.Vec;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
+import de.tum.in.cindy3dplugin.jogl.Util;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightManager.LightType;
 
 /**
  * Implementation of the plugin interface
@@ -510,34 +513,81 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	public void background3d(ArrayList<Double> vec) {
 		if (vec.size() != 3)
 			return;
-		cindy3d.setBackgroundColor(new Color(
-				(float)Math.max(0, Math.min(1, vec.get(0))),
-				(float)Math.max(0, Math.min(1, vec.get(1))),
-				(float)Math.max(0, Math.min(1, vec.get(2)))));
+		cindy3d.setBackgroundColor(Util.toColor(vec));
 	}
 	
 	@CindyScript("depthrange3d")
 	public void depthrange3d(double near, double far) {
 		cindy3d.setDepthRange(near, far);
 	}
+	
+	@CindyScript("pointlight3d")
+	public void pointlight3d(int light) {
+		cindy3d.setLight(light, getLightModifiers(LightType.POINT_LIGHT));
+	}
+	
+	@CindyScript("directionallight3d")
+	public void directionallight3d(int light) {
+		cindy3d.setLight(light, getLightModifiers(LightType.DIRECTIONAL_LIGHT));
+	}
+	
+	private LightInfo getLightModifiers(LightType type) {
+		LightInfo info = new LightInfo();
+		
+		info.type = type;
+		
+		Object value;
+		
+		value = modifiers.get("ambient");
+		if (value instanceof double[]) {
+			info.ambient = Util.toColor((double[])value);
+		}
+		
+		value = modifiers.get("diffuse");
+		if (value instanceof double[]) {
+			info.diffuse = Util.toColor((double[])value);
+		}
+		
+		value = modifiers.get("specular");
+		if (value instanceof double[]) {
+			info.specular = Util.toColor((double[])value);
+		}
+		
+		value = modifiers.get("position");
+		if (value instanceof double[]) {
+			info.position = Util.toVector((double[])value);
+			
+			if (info.position.getX() == 42) {
+				info.diffuse = new Color(0.0f,0.0f,1.0f);
+			}
+			else {
+				info.diffuse = new Color(0.0f,1.0f,0.0f);
+			}
+		}
+		else
+		{
+			info.diffuse = new Color(1.0f,0.0f,0.0f);
+		}
+		
+		value = modifiers.get("direction");
+		if (value instanceof double[]) {
+			info.direction = Util.toVector((double[])value);
+		}
+		
+		return info;
+	}
 
 	protected void setColorState(AppearanceState appearance,
 			ArrayList<Double> vec) {
 		if (vec.size() != 3)
 			return;
-		appearance.setColor(new Color(
-				(float)Math.max(0, Math.min(1, vec.get(0))),
-				(float)Math.max(0, Math.min(1, vec.get(1))),
-				(float)Math.max(0, Math.min(1, vec.get(2)))));
+		appearance.setColor(Util.toColor(vec));
 	}
 	
 	protected void setColorState(AppearanceState appearance,
 			double[] vec) {
 		if (vec.length != 3)
 			return;
-		appearance.setColor(new Color(
-				(float)Math.max(0, Math.min(1, vec[0])),
-				(float)Math.max(0, Math.min(1, vec[1])),
-				(float)Math.max(0, Math.min(1, vec[2]))));
+		appearance.setColor(Util.toColor(vec));
 	}
 }

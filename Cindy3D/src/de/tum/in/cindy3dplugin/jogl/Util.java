@@ -1,11 +1,13 @@
 package de.tum.in.cindy3dplugin.jogl;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
@@ -48,6 +50,8 @@ public class Util {
 	public static double[] vectorToDoubleArray(Vector3D v) {
 		return new double[] {v.getX(), v.getY(), v.getZ()};
 	}
+	
+	private static String shaderLightFillIn = "";
 		
 	public static void readShaderSource(ClassLoader context, URL url,
 			StringBuffer result) {
@@ -77,6 +81,8 @@ public class Util {
 								"Can't find include file " + includeFile);
 					}
 					readShaderSource(context, nextURL, result);
+				} else if (line.startsWith("#pragma lights")) {
+					result.append(shaderLightFillIn + "\n");
 				} else {
 					result.append(line + "\n");
 				}
@@ -85,15 +91,48 @@ public class Util {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
-	
-	public static ShaderCode loadShader(int type, String name) {		
+
+	public static ShaderCode loadShader(int type, String name) {
 		StringBuffer buffer = new StringBuffer();
 		URL url = Util.class.getResource(SHADER_PATH + name);
 		readShaderSource(Util.class.getClassLoader(), url, buffer);
 		ShaderCode shader = new ShaderCode(type, 1,
 				new String[][] { { buffer.toString() } });
 		return shader;
+	}
+	
+	public static Color toColor(double[] vec) {
+		
+		if (vec.length != 3) {
+			return null;
+		}
+		return new Color(
+				(float)Math.max(0, Math.min(1, vec[0])),
+				(float)Math.max(0, Math.min(1, vec[1])),
+				(float)Math.max(0, Math.min(1, vec[2])));
+	}
+	
+	public static Vector3D toVector(double[] vec) {
+		if (vec.length != 3) {
+			return null;
+		}
+		return new Vector3D(vec[0], vec[1], vec[2]);
+	}
+	
+	public static Color toColor(ArrayList<Double> vec) {
+		if (vec.size() != 3) {
+			return null;
+		}
+		return new Color(
+				(float)Math.max(0, Math.min(1, vec.get(0))),
+				(float)Math.max(0, Math.min(1, vec.get(1))),
+				(float)Math.max(0, Math.min(1, vec.get(2))));
+	}
+
+	public static void setShaderLightFillIn(String shaderLightFillIn) {
+		Util.shaderLightFillIn = shaderLightFillIn;
+		
 	}
 }

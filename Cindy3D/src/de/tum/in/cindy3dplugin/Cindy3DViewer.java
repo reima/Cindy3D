@@ -2,6 +2,8 @@ package de.tum.in.cindy3dplugin;
 
 import java.awt.Color;
 
+import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
+
 public interface Cindy3DViewer {
 	enum MeshTopology {
 		OPEN,
@@ -56,4 +58,5 @@ public interface Cindy3DViewer {
 			boolean perVertexNormals, MeshTopology topology, AppearanceState appearance);
 	void setBackgroundColor(Color color);
 	void setDepthRange(double near, double far);
+	void setLight(int light, LightInfo info);
 }
