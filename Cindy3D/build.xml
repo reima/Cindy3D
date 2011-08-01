@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="jRealityPlugin" default="copy">
+<project name="Cindy3D" default="copy">
 
     <property environment="env"/>
 
     <target name="init" description="setup paths">
         <property name="cindy2jar" location="lib/cindy2.jar"/>
-    	<property name="3rdpartydir" location="lib/3rd-party"/>
+        <property name="3rdpartydir" location="lib/3rd-party"/>
         <property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/Cindy3D"/>
         <property name="plugin" location="Cindy3D.jar"/>
     </target>
     <path id="libraries">
+    	<fileset dir="lib/3rd-party" includes="*.jar"/>
     </path>
 
     <!-- no changes necessary below this line -->
-	
+
     <target name="compile" depends="init" description="Compile plugin">
         <javac encoding="iso-8859-1" debug="on" optimize="on"
                srcdir="src" destdir="bin" target="1.5"
                source="1.5">
             <classpath>
                 <pathelement location="${cindy2jar}"/>
-                <path refid="libraries"/>
+                <path refid="libraries" />
             </classpath>
         </javac>
     </target>
@@ -32,16 +33,10 @@
         <!-- add compiled classes -->
         <jar basedir="bin" destfile="${plugin}" includes="**/*.class">
         </jar>
-    	
+
         <!-- add resources -->
         <jar basedir="src" destfile="${plugin}" excludes="**/*.java" update="true">
         </jar>
-
-        <!-- add class path -->
-        <pathconvert property="mf.classpath" pathsep=" ">
-            <path refid="libraries"/>
-            <flattenmapper/>
-        </pathconvert>
 
         <!-- Add services file -->
         <jar destfile="${plugin}" basedir="config" update="true">
@@ -51,9 +46,9 @@
 
     <target name="copy" depends="build" description="Copy plugin to Plugins folder">
         <copy file="${plugin}" todir="${pluginfolder}"/>
-    	<copy todir="${pluginfolder}">
-    		<fileset dir="${3rdpartydir}" includes="*.jar"/>
-    	</copy>
+        <copy todir="${pluginfolder}">
+            <fileset dir="${3rdpartydir}" includes="*.jar"/>
+        </copy>
     </target>
 
     <target name="doc" description="Generate Javadoc">
