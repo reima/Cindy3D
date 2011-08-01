@@ -1,7 +1,5 @@
 package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 
-import java.nio.IntBuffer;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -26,7 +24,7 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 	}
 
 	@Override
-	public boolean init(GL gl) {
+	public boolean loadShader(GL gl) {
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();
@@ -71,8 +69,6 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(program.program());
 		
-		IntBuffer intBuffer = IntBuffer.allocate(1);
-		gl2.glGetIntegerv(GL2.GL_CULL_FACE_MODE, intBuffer);
 		if (jrs.cullMode == CullMode.CULL_FRONT) {
 			renderMode = 0;
 		} else if (jrs.cullMode == CullMode.CULL_BACK) {

@@ -24,7 +24,7 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 	private int transformLoc;
 
 	@Override
-	public boolean init(GL gl) {
+	public boolean loadShader(GL gl) {
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();

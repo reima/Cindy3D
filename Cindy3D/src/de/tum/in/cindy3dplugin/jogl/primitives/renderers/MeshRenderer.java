@@ -36,7 +36,7 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 	}
 
 	@Override
-	public boolean init(GL gl) {
+	public boolean loadShader(GL gl) {
 		meshBuffers = new HashMap<Integer, MeshBuffer>();
 
 		GL2 gl2 = gl.getGL2();

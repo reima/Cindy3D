@@ -36,7 +36,7 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 	}
 
 	@Override
-	public boolean init(GL gl) {
+	public boolean loadShader(GL gl) {
 		GL2 gl2 = gl.getGL2();
 
 		program = new ShaderProgram();
