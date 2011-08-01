@@ -109,7 +109,7 @@ forall(-size_1..size_1,x,
 	)
 );
 polygoncolor3d([0.85,0.5,0.4]);
-opacity3d(B.x/10.0);
+alpha3d(B.x/10.0);
 soffset = size+[0.2,0.2,0.2];
 quad = concat(soffset, reverse(-soffset));
 fillpoly3d([quad_[-1,-2,-3],quad_[ 1,-2,-3],quad_[ 1, 2,-3],quad_[-1, 2,-3]]);

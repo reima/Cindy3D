@@ -142,7 +142,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		log.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
-				.getColor(), appearance.getOpacity()));
+				.getColor(), appearance.getAlpha()));
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 //		log.info(str);
 		
 		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor(),
-				appearance.getOpacity()));
+				appearance.getAlpha()));
 	}
 
 	@Override
@@ -225,14 +225,14 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, MeshTopology topology, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
-				.getColor(), appearance.getOpacity(), topology));
+				.getColor(), appearance.getAlpha(), topology));
 	}
 	
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			boolean perVertexNormals, MeshTopology topology, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, perVertexNormals,
-				appearance.getColor(), appearance.getOpacity(),
+				appearance.getColor(), appearance.getAlpha(),
 				topology));
 	}
 	
@@ -241,7 +241,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			AppearanceState appearance)
 	{
 		scene.addPoint(new Point(cx, cy, cz, radius, appearance
-				.getColor(), appearance.getOpacity()));
+				.getColor(), appearance.getAlpha()));
 	}
 	
 	@Override

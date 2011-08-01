@@ -5,9 +5,9 @@ import java.awt.Color;
 public abstract class Primitive {
 	public Color color;
 
-	public Primitive(Color color, double opacity) {
+	public Primitive(Color color, double alpha) {
 		this.color = new Color(color.getRed(), color.getGreen(), color
-				.getBlue(), (int) (opacity * 255));
+				.getBlue(), (int) (alpha * 255));
 	}
 
 	public boolean isOpaque() {

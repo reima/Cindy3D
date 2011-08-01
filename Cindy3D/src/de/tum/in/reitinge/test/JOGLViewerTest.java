@@ -22,7 +22,7 @@ public class JOGLViewerTest {
 //		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 0.5);
 //		viewer.addSphere(0, 0, 0, 1, appearance);
 //		appearance.setColor(Color.green);
-//		appearance.setOpacity(1.0);
+//		appearance.setAlpha(1.0);
 //		viewer.addSphere(0, 0, 0, 0.25, appearance);
 		viewer.end();
 	}
@@ -50,7 +50,7 @@ public class JOGLViewerTest {
 	public static void circles(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
 		
-		appearance.setOpacity(0.5);
+		appearance.setAlpha(0.5);
 		
 		for (int i = -5; i <= 5; ++i) {
 			for (int j = -5; j <= 5; ++j) {
@@ -71,7 +71,7 @@ public class JOGLViewerTest {
 		
 //		appearance.setColor(Color.green);
 //		appearance.setSize(50);
-//		appearance.setOpacity(0.1);
+//		appearance.setAlpha(0.1);
 //		viewer.addPoint(0, 0, 0, appearance);
 		
 		appearance.setColor(Color.red);
@@ -106,7 +106,7 @@ public class JOGLViewerTest {
 			}
 		}
 		appearance.setColor(Color.RED);
-		//appearance.setOpacity(0.7);
+		//appearance.setAlpha(0.7);
 		viewer.addMesh(rings, segments, vert, true, MeshTopology.CLOSE_XY, appearance);
 		
 		//viewer.addPoint(0, 0, 0, appearance);
@@ -135,7 +135,7 @@ public class JOGLViewerTest {
 //		
 //		viewer.addPolygon(vertices2, null, appearance);
 //		
-//		appearance.setOpacity(0.25);
+//		appearance.setAlpha(0.25);
 //		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
 //				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
 		
@@ -156,7 +156,7 @@ public class JOGLViewerTest {
 			}
 		}
 		appearance.setColor(Color.BLUE);
-		appearance.setOpacity(0.5);
+		appearance.setAlpha(0.5);
 		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
 		
 		vert = new double[sizeCount*sizeCount][3];
@@ -172,7 +172,7 @@ public class JOGLViewerTest {
 			}
 		}
 		appearance.setColor(Color.RED);
-		appearance.setOpacity(0.5);
+		appearance.setAlpha(0.5);
 		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
 		
 		vert = new double[sizeCount*sizeCount][3];
@@ -188,7 +188,7 @@ public class JOGLViewerTest {
 			}
 		}
 		appearance.setColor(Color.YELLOW);
-		appearance.setOpacity(0.5);
+		appearance.setAlpha(0.5);
 		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
 		
 		vert = new double[sizeCount*sizeCount][3];
@@ -204,7 +204,7 @@ public class JOGLViewerTest {
 			}
 		}
 		appearance.setColor(Color.GREEN);
-		appearance.setOpacity(0.5);
+		appearance.setAlpha(0.5);
 		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
 		
 		// viewer.addLineStrip(vertices, appearance, true);
@@ -228,7 +228,7 @@ public class JOGLViewerTest {
 		};
 		
 		for (double[] vert : verts) {
-			appearance.setOpacity(0.5);
+			appearance.setAlpha(0.5);
 			viewer.addSphere(vert[0], vert[1], vert[2], 0.1, appearance);
 		}
 		
@@ -293,7 +293,7 @@ public class JOGLViewerTest {
 //		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.BLACK};
 //		
 //		appearance.setColor(Color.RED);
-//		appearance.setOpacity(0.3);
+//		appearance.setAlpha(0.3);
 //		
 //		int h=0;
 //		for (int[] triangle : triangles) {
@@ -306,7 +306,7 @@ public class JOGLViewerTest {
 //		}
 //		
 //		appearance.setColor(Color.BLUE);
-//		appearance.setOpacity(0.3);
+//		appearance.setAlpha(0.3);
 //		
 //		h=3;
 //		for (int[] triangle : triangles) {

@@ -120,10 +120,10 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (value instanceof Double) {
 			result.setSize((Double)value);
 		}
-		value = modifiers.get("opacity");
+		value = modifiers.get("alpha");
 		if (value instanceof Double) {
-			double opacity = Math.max(0, Math.min(1, (Double)value));
-			result.setOpacity(opacity);
+			double alpha = Math.max(0, Math.min(1, (Double)value));
+			result.setAlpha(alpha);
 		}
 		return result;
 	}
@@ -427,10 +427,10 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			polygonAppearance = polygonAppearanceStack.pop();
 	}
 	
-	@CindyScript("opacity3d")
-	public void opacity3d(double opacity) {
-		opacity = Math.max(0, Math.min(1, opacity));
-		polygonAppearance.setOpacity(opacity);
+	@CindyScript("alpha3d")
+	public void alpha3d(double alpha) {
+		alpha = Math.max(0, Math.min(1, alpha));
+		polygonAppearance.setAlpha(alpha);
 	}
 
 	/**

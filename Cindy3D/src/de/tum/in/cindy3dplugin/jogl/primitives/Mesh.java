@@ -24,17 +24,17 @@ public class Mesh extends Primitive {
 	public int faceCount;
 
 	public Mesh(int height, int width, double[][] positions, double[][] normals,
-			Color color, double opacity, MeshTopology topology) {
-		super(color, opacity);
+			Color color, double alpha, MeshTopology topology) {
+		super(color, alpha);
 		init(width, height, positions, normals, normals != null, topology);
 		if (normals == null)
 			computeNormals();
 	}
 
 	public Mesh(int height, int width, double[][] positions,
-			boolean perVertexNormals, Color color, double opacity,
+			boolean perVertexNormals, Color color, double alpha,
 			MeshTopology topology) {
-		super(color, opacity);
+		super(color, alpha);
 		init(width, height, positions, null, perVertexNormals, topology);
 		computeNormals();
 	}

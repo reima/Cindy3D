@@ -10,12 +10,12 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 public class MeshBuffer {
 	private static final int SIZEOF_DOUBLE = 8;
 	private static final int SIZEOF_INT = 4;
-	
+
 	int vertexBuffer;
 	int indexBuffer;
 
 	boolean hasIndexBuffer;
-	
+
 	int indexCount;
 	int vertexCount;
 
@@ -44,33 +44,28 @@ public class MeshBuffer {
 				vertices.put(m.normals[i]);
 			}
 		}
-		
+
 		// Iterate over all grid cells (each of which consists of two faces)
 		int faceIndex = 0;
 		for (int gridY = 0; gridY < m.gridYMax; ++gridY) {
 			for (int gridX = 0; gridX < m.gridXMax; ++gridX) {
 				/*
-				 *    v1----v2
-				 *    |    / |
-				 *    |f1 /  |
-				 *    |  / f2|
-				 *    | /    |
-				 *    v3----v4
+				 * v1----v2 | / | |f1 / | | / f2| | / | v3----v4
 				 */
 				int gridXPlus1 = (gridX + 1) % m.gridWidth;
 				int gridYPlus1 = (gridY + 1) % m.gridHeight;
-				
-				int v1Index = m.getVertexIndex(gridX,      gridY);
+
+				int v1Index = m.getVertexIndex(gridX, gridY);
 				int v2Index = m.getVertexIndex(gridXPlus1, gridY);
-				int v3Index = m.getVertexIndex(gridX,      gridYPlus1);
+				int v3Index = m.getVertexIndex(gridX, gridYPlus1);
 				int v4Index = m.getVertexIndex(gridXPlus1, gridYPlus1);
-				
+
 				if (m.perVertexNormals) {
 					// f1
 					indices.put(v1Index);
 					indices.put(v2Index);
 					indices.put(v3Index);
-					
+
 					// f2
 					indices.put(v2Index);
 					indices.put(v3Index);
@@ -84,7 +79,7 @@ public class MeshBuffer {
 					vertices.put(m.normals[f1Index]);
 					vertices.put(m.positions[v3Index]);
 					vertices.put(m.normals[f1Index]);
-					
+
 					// f2
 					int f2Index = faceIndex++;
 					vertices.put(m.positions[v2Index]);
@@ -96,9 +91,9 @@ public class MeshBuffer {
 				}
 			}
 		}
-		
+
 		int tmp[] = new int[1];
-		
+
 		vertices.flip();
 		gl2.glGenBuffers(1, tmp, 0);
 		vertexBuffer = tmp[0];
@@ -106,7 +101,7 @@ public class MeshBuffer {
 		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()
 				* SIZEOF_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
-		
+
 		if (hasIndexBuffer) {
 			indices.flip();
 			gl2.glGenBuffers(1, tmp, 0);

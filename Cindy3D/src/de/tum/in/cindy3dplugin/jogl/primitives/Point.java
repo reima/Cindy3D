@@ -9,8 +9,8 @@ public class Point extends Primitive {
 	public double size;
 
 	public Point(double x, double y, double z, double size, Color color,
-			double opacity) {
-		super(color, opacity);
+			double alpha) {
+		super(color, alpha);
 		this.x = x;
 		this.y = y;
 		this.z = z;
