@@ -30,6 +30,7 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Point;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
+import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
 
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
@@ -141,7 +142,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		log.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
-				.getColor()));
+				.getColor(), appearance.getOpacity()));
 	}
 
 	@Override

@@ -8,10 +8,10 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
 import de.tum.in.cindy3dplugin.jogl.Util;
-import de.tum.in.cindy3dplugin.jogl.JOGLRenderState.CullMode;
 import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
+import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
 public class PointRenderer extends PrimitiveRenderer<Point> {
 	private ShaderProgram program = null;

@@ -15,15 +15,15 @@ public class JOGLViewerTest {
 		
 		viewer.begin();
 //		colorSpiral(viewer);
-//		circles(viewer);
+		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 0.5);
-		viewer.addSphere(0, 0, 0, 1, appearance);
-		appearance.setColor(Color.green);
-		appearance.setOpacity(1.0);
-		viewer.addSphere(0, 0, 0, 0.25, appearance);
+//		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 0.5);
+//		viewer.addSphere(0, 0, 0, 1, appearance);
+//		appearance.setColor(Color.green);
+//		appearance.setOpacity(1.0);
+//		viewer.addSphere(0, 0, 0, 0.25, appearance);
 		viewer.end();
 	}
 	
@@ -49,6 +49,8 @@ public class JOGLViewerTest {
 	
 	public static void circles(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
+		
+		appearance.setOpacity(0.5);
 		
 		for (int i = -5; i <= 5; ++i) {
 			for (int j = -5; j <= 5; ++j) {

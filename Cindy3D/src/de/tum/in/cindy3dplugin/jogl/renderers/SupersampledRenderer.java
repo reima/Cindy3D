@@ -9,7 +9,6 @@ import javax.media.opengl.GLPbuffer;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-import de.tum.in.cindy3dplugin.jogl.JOGLRenderer;
 import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 

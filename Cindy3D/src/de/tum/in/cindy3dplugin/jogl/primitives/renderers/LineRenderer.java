@@ -13,10 +13,10 @@ import org.apache.commons.math.linear.RealVector;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
-import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
+import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class LineRenderer extends PrimitiveRenderer<Line> {
 
