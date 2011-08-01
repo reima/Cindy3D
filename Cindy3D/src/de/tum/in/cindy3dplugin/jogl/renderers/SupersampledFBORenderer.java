@@ -88,11 +88,11 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		
 		// Render to framebuffer
 		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, framebuffer);
-		gl.glPushAttrib(GL2.GL_VIEWPORT_BIT);
 		gl.glViewport(0, 0, width*superSampleFactor, height*superSampleFactor);
 		super.display(drawable);
 		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
-		gl.glPopAttrib();
+		
+		gl.glViewport(0,0, width, height);
 		
 		// Bring framebuffer to screen by drawing a textured quad		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
