@@ -59,4 +59,5 @@ public interface Cindy3DViewer {
 	void setBackgroundColor(Color color);
 	void setDepthRange(double near, double far);
 	void setLight(int light, LightInfo info);
+	void disableLight(int light);
 }

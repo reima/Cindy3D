@@ -29,8 +29,9 @@ public class JOGLViewerTest {
 		
 		LightInfo info = new LightInfo();
 		
-		info.type = LightType.POINT_LIGHT;
-		info.position = new Vector3D(10,0,0);
+		info.type = LightType.DIRECTIONAL_LIGHT;
+		info.direction = new Vector3D(1,0,0);
+		info.diffuse = new Color(1.0f,0.0f,0.0f);
 		viewer.setLight(0, info);
 		
 //		appearance.setColor(Color.green);

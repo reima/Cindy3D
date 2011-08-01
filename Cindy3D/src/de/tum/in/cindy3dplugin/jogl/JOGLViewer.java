@@ -326,4 +326,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void setLight(int light, LightInfo info) {
 		renderer.getLightManager().setLight(light, info);
 	}
+
+	@Override
+	public void disableLight(int light) {
+		renderer.getLightManager().disableLight(light);
+	}
 }

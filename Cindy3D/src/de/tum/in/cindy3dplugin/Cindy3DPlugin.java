@@ -12,6 +12,7 @@ import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.lighting.LightManager.LightType;
 
 /**
@@ -521,13 +522,28 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.setDepthRange(near, far);
 	}
 	
+	@CindyScript("disablelight3d")
+	public void disablelight3d(int light) {
+		if (light < 0 || light >= LightManager.MAX_LIGHTS) {
+			return;
+		}
+		
+		cindy3d.disableLight(light);
+	}
+	
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
+		if (light < 0 || light >= LightManager.MAX_LIGHTS) {
+			return;
+		}
 		cindy3d.setLight(light, getLightModifiers(LightType.POINT_LIGHT));
 	}
 	
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
+		if (light < 0 || light >= LightManager.MAX_LIGHTS) {
+			return;
+		}
 		cindy3d.setLight(light, getLightModifiers(LightType.DIRECTIONAL_LIGHT));
 	}
 	
@@ -556,17 +572,6 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		value = modifiers.get("position");
 		if (value instanceof double[]) {
 			info.position = Util.toVector((double[])value);
-			
-			if (info.position.getX() == 42) {
-				info.diffuse = new Color(0.0f,0.0f,1.0f);
-			}
-			else {
-				info.diffuse = new Color(0.0f,1.0f,0.0f);
-			}
-		}
-		else
-		{
-			info.diffuse = new Color(1.0f,0.0f,0.0f);
 		}
 		
 		value = modifiers.get("direction");
