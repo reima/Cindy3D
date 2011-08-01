@@ -1,26 +1,27 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives;
 
 import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
+import de.tum.in.cindy3dplugin.jogl.Util;
 
 public class Mesh extends Primitive {
 	private static int meshCounter = 0;
 	
-	int gridWidth, gridHeight;
+	public int gridWidth, gridHeight;
 
-	double[][] positions;
-	double[][] normals;
+	public double[][] positions;
+	public double[][] normals;
 
-	boolean perVertexNormals;
+	public boolean perVertexNormals;
 
-	int identifier;
-	MeshTopology topology;
+	public int identifier;
+	public MeshTopology topology;
 
-	int gridXMax, gridYMax;
-	int faceCount;
+	public int gridXMax, gridYMax;
+	public int faceCount;
 
 	public Mesh(int height, int width, double[][] positions, double[][] normals,
 			Color color, double opacity, MeshTopology topology) {

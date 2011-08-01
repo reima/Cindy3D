@@ -1,7 +1,10 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.renderers;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
+import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
+import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 
 public class SupersampledFBORenderer extends DefaultRenderer {
 	private int width;

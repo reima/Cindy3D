@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.renderers;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,7 +7,17 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLException;
 
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderer;
+import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
+import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.JOGLRenderState.CullMode;
+import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.CircleRenderer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.LineRenderer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.MeshRenderer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PointRenderer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PolygonRenderer;
 
 public class DefaultRenderer extends JOGLRenderer {	
 	private PointRenderer pointRenderer = new PointRenderer();

@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.renderers;
 
 import javax.media.opengl.DebugGL2;
 import javax.media.opengl.GL2;
@@ -8,6 +8,10 @@ import javax.media.opengl.GLDrawableFactory;
 import javax.media.opengl.GLPbuffer;
 
 import com.jogamp.opengl.util.texture.Texture;
+
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderer;
+import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
+import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 
 public class SupersampledRenderer extends JOGLRenderer {
 	private GLPbuffer pbuffer = null;

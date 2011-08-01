@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 
 import java.nio.IntBuffer;
 
@@ -8,9 +8,12 @@ import javax.media.opengl.GL2;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
+import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.JOGLRenderState.CullMode;
+import de.tum.in.cindy3dplugin.jogl.primitives.Point;
 
-class PointRenderer extends PrimitiveRenderer<Point> {
+public class PointRenderer extends PrimitiveRenderer<Point> {
 	private ShaderProgram program = null;
 	private int centerLoc;
 	private int colorLoc;

@@ -2,6 +2,8 @@ package de.tum.in.cindy3dplugin.jogl;
 
 import javax.media.opengl.GLEventListener;
 
+import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
+
 public abstract class JOGLRenderer implements GLEventListener {
 	protected Scene scene;
 	protected ModelViewerCamera camera;

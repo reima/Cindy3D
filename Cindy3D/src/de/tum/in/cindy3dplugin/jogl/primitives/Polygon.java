@@ -1,12 +1,12 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives;
 
 import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
 public class Polygon extends Primitive {
-	Vector3D positions[];
-	Vector3D normals[];
+	public Vector3D positions[];
+	public Vector3D normals[];
 
 	public Polygon(double[][] positions, double[][] normals,
 			Color color, double opacity) {

@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,6 +8,10 @@ import javax.media.opengl.GL2;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
+
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
+import de.tum.in.cindy3dplugin.jogl.Util;
+import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 
 public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 

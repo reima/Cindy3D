@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives;
 
 import java.awt.Color;
 import java.util.ArrayList;

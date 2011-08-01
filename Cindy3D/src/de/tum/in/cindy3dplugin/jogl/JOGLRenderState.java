@@ -3,7 +3,7 @@ package de.tum.in.cindy3dplugin.jogl;
 import javax.media.opengl.GL;
 
 public class JOGLRenderState {
-	enum CullMode {
+	public enum CullMode {
 		CULL_NONE,
 		CULL_FRONT,
 		CULL_BACK

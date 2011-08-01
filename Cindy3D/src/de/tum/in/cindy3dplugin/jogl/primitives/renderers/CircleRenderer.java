@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -10,6 +10,10 @@ import org.apache.commons.math.linear.RealMatrix;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
+
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
+import de.tum.in.cindy3dplugin.jogl.Util;
+import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 
 public class CircleRenderer extends PrimitiveRenderer<Circle> {
 	private ShaderProgram program = null;

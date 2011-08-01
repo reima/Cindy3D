@@ -1,8 +1,11 @@
-package de.tum.in.cindy3dplugin.jogl;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 
 import java.util.Collection;
 
 import javax.media.opengl.GL;
+
+import de.tum.in.cindy3dplugin.jogl.JOGLRenderState;
+import de.tum.in.cindy3dplugin.jogl.primitives.Primitive;
 
 public abstract class PrimitiveRenderer<T extends Primitive> {
 	public abstract boolean init(GL gl);

@@ -23,7 +23,14 @@ import org.apache.commons.math.geometry.Vector3D;
 
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
-import de.tum.in.cindy3dplugin.jogl.Line.LineType;
+import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
+import de.tum.in.cindy3dplugin.jogl.primitives.Line;
+import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
+import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
+import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
+import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
+import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
 
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
