@@ -15,12 +15,9 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class MeshRenderer extends PrimitiveRenderer<Mesh> {
-
 	private HashMap<Integer, MeshBuffer> meshBuffers;
 
 	private ShaderProgram program = null;
-
-	private int colorLoc;
 
 	@Override
 	public void dispose(GL gl) {
@@ -59,8 +56,6 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 		if (!program.link(gl.getGL2(), null))
 			return false;
 
-		colorLoc = gl2.glGetUniformLocation(program.program(), "polygonColor");
-
 		return true;
 	}
 
@@ -92,9 +87,7 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 			meshBuffers.put(m.identifier, mb);
 		}
 
-		gl2.glUniform4fv(colorLoc, 1, m.color.getComponents(null), 0);
-		
-		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)m.shininess);
+		Util.setMaterial(jrs.gl, m.color, m.shininess);
 
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
 

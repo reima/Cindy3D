@@ -1,5 +1,3 @@
-uniform vec4 polygonColor;
-
 varying vec3 pos;
 varying vec3 normal;
 
@@ -7,6 +5,5 @@ varying vec3 normal;
 
 void main() {
 	shade(normalize(normal),
-	      vec3(gl_ModelViewMatrix * vec4(pos, 1)),
-	      polygonColor);
+	      vec3(gl_ModelViewMatrix * vec4(pos, 1)));
 }

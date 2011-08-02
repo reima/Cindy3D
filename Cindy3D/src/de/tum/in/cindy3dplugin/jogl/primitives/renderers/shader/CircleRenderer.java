@@ -21,7 +21,6 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 	private int centerLoc;
 	private int radiusSqLoc;
 	private int normalLoc;
-	private int colorLoc;
 	private int transformLoc;
 
 	@Override
@@ -51,7 +50,6 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 		radiusSqLoc = gl2.glGetUniformLocation(program.program(),
 				"circleRadiusSq");
 		normalLoc = gl2.glGetUniformLocation(program.program(), "circleNormal");
-		colorLoc = gl2.glGetUniformLocation(program.program(), "circleColor");
 
 		return true;
 	}
@@ -82,9 +80,8 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 		gl2.glUniform3f(normalLoc, (float) circle.normalX,
 				(float) circle.normalY, (float) circle.normalZ);
 		gl2.glUniform1f(radiusSqLoc, (float) (circle.radius * circle.radius));
-		gl2.glUniform4fv(colorLoc, 1, circle.color.getComponents(null), 0);
-		
-		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)circle.shininess);
+
+		Util.setMaterial(jrs.gl, circle.color, circle.shininess);
 
 		RealMatrix transform = MatrixUtils.createRealIdentityMatrix(4);
 		transform.setColumn(3, new double[] { circle.centerX, circle.centerY,

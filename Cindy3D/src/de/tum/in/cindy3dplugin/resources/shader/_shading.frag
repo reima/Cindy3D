@@ -68,7 +68,7 @@ void directionalLight(in int i, in vec3 normal)
    Specular += gl_LightSource[i].specular * pf;
 }
 
-void shade(in vec3 normal, in vec3 ecPoint, in vec4 materialColor) {
+void shade(in vec3 normal, in vec3 ecPoint) {
   Ambient = vec4(0.0);
   Diffuse = vec4(0.0);
   Specular = vec4(0.0);
@@ -80,8 +80,8 @@ void shade(in vec3 normal, in vec3 ecPoint, in vec4 materialColor) {
  
   vec4 color = //gl_FrontLightModelProduct.sceneColor +
     Ambient  * gl_FrontMaterial.ambient +
-    Diffuse  * vec4(materialColor.rgb, 1.0);
-  color += Specular * gl_FrontMaterial.specular;
-  color = clamp( color, 0.0, 1.0 );
-  gl_FragColor = vec4(color.rgb, materialColor.a);
+    Diffuse  * gl_FrontMaterial.diffuse +
+    Specular * gl_FrontMaterial.specular;
+  color = clamp(color, 0.0, 1.0);
+  gl_FragColor = vec4(color.rgb, gl_FrontMaterial.diffuse.a);
 }

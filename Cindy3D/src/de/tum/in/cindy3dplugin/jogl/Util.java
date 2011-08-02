@@ -16,6 +16,9 @@ import java.util.logging.SimpleFormatter;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
 
@@ -243,5 +246,12 @@ public class Util {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static void setMaterial(GL gl, Color color, double shininess) {
+		gl.getGL2().glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE,
+				color.getColorComponents(null), 0);
+		gl.getGL2().glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS,
+				(float) shininess);
 	}
 }

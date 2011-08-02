@@ -20,14 +20,12 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class LineRenderer extends PrimitiveRenderer<Line> {
-
 	private ShaderProgram program = null;
 
 	private int transformLoc;
 	private int originLoc;
 	private int directionLoc;
 	private int radiusLoc;
-	private int colorLoc;
 	private int lengthLoc;
 
 	@Override
@@ -65,7 +63,6 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 				"cylinderDirection");
 		radiusLoc = gl2.glGetUniformLocation(program.program(),
 				"cylinderRadius");
-		colorLoc = gl2.glGetUniformLocation(program.program(), "cylinderColor");
 		lengthLoc = gl2.glGetUniformLocation(program.program(),
 				"cylinderLength");
 
@@ -96,7 +93,6 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 
 	@Override
 	protected void render(JOGLRenderState jrs, Line line) {
-		
 		GL2 gl2 = jrs.gl.getGL2();
 		// Get the model view matrix
 		RealMatrix modelView = jrs.camera.getTransform();
@@ -238,9 +234,9 @@ public class LineRenderer extends PrimitiveRenderer<Line> {
 			// processing the vertices on gpu
 			gl2.glUniform1f(lengthLoc, (float) cylinderLength);
 			gl2.glUniform1f(radiusLoc, (float) line.radius);
-			gl2.glUniform4fv(colorLoc, 1, line.color.getComponents(null), 0);
 			
-			gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)line.shininess);
+			Util.setMaterial(jrs.gl, line.color, line.shininess);
+			
 			//gl2.glFlush();
 			gl2.glBegin(GL2.GL_QUADS);
 				gl2.glVertex3d(-1, -1, -1);

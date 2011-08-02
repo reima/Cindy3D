@@ -15,7 +15,6 @@ import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 public class PointRenderer extends PrimitiveRenderer<Point> {
 	private ShaderProgram program = null;
 	private int centerLoc;
-	private int colorLoc;
 	private int radiusLoc;
 	private int modeLoc;
 	
@@ -46,7 +45,6 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 			return false;
 
 		centerLoc = gl2.glGetUniformLocation(program.program(), "sphereCenter");
-		colorLoc = gl2.glGetUniformLocation(program.program(), "sphereColor");
 		radiusLoc = gl2.glGetUniformLocation(program.program(), "sphereRadius");
 		modeLoc = gl2.glGetUniformLocation(program.program(), "sphereMode");
 
@@ -84,11 +82,10 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUniform3f(centerLoc, (float) point.x, (float) point.y,
 				(float) point.z);
-		gl2.glUniform4fv(colorLoc, 1, point.color.getComponents(null), 0);
 		gl2.glUniform1f(radiusLoc, (float) point.size);
 		
-		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)point.shininess);
-		
+		Util.setMaterial(jrs.gl, point.color, point.shininess);
+
 		// gl2.glFlush();
 		gl2.glUniform1f(modeLoc, renderMode);
 			

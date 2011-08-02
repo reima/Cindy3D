@@ -1,6 +1,5 @@
 uniform vec3 sphereCenter;
 uniform float sphereRadius;
-uniform vec4 sphereColor;
 uniform float sphereMode;
 
 varying vec3 pos;
@@ -44,7 +43,7 @@ void main() {
 
   vec3 pointOnSphere = lambda*dir;
   vec3 normal = normalize(pointOnSphere - camSpaceCenter);
-  shade(normal, pointOnSphere, sphereColor);
+  shade(normal, pointOnSphere);
 
   vec4 projPoint = gl_ProjectionMatrix * vec4(pointOnSphere, 1);
   gl_FragDepth = (projPoint.z / projPoint.w + 1.0) / 2.0;

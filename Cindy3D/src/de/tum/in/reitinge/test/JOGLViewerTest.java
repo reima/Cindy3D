@@ -19,7 +19,8 @@ public class JOGLViewerTest {
 		viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
-		colorSpiral(viewer);
+		materials(viewer);
+//		colorSpiral(viewer);
 //		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
@@ -27,6 +28,18 @@ public class JOGLViewerTest {
 //		enneper(viewer, true);
 //		lights(viewer);
 		viewer.end();
+	}
+	
+	public static void materials(Cindy3DViewer viewer) {
+		AppearanceState app = new AppearanceState(Color.red, 0, 1, 1);
+		
+		for (int i = 1; i <= 12; ++i) {
+			for (int j = 1; j <= 12; ++j) {
+				app.setShininess(i*10);
+				app.setColor(new Color(Color.HSBtoRGB(j/12.0f, 1, 1)));
+				viewer.addSphere(i-6, j-6, 0, 0.45, app);
+			}
+		}
 	}
 	
 	public static void lights(Cindy3DViewer viewer) {

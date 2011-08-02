@@ -1,7 +1,6 @@
 uniform vec3 cylinderPoint;
 uniform vec3 cylinderDirection;
 uniform float cylinderRadius;
-uniform vec4 cylinderColor;
 uniform float cylinderLength;
 
 varying vec3 pos;
@@ -52,8 +51,8 @@ void main() {
 	vec3 normal = normalize(cross(cross(cylinderDirection,
 						pointOnCylinder-cylinderPoint), cylinderDirection));
 
-	shade(normal, pointOnCylinder, cylinderColor);
-  
+	shade(normal, pointOnCylinder);
+
 	vec4 projPoint = gl_ProjectionMatrix * vec4(pointOnCylinder, 1);
 	gl_FragDepth = (projPoint.z / projPoint.w + 1.0) / 2.0;
 }

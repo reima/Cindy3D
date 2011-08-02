@@ -12,11 +12,8 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
-
 	private ShaderProgram program = null;
-	
-	private int colorLoc;
-	
+
 	@Override
 	public void dispose(GL gl) {
 		if (program != null)
@@ -47,8 +44,6 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 		if (!program.link(gl.getGL2(), null))
 			return false;
 
-		colorLoc = gl2.glGetUniformLocation(program.program(), "polygonColor");
-
 		return true;
 	}
 	
@@ -62,9 +57,7 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	protected void render(JOGLRenderState jrs, Polygon polygon) {
 		GL2 gl2 = jrs.gl.getGL2();
 
-		gl2.glUniform4fv(colorLoc, 1, polygon.color.getComponents(null), 0);
-		
-		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)polygon.shininess);
+		Util.setMaterial(jrs.gl, polygon.color, polygon.shininess);
 
 		gl2.glBegin(GL2.GL_POLYGON);
 		for (int i = 0; i < polygon.positions.length; ++i) {

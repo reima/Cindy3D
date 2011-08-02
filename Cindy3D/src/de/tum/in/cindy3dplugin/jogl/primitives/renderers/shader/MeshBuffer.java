@@ -50,14 +50,19 @@ public class MeshBuffer {
 		for (int gridY = 0; gridY < m.gridYMax; ++gridY) {
 			for (int gridX = 0; gridX < m.gridXMax; ++gridX) {
 				/*
-				 * v1----v2 | / | |f1 / | | / f2| | / | v3----v4
+				 *    v1----v2
+				 *    |    / |
+				 *    |f1 /  |
+				 *    |  / f2|
+				 *    | /    |
+				 *    v3----v4
 				 */
 				int gridXPlus1 = (gridX + 1) % m.gridWidth;
 				int gridYPlus1 = (gridY + 1) % m.gridHeight;
 
-				int v1Index = m.getVertexIndex(gridX, gridY);
+				int v1Index = m.getVertexIndex(gridX,      gridY);
 				int v2Index = m.getVertexIndex(gridXPlus1, gridY);
-				int v3Index = m.getVertexIndex(gridX, gridYPlus1);
+				int v3Index = m.getVertexIndex(gridX,      gridYPlus1);
 				int v4Index = m.getVertexIndex(gridXPlus1, gridYPlus1);
 
 				if (m.perVertexNormals) {
