@@ -63,6 +63,8 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 		GL2 gl2 = jrs.gl.getGL2();
 
 		gl2.glUniform4fv(colorLoc, 1, polygon.color.getComponents(null), 0);
+		
+		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)polygon.shininess);
 
 		gl2.glBegin(GL2.GL_POLYGON);
 		for (int i = 0; i < polygon.positions.length; ++i) {

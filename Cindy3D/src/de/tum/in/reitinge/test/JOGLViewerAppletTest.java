@@ -30,7 +30,7 @@ public class JOGLViewerAppletTest extends Applet {
 	}
 	
 	public static void enneper(Cindy3DViewer viewer, boolean dots) {
-		AppearanceState app = new AppearanceState(Color.white, 1, 1);
+		AppearanceState app = new AppearanceState(Color.white, 60, 1, 1);
 		
 		viewer.setBackgroundColor(Color.black);
 		int rr = 30;

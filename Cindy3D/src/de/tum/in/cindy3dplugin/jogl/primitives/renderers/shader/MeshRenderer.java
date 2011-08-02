@@ -93,6 +93,8 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 		}
 
 		gl2.glUniform4fv(colorLoc, 1, m.color.getComponents(null), 0);
+		
+		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)m.shininess);
 
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
 

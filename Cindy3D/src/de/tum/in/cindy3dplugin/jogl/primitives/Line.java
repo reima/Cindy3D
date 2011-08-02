@@ -18,9 +18,10 @@ public class Line extends Primitive {
 
 	public Line(double x1, double y1, double z1,
 				double x2, double y2, double z2,
-				double radius, Color color, LineType lineType) {
+				double radius, Color color, double shininess,
+				LineType lineType) {
 		
-		super(color, 1);
+		super(color, shininess, 1);
 		p1 = new Vector3D(x1, y1, z1);
 		p2 = new Vector3D(x2, y2, z2);
 		this.radius = radius;

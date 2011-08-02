@@ -19,18 +19,18 @@ public class JOGLViewerTest {
 		viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
-//		colorSpiral(viewer);
+		colorSpiral(viewer);
 //		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
-		enneper(viewer, true);
+//		enneper(viewer, true);
 //		lights(viewer);
 		viewer.end();
 	}
 	
 	public static void lights(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.white, 1.0, 1);
+		AppearanceState appearance = new AppearanceState(Color.white, 60, 1.0, 1);
 		viewer.addSphere(0, 0, 0, 1, appearance);
 		
 		LightInfo info = new LightInfo();
@@ -46,7 +46,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void enneper(Cindy3DViewer viewer, boolean dots) {
-		AppearanceState app = new AppearanceState(Color.white, 1, 1);
+		AppearanceState app = new AppearanceState(Color.white, 60, 1, 1);
 		
 		viewer.setBackgroundColor(Color.black);
 		int rr = 30;
@@ -82,7 +82,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void colorSpiral(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 255, 1.0, 1.0);
 		
 		double height = 2;
 		double radius = 1;
@@ -102,7 +102,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void circles(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
 		
 		appearance.setAlpha(0.5);
 		
@@ -119,7 +119,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void spheres(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 100.0, 1);
+		AppearanceState appearance = new AppearanceState(Color.red, 60, 100.0, 1);
 		
 		//viewer.addPoint(0, 0, 0, appearance);
 		
@@ -167,7 +167,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void lines(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 1.0, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
 		
 		//viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
 		//viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
@@ -265,7 +265,7 @@ public class JOGLViewerTest {
 	}
 
 	public static void icosahedron(JOGLViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.yellow, 1.0, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.yellow, 60, 1.0, 1.0);
 		double golden = (1.0 + Math.sqrt(5)) / 2.0;
 
 		double verts[][] = { { 0, 1, golden }, { 0, -1, golden },

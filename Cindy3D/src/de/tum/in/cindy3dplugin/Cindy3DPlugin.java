@@ -62,11 +62,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 	public Cindy3DPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
-		pointAppearance = new AppearanceState(Color.RED, 1, 1);
+		pointAppearance = new AppearanceState(Color.RED, 60, 1, 1);
 		lineAppearanceStack = new Stack<AppearanceState>();
-		lineAppearance = new AppearanceState(Color.BLUE, 1, 1);
+		lineAppearance = new AppearanceState(Color.BLUE, 60, 1, 1);
 		polygonAppearanceStack = new Stack<AppearanceState>();
-		polygonAppearance = new AppearanceState(Color.GREEN, 1, 1);
+		polygonAppearance = new AppearanceState(Color.GREEN, 60, 1, 1);
 	}
 
 	@Override
@@ -446,6 +446,14 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		setColorState(pointAppearance, vec);
 		setColorState(lineAppearance, vec);
 		setColorState(polygonAppearance, vec);
+	}
+	
+	@CindyScript("shininess3d")
+	public void shininess3d(double shininess) {
+		shininess = Math.max(0, Math.min(1, shininess));
+		pointAppearance.setShininess(shininess);
+		lineAppearance.setShininess(shininess);
+		polygonAppearance.setShininess(shininess);
 	}
 
 	/**

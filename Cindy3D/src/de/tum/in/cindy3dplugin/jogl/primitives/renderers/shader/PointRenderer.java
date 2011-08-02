@@ -87,6 +87,8 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 		gl2.glUniform4fv(colorLoc, 1, point.color.getComponents(null), 0);
 		gl2.glUniform1f(radiusLoc, (float) point.size);
 		
+		gl2.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, (float)point.shininess);
+		
 		// gl2.glFlush();
 		gl2.glUniform1f(modeLoc, renderMode);
 			

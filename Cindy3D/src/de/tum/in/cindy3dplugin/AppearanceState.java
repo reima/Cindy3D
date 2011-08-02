@@ -9,6 +9,7 @@ import java.awt.Color;
 public class AppearanceState {
 
 	private Color color;
+	private double shininess;
 	private double size;
 	private double alpha;
 	
@@ -17,8 +18,10 @@ public class AppearanceState {
 	 * @param color Point color
 	 * @param size Point size
 	 */
-	public AppearanceState(Color color, double size, double alpha) {
+	public AppearanceState(Color color, double shininess, double size,
+			double alpha) {
 		this.color = color;
+		this.shininess = shininess;
 		this.size = size;
 		this.alpha = alpha;
 	}
@@ -28,7 +31,7 @@ public class AppearanceState {
 	 * @param state Appearance state to initialize from
 	 */
 	public AppearanceState(AppearanceState state) {
-	    this(state.color, state.size, state.alpha);
+	    this(state.color, state.shininess, state.size, state.alpha);
 	}
 
 	/**
@@ -37,18 +40,35 @@ public class AppearanceState {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	
 	/**
 	 * @return the color
 	 */
 	public Color getColor() {
 		return color;
 	}
+	
+	/**
+	 * @param shininess the shininess to set
+	 */
+	public void setShininess(double shininess) {
+		this.shininess = shininess;
+	}
+	
+	/**
+	 * @return the shininess
+	 */
+	public double getShininess() {
+		return shininess;
+	}
+	
 	/**
 	 * @param size the size to set
 	 */
 	public void setSize(double size) {
 		this.size = size;
 	}
+	
 	/**
 	 * @return the size
 	 */

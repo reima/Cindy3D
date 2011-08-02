@@ -131,7 +131,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			AppearanceState appearance) {
 		// log.info("addPoint(" + x + "," + y + "," + z + ")");
 		scene.addPoint(new Point(x, y, z, appearance.getSize() * POINT_SCALE,
-				appearance.getColor(), 1));
+				appearance.getColor(), appearance.getShininess(), 1));
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		Util.logger.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
-				.getColor(), appearance.getAlpha()));
+				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}
 
 	@Override
@@ -153,7 +153,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		addPoint(x2, y2, z2, appearance);
 		
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
-				* POINT_SCALE, appearance.getColor(), LineType.SEGMENT));
+				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
+				LineType.SEGMENT));
 	}
 
 	@Override
@@ -162,7 +163,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		Util.logger.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 				+ "," + z2 + ")");
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
-				* POINT_SCALE, appearance.getColor(), LineType.LINE));
+				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
+				LineType.LINE));
 	}
 
 	@Override
@@ -174,7 +176,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		addPoint(x1, y1, z1, appearance);
 		
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
-				* POINT_SCALE, appearance.getColor(), LineType.RAY));
+				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
+				LineType.RAY));
 	}
 
 	@Override
@@ -191,7 +194,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 //		Util.logger.info(str);
 		
 		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor(),
-				appearance.getAlpha()));
+				appearance.getShininess(), appearance.getAlpha()));
 	}
 
 	@Override
@@ -201,21 +204,22 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			scene.addLine(new Line(vertices[i - 1][0], vertices[i - 1][1],
 					vertices[i - 1][2], vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * POINT_SCALE,
-					appearance.getColor(), LineType.SEGMENT));
+					appearance.getColor(), appearance.getShininess(),
+					LineType.SEGMENT));
 			scene.addPoint(new Point(vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * POINT_SCALE,
-					appearance.getColor(), 1.0));
+					appearance.getColor(), appearance.getShininess() , 1.0));
 		}
 		scene.addPoint(new Point(vertices[0][0], vertices[0][1],
 				vertices[0][2], appearance.getSize() * POINT_SCALE, appearance
-						.getColor(), 1.0));
+						.getColor(), appearance.getShininess(), 1.0));
 		if (closed) {
 			scene.addLine(new Line(vertices[vertices.length - 1][0],
 					vertices[vertices.length - 1][1],
 					vertices[vertices.length - 1][2], vertices[0][0],
 					vertices[0][1], vertices[0][2], appearance.getSize()
 							* POINT_SCALE, appearance.getColor(),
-					LineType.SEGMENT));
+					appearance.getShininess(), LineType.SEGMENT));
 		}
 	}
 
@@ -223,14 +227,14 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, MeshTopology topology, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
-				.getColor(), appearance.getAlpha(), topology));
+				.getColor(), appearance.getShininess(), appearance.getAlpha(), topology));
 	}
 	
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			boolean perVertexNormals, MeshTopology topology, AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, perVertexNormals,
-				appearance.getColor(), appearance.getAlpha(),
+				appearance.getColor(), appearance.getShininess(), appearance.getAlpha(),
 				topology));
 	}
 	
@@ -239,7 +243,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			AppearanceState appearance)
 	{
 		scene.addPoint(new Point(cx, cy, cz, radius, appearance
-				.getColor(), appearance.getAlpha()));
+				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}
 	
 	@Override

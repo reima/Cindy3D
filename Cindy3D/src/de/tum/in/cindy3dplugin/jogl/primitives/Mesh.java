@@ -23,18 +23,19 @@ public class Mesh extends Primitive {
 	public int gridXMax, gridYMax;
 	public int faceCount;
 
-	public Mesh(int height, int width, double[][] positions, double[][] normals,
-			Color color, double alpha, MeshTopology topology) {
-		super(color, alpha);
+	public Mesh(int height, int width, double[][] positions,
+			double[][] normals, Color color, double shininess, double alpha,
+			MeshTopology topology) {
+		super(color, shininess, alpha);
 		init(width, height, positions, normals, normals != null, topology);
 		if (normals == null)
 			computeNormals();
 	}
 
 	public Mesh(int height, int width, double[][] positions,
-			boolean perVertexNormals, Color color, double alpha,
-			MeshTopology topology) {
-		super(color, alpha);
+			boolean perVertexNormals, Color color, double shininess,
+			double alpha, MeshTopology topology) {
+		super(color, shininess, alpha);
 		init(width, height, positions, null, perVertexNormals, topology);
 		computeNormals();
 	}
