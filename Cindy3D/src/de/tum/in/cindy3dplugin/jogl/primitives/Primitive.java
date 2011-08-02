@@ -4,9 +4,9 @@ import java.awt.Color;
 
 public abstract class Primitive {
 	public Color color;
-	public double shininess;
+	public int shininess;
 
-	public Primitive(Color color, double shininess, double alpha) {
+	public Primitive(Color color, int shininess, double alpha) {
 		this.color = new Color(color.getRed(), color.getGreen(), color
 				.getBlue(), (int) (alpha * 255));
 		this.shininess = shininess;

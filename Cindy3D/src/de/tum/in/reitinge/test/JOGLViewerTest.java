@@ -33,6 +33,8 @@ public class JOGLViewerTest {
 	public static void materials(Cindy3DViewer viewer) {
 		AppearanceState app = new AppearanceState(Color.red, 0, 1, 1);
 		
+		app.setAlpha(1);
+		
 		for (int i = 1; i <= 12; ++i) {
 			for (int j = 1; j <= 12; ++j) {
 				app.setShininess(i*10);

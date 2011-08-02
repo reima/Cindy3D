@@ -9,7 +9,7 @@ public class Polygon extends Primitive {
 	public Vector3D normals[];
 
 	public Polygon(double[][] positions, double[][] normals,
-			Color color, double shininess, double alpha) {
+			Color color, int shininess, double alpha) {
 		super(color, shininess, alpha);
 		this.positions = new Vector3D[positions.length];
 		this.normals = new Vector3D[positions.length];

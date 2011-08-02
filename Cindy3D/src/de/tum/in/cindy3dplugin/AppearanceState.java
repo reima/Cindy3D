@@ -9,7 +9,7 @@ import java.awt.Color;
 public class AppearanceState {
 
 	private Color color;
-	private double shininess;
+	private int shininess;
 	private double size;
 	private double alpha;
 	
@@ -18,7 +18,7 @@ public class AppearanceState {
 	 * @param color Point color
 	 * @param size Point size
 	 */
-	public AppearanceState(Color color, double shininess, double size,
+	public AppearanceState(Color color, int shininess, double size,
 			double alpha) {
 		this.color = color;
 		this.shininess = shininess;
@@ -51,14 +51,14 @@ public class AppearanceState {
 	/**
 	 * @param shininess the shininess to set
 	 */
-	public void setShininess(double shininess) {
+	public void setShininess(int shininess) {
 		this.shininess = shininess;
 	}
 	
 	/**
 	 * @return the shininess
 	 */
-	public double getShininess() {
+	public int getShininess() {
 		return shininess;
 	}
 	

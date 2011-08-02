@@ -9,7 +9,7 @@ public class Circle extends Primitive {
 	
 	public Circle(double centerX, double centerY, double centerZ,
 			double normalX, double normalY, double normalZ, double radius,
-			Color color, double shininess, double alpha) {
+			Color color, int shininess, double alpha) {
 		super(color, shininess, alpha);
 		this.centerX = centerX;
 		this.centerY = centerY;
