@@ -8,6 +8,7 @@
     	<property name="3rdpartydir" location="lib/3rd-party"/>
         <property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/Cindy3D"/>
         <property name="plugin" location="Cindy3D.jar"/>
+    	<property name="applet" location="deploy/cindy3d-applet.jar"/>
     </target>
     <path id="libraries">
     </path>
@@ -63,5 +64,14 @@
                  destdir="doc">
         </javadoc>
     </target>
-
+	
+	<target name="applet" depends="init" description="Generate test applet">
+		<delete file="${applet}"/>
+		
+		<jar destfile="${applet}" basedir="bin" includes="**/*.class">
+		</jar>
+		
+		<jar destfile="${applet}" basedir="src" excludes="**/*.java" update="true">
+		</jar>
+	</target>
 </project>

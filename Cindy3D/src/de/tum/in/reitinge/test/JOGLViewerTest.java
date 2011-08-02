@@ -24,6 +24,12 @@ public class JOGLViewerTest {
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
+		enneper(viewer, true);
+//		lights(viewer);
+		viewer.end();
+	}
+	
+	public static void lights(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.white, 1.0, 1);
 		viewer.addSphere(0, 0, 0, 1, appearance);
 		
@@ -33,11 +39,46 @@ public class JOGLViewerTest {
 		info.direction = new Vector3D(1,0,0);
 		info.diffuse = new Color(1.0f,0.0f,0.0f);
 		viewer.setLight(0, info);
+
+		appearance.setColor(Color.green);
+		appearance.setAlpha(1.0);
+		viewer.addSphere(-1, 0, 0, 0.25, appearance);
+	}
+	
+	public static void enneper(Cindy3DViewer viewer, boolean dots) {
+		AppearanceState app = new AppearanceState(Color.white, 1, 1);
 		
-//		appearance.setColor(Color.green);
-//		appearance.setAlpha(1.0);
-//		viewer.addSphere(-1, 0, 0, 0.25, appearance);
-		viewer.end();
+		viewer.setBackgroundColor(Color.black);
+		int rr = 30;
+		int ss = 30;
+		
+		double[][] vertices = new double[(2*rr+1)*(2*ss+1)][3];
+		
+		int i = 0;
+		for (int ii = -rr; ii <= rr; ++ii) {
+			double u = ii/20.0;
+			for (int jj = -ss; jj <= ss; ++jj, ++i) {
+				double v = jj/20.0;
+				double x = u - u*u*u/3.0 + u*v*v;
+				double y = v - v*v*v/3.0 + v*u*u;
+				double z = u*u - v*v;
+				vertices[i][0] = x;
+				vertices[i][1] = y;
+				vertices[i][2] = z;
+			}
+		}
+		
+		if (dots) {
+			app.setSize(0.6);
+			app.setColor(new Color(0.9f, 0.1f, 0.1f));
+			for (double[] vertex : vertices) {
+				viewer.addPoint(vertex[0], vertex[1], vertex[2], app);
+			}
+		}
+		
+		app.setAlpha(0.8);
+		app.setColor(new Color(0.5f, 0.5f, 1.0f));
+		viewer.addMesh(2*rr+1, 2*ss+1, vertices, true, MeshTopology.OPEN, app);
 	}
 	
 	public static void colorSpiral(Cindy3DViewer viewer) {

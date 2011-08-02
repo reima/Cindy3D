@@ -148,18 +148,23 @@ public class Util {
 	 */
 	public static void setupGluegenClassLoading() {
 		// Try to get JAR path
-		ProtectionDomain pd = Util.class.getProtectionDomain();
-		CodeSource cs = pd.getCodeSource();
-		URL jarURL = cs.getLocation();
 		String jarPath = null;
 		try {
+			ProtectionDomain pd = Util.class.getProtectionDomain();
+			CodeSource cs = pd.getCodeSource();
+			URL jarURL = cs.getLocation();
 			jarPath = jarURL.toURI().getPath();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			return;
+		} catch (SecurityException e) {
+			// Can't get protection domain. This is the case if Cindy3D is
+			// running inside an applet. But that's ok, as JNLP handles the
+			// class and native libraries loading for us.
+			return;
 		}
+		
 		File jarFile = new File(jarPath);
-
 		if (!jarFile.isFile()) {
 			// Not loaded from JAR file, do nothing
 			return;

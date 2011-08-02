@@ -2,6 +2,7 @@ package de.tum.in.cindy3dplugin.jogl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -39,7 +40,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private static final double POINT_SCALE = 0.05;
 	private static final boolean FILE_LOGGING = false;
 	
-	private JFrame frame;
+	boolean standalone;
+	private Container container;
 	private GLCanvas canvas;
 	
 	private JOGLRenderer renderer;
@@ -51,8 +53,12 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private double[] mousePosition = new double[2];
 	
 	private boolean drawPending = false;
-
+	
 	public JOGLViewer() {
+		this(null);
+	}
+
+	public JOGLViewer(Container container) {
 		try {
 			log = Logger.getLogger("log");
 			if (FILE_LOGGING) {
@@ -60,7 +66,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				fh.setFormatter(new SimpleFormatter());
 				log.addHandler(fh);
 			}
-			log.setLevel(Level.ALL);
+			//log.setLevel(Level.ALL);
 			log.log(Level.INFO, "Log started");
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -72,10 +78,18 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		
 		Util.setupGluegenClassLoading();
 		
-		frame = new JFrame("Cindy3D (JOGL)");
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.setLayout(new BorderLayout());
-		
+		if (container == null) {
+			standalone = true;
+			JFrame frame = new JFrame("Cindy3D (JOGL)");
+			frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			frame.setLayout(new BorderLayout());
+			frame.setSize(640, 480);
+			this.container = frame;
+		} else {
+			standalone = false;
+			this.container = container;
+		}
+
 		camera.lookAt(new Vector3D(0, 0, 5), Vector3D.ZERO, Vector3D.PLUS_J);
 
 		try {
@@ -90,10 +104,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			canvas.addMouseListener(this);
 			canvas.addMouseMotionListener(this);
 			canvas.addMouseWheelListener(this);
-			canvas.setSize(640, 480);
-
-			frame.add(canvas, BorderLayout.CENTER);
-			frame.pack();
+			canvas.setSize(this.container.getSize());
+			this.container.add(canvas, BorderLayout.CENTER);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			log.log(Level.SEVERE, e.toString(), e);
@@ -111,9 +123,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		log.info("end()");
 
 		try {
-			if (!frame.isVisible())
-				frame.setVisible(true);
-			
+			if (!container.isVisible()) {
+				container.setVisible(true);
+			}
 			canvas.display();
 		} catch (Exception e) {
 			log.log(Level.SEVERE, e.toString(), e);
@@ -123,8 +135,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void shutdown() {
 		log.info("shutdown()");
-		frame.dispose();
-		frame = null;
+		if (standalone && container instanceof JFrame) {
+			((JFrame)container).dispose();
+		}
+		container = null;
 	}
 
 	@Override

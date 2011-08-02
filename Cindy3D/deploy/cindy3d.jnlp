@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp href="cindy3d.jnlp">
+	<information>
+		<title>Cindy3D Applet</title>
+		<vendor>TUM</vendor>
+		<homepage href="http://www.cinderella.de/"/>
+		<description>Cindy3D Applet</description>
+		<offline-allowed/>
+	</information>
+
+	<resources>
+		<j2se href="http://java.sun.com/products/autodl/j2se" version="1.5+"/>
+		<property name="sun.java2d.nodraw" value="true"/>
+		<jar href="cindy3d-applet.jar" main="true"/>
+		<jar href="commons-math-2.2.jar"/>
+		<extension name="jogl-all-awt" href="http://jogamp.org/deployment/webstart/jogl-all-awt.jnlp"/>
+	</resources>
+
+	<applet-desc
+		name="Cindy3D-Applet"
+		main-class="de.tum.in.reitinge.test.JOGLViewerAppletTest"
+		width="640"
+		height="480">
+	</applet-desc>
+</jnlp>

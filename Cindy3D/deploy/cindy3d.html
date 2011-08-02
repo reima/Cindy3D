@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Cindy3D Applet Test</title>
+</head>
+<body>
+
+<p>
+
+<applet code="org.jdesktop.applet.util.JNLPAppletLauncher"
+      width="640"
+      height="480"
+      archive="http://download.java.net/media/applet-launcher/applet-launcher.jar,
+               http://jogamp.org/deployment/webstart/nativewindow.all.jar,
+               http://jogamp.org/deployment/webstart/jogl.all.jar,
+               http://jogamp.org/deployment/webstart/gluegen-rt.jar,
+               http://home.in.tum.de/~reitinge/idp/cindy3d-applet.jar">
+   <param name="codebase_lookup" value="false">
+   <param name="subapplet.classname" value="de.tum.in.reitinge.test.JOGLViewerAppletTest">
+   <param name="subapplet.displayname" value="Cindy3D Applet">
+   <param name="noddraw.check" value="true">
+   <param name="progressbar" value="true">
+   <param name="jnlpNumExtensions" value="1">
+   <param name="jnlpExtension1"
+          value="http://jogamp.org/deployment/webstart/jogl-core.jnlp">
+   <param name="java_arguments" value="-Dsun.java2d.noddraw=true">
+   <param name="jnlp_href" value="http://home.in.tum.de/~reitinge/idp/cindy3d.jnlp">
+</applet>
+
+</p>
+
+</body>
+</html>
