@@ -72,7 +72,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@Override
 	public void register() {
 		if (cindy3d == null)
-			cindy3d = new JOGLViewer();
+			cindy3d = new JOGLViewer(null);
 	}
 
 	@Override

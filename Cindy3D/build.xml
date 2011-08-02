@@ -1,62 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Cindy3D" default="copy">
 
-    <property environment="env"/>
+	<property environment="env"/>
 
-    <target name="init" description="setup paths">
-        <property name="cindy2jar" location="lib/cindy2.jar"/>
-        <property name="3rdpartydir" location="lib/3rd-party"/>
-        <property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/Cindy3D"/>
-        <property name="plugin" location="Cindy3D.jar"/>
-    </target>
-    <path id="libraries">
-    	<fileset dir="lib/3rd-party" includes="*.jar"/>
-    </path>
+	<target name="init" description="setup paths">
+		<property name="cindy2jar" location="lib/cindy2.jar"/>
+		<property name="3rdpartydir" location="lib/3rd-party"/>
+		<property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/Cindy3D"/>
+		<property name="plugin" location="Cindy3D.jar"/>
+		<property name="applet" location="deploy/cindy3d-applet.jar"/>
+	</target>
+	<path id="libraries">
+		<fileset dir="lib/3rd-party" includes="*.jar"/>
+	</path>
 
-    <!-- no changes necessary below this line -->
+	<!-- no changes necessary below this line -->
+	
+	<target name="compile" depends="init" description="Compile plugin">
+		<javac encoding="iso-8859-1" debug="on" optimize="on"
+			   srcdir="src" destdir="bin" target="1.5"
+			   source="1.5">
+			<classpath>
+				<pathelement location="${cindy2jar}"/>
+				<path refid="libraries"/>
+			</classpath>
+		</javac>
+	</target>
 
-    <target name="compile" depends="init" description="Compile plugin">
-        <javac encoding="iso-8859-1" debug="on" optimize="on"
-               srcdir="src" destdir="bin" target="1.5"
-               source="1.5">
-            <classpath>
-                <pathelement location="${cindy2jar}"/>
-                <path refid="libraries" />
-            </classpath>
-        </javac>
-    </target>
+	<target name="build" depends="compile" description="Create plugin JAR">
 
-    <target name="build" depends="compile" description="Create plugin JAR">
+		<delete file="${plugin}"/>
 
-        <delete file="${plugin}"/>
+		<!-- add compiled classes -->
+		<jar basedir="bin" destfile="${plugin}" includes="**/*.class">
+		</jar>
+		
+		<!-- add resources -->
+		<jar basedir="src" destfile="${plugin}" excludes="**/*.java" update="true">
+		</jar>
 
-        <!-- add compiled classes -->
-        <jar basedir="bin" destfile="${plugin}" includes="**/*.class">
-        </jar>
+		<!-- add class path -->
+		<pathconvert property="mf.classpath" pathsep=" ">
+			<path refid="libraries"/>
+			<flattenmapper/>
+		</pathconvert>
 
-        <!-- add resources -->
-        <jar basedir="src" destfile="${plugin}" excludes="**/*.java" update="true">
-        </jar>
+		<!-- Add services file -->
+		<jar destfile="${plugin}" basedir="config" update="true">
+			<file file="META-INF/services/de.cinderella.api.cs.CindyScriptPlugin"/>
+		</jar>
+	</target>
 
-        <!-- Add services file -->
-        <jar destfile="${plugin}" basedir="config" update="true">
-            <file file="META-INF/services/de.cinderella.api.cs.CindyScriptPlugin"/>
-        </jar>
-    </target>
+	<target name="copy" depends="build" description="Copy plugin to Plugins folder">
+		<copy file="${plugin}" todir="${pluginfolder}"/>
+		<copy todir="${pluginfolder}">
+			<fileset dir="${3rdpartydir}" includes="*.jar"/>
+		</copy>
+	</target>
 
-    <target name="copy" depends="build" description="Copy plugin to Plugins folder">
-        <copy file="${plugin}" todir="${pluginfolder}"/>
-        <copy todir="${pluginfolder}">
-            <fileset dir="${3rdpartydir}" includes="*.jar"/>
-        </copy>
-    </target>
-
-    <target name="doc" description="Generate Javadoc">
-        <javadoc packagenames="de.tum.in.cindy3dplugin"
-                 sourcepath="src"
-                 classpath="lib/cindy2.jar"
-                 destdir="doc">
-        </javadoc>
-    </target>
-
+	<target name="doc" description="Generate Javadoc">
+		<javadoc packagenames="de.tum.in.cindy3dplugin"
+				 sourcepath="src"
+				 classpath="lib/cindy2.jar"
+				 destdir="doc">
+		</javadoc>
+	</target>
+	
+	<target name="applet" depends="init" description="Generate test applet">
+		<delete file="${applet}"/>
+		
+		<jar destfile="${applet}" basedir="bin" includes="**/*.class">
+		</jar>
+		
+		<jar destfile="${applet}" basedir="src" excludes="**/*.java" update="true">
+		</jar>
+	</target>
 </project>
