@@ -56,7 +56,7 @@ public class DefaultRenderer extends JOGLRenderer {
 					0.2f, 0.2f, 0.2f }, 0);
 			gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 60.0f);
 	
-//			gl.glEnable(GL2.GL_LIGHTING);
+			gl.glEnable(GL2.GL_LIGHTING);
 //			gl.glEnable(GL2.GL_LIGHT0);
 //			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 5.0f,
 //					5.0f, 5.0f, 1.0f }, 0);
