@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;

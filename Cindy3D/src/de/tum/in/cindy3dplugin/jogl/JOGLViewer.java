@@ -24,6 +24,7 @@ import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader.ShaderPrimitiveRendererFactory;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 import de.tum.in.cindy3dplugin.jogl.primitives.Point;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
@@ -75,9 +76,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			GLProfile profile = GLProfile.getDefault();
 			GLCapabilities caps = new GLCapabilities(profile);
 			canvas = new GLCanvas(caps);
-			//renderer = new DefaultRenderer(scene, camera);
-			//renderer = new SupersampledRenderer(scene, camera);
-			renderer = new SupersampledFBORenderer(scene, camera);
+//			renderer = new DefaultRenderer(scene, camera,
+//					new ShaderPrimitiveRendererFactory());
+			renderer = new SupersampledFBORenderer(scene, camera,
+					new ShaderPrimitiveRendererFactory());
 			canvas.addGLEventListener(renderer);
 			canvas.addMouseListener(this);
 			canvas.addMouseMotionListener(this);

@@ -14,7 +14,7 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 	
 	public abstract void preRender(JOGLRenderState jrs);
 	public abstract void postRender(JOGLRenderState jrs);
-	protected abstract void render(JOGLRenderState jrs, T primitive);	
+	protected abstract void render(JOGLRenderState jrs, T primitive);
 	
 	public void render(JOGLRenderState jrs, Collection<T> c) {
 		if (c.isEmpty())

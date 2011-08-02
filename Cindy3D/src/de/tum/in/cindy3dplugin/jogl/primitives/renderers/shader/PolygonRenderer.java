@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -8,6 +8,7 @@ import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
