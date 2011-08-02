@@ -15,10 +15,10 @@ public abstract class Light {
 	
 	public void setGLState(GL2 gl, int light) {
 		if (enabled) {
-			gl.glEnable(GL2.GL_LIGHT0 + light);
+			gl.glEnable(light);
 		}
 		else
-			gl.glDisable(GL2.GL_LIGHT0 + light);
+			gl.glDisable(light);
 
 		gl.glLightfv(light, GL2.GL_AMBIENT,
 				ambientColor.getComponents(null), 0);
