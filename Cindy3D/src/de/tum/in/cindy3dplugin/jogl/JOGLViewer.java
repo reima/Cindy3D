@@ -9,11 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.io.IOException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
@@ -38,7 +34,6 @@ import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
 	private static final double POINT_SCALE = 0.05;
-	private static final boolean FILE_LOGGING = false;
 	
 	boolean standalone;
 	private Container container;
@@ -49,7 +44,6 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private Scene scene = new Scene();
 	private ModelViewerCamera camera = new ModelViewerCamera();
 	
-	private Logger log;
 	private double[] mousePosition = new double[2];
 	
 	private boolean drawPending = false;
@@ -59,23 +53,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	}
 
 	public JOGLViewer(Container container) {
-		try {
-			log = Logger.getLogger("log");
-			if (FILE_LOGGING) {
-				FileHandler fh = new FileHandler("C:\\tmp\\cindy.log", false);
-				fh.setFormatter(new SimpleFormatter());
-				log.addHandler(fh);
-			}
-			//log.setLevel(Level.ALL);
-			log.log(Level.INFO, "Log started");
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		Util.initLogger();
 		Util.setupGluegenClassLoading();
 		
 		if (container == null) {
@@ -108,19 +86,19 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			this.container.add(canvas, BorderLayout.CENTER);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			log.log(Level.SEVERE, e.toString(), e);
+			Util.logger.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
 	@Override
 	public void begin() {
-		log.info("begin()");
+		Util.logger.info("begin()");
 		scene.clear();
 	}
 
 	@Override
 	public void end() {
-		log.info("end()");
+		Util.logger.info("end()");
 
 		try {
 			if (!container.isVisible()) {
@@ -128,13 +106,13 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			}
 			canvas.display();
 		} catch (Exception e) {
-			log.log(Level.SEVERE, e.toString(), e);
+			Util.logger.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
 	@Override
 	public void shutdown() {
-		log.info("shutdown()");
+		Util.logger.info("shutdown()");
 		if (standalone && container instanceof JFrame) {
 			((JFrame)container).dispose();
 		}
@@ -157,7 +135,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addCircle(double cx, double cy, double cz, double nx,
 			double ny, double nz, double radius, AppearanceState appearance) {
-		log.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
+		Util.logger.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
 				.getColor(), appearance.getAlpha()));
@@ -166,7 +144,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addSegment(double x1, double y1, double z1, double x2,
 			double y2, double z2, AppearanceState appearance) {
-		log.info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+		Util.logger.info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 				+ "," + z2 + ")");
 		
 		addPoint(x1, y1, z1, appearance);
@@ -179,7 +157,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addLine(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		log.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+		Util.logger.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 				+ "," + z2 + ")");
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
 				* POINT_SCALE, appearance.getColor(), LineType.LINE));
@@ -188,7 +166,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addRay(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		log.info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+		Util.logger.info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 				+ "," + z2 + ")");
 		
 		addPoint(x1, y1, z1, appearance);
@@ -208,7 +186,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 //					+ vertices[i][2] + "]";
 //		}
 //		str += ")";
-//		log.info(str);
+//		Util.logger.info(str);
 		
 		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor(),
 				appearance.getAlpha()));

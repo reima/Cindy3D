@@ -24,17 +24,13 @@ public class DefaultRenderer extends JOGLRenderer {
 	private PolygonRenderer polygonRenderer = new PolygonRenderer();
 	private MeshRenderer meshRenderer = new MeshRenderer();
 	
-	private Logger log;
-	
 	public DefaultRenderer(Scene scene, ModelViewerCamera camera) {
 		super(scene, camera);
-		
-		log = Logger.getLogger("log");
 	}
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
-		log.info("init()");
+		Util.logger.info("init()");
 		
 		try {
 			// drawable.setGL(new DebugGL2(drawable.getGL().getGL2()));
@@ -69,7 +65,7 @@ public class DefaultRenderer extends JOGLRenderer {
 	
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
-			log.log(Level.SEVERE, e.toString(), e);
+			Util.logger.log(Level.SEVERE, e.toString(), e);
 		}
 		
 	}
@@ -77,7 +73,7 @@ public class DefaultRenderer extends JOGLRenderer {
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
-		log.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
+		Util.logger.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
 		GL2 gl = drawable.getGL().getGL2();
 		if (height <= 0)
 			height = 1;
@@ -111,7 +107,7 @@ public class DefaultRenderer extends JOGLRenderer {
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
-		// log.info("display()");
+//		 Util.logger.info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
 		float[] backgroundColor = new float[4];
@@ -132,15 +128,15 @@ public class DefaultRenderer extends JOGLRenderer {
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
 			
 			if (!pointRenderer.loadShader(gl))
-				log.severe("Point renderer initialization failed");
+				Util.logger.severe("Point renderer initialization failed");
 			if (!circleRenderer.loadShader(gl))
-				log.severe("Circle renderer initialization failed");
+				Util.logger.severe("Circle renderer initialization failed");
 			if (!lineRenderer.loadShader(gl))
-				log.severe("Line renderer initialization failed");
+				Util.logger.severe("Line renderer initialization failed");
 			if (!polygonRenderer.loadShader(gl))
-				log.severe("Polygon renderer initialization failed");
+				Util.logger.severe("Polygon renderer initialization failed");
 			if (!meshRenderer.loadShader(gl))
-				log.severe("Mesh renderer initialization failed");
+				Util.logger.severe("Mesh renderer initialization failed");
 			
 			lightManager.setCompileShader(false);
 		}

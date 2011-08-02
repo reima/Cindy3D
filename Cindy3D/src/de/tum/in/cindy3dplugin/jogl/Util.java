@@ -10,6 +10,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
@@ -22,6 +26,9 @@ import com.jogamp.gluegen.runtime.NativeLibLoader;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public class Util {
+	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
+	private static final boolean FILE_LOGGING = false;
+	
 	public static float[] matrixToFloatArray(RealMatrix m) {
 		int rows = m.getRowDimension();
 		int cols = m.getColumnDimension();
@@ -99,7 +106,6 @@ public class Util {
 		}
 	}
 
-	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
 
 	public static ShaderCode loadShader(int type, String name) {
 		StringBuffer buffer = new StringBuffer();
@@ -210,5 +216,26 @@ public class Util {
 				return result;
 			}
 		});
+	}
+	
+	public static Logger logger;
+
+	public static void initLogger() {
+		try {
+			logger = Logger.getLogger("log");
+			if (FILE_LOGGING) {
+				FileHandler fh = new FileHandler("C:\\tmp\\cindy.log", false);
+				fh.setFormatter(new SimpleFormatter());
+				logger.addHandler(fh);
+			}
+			//log.setLevel(Level.ALL);
+			logger.log(Level.INFO, "Log started");
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
