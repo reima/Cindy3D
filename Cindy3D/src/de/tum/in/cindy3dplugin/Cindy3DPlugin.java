@@ -32,7 +32,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	/**
 	 * The current point appearance
 	 */
-	private AppearanceState pointApp;
+	private AppearanceState pointAppearance;
 
 	/**
 	 * Stack of saved line appearances
@@ -44,7 +44,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	/**
 	 * The current line appearance
 	 */
-	private AppearanceState lineApp;
+	private AppearanceState lineAppearance;
 	
 	/**
 	 * Stack of saved polygon appearances
@@ -55,7 +55,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	/**
 	 * The current surface appearance
 	 */
-	private AppearanceState surfaceApp;
+	private AppearanceState surfaceAppearance;
 
 	/**
 	 * Modifiers for the current CindyScript function call
@@ -64,11 +64,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 	public Cindy3DPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
-		pointApp = new AppearanceState(Color.RED, 60, 1, 1);
+		pointAppearance = new AppearanceState(Color.RED, 60, 1, 1);
 		lineAppearanceStack = new Stack<AppearanceState>();
-		lineApp = new AppearanceState(Color.BLUE, 60, 1, 1);
+		lineAppearance = new AppearanceState(Color.BLUE, 60, 1, 1);
 		surfaceAppearanceStack = new Stack<AppearanceState>();
-		surfaceApp = new AppearanceState(Color.GREEN, 60, 1, 1);
+		surfaceAppearance = new AppearanceState(Color.GREEN, 60, 1, 1);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			return;
 
 		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2),
-				getModifiedAppearance(pointApp, getModifiers()));
+				getModifiedAppearance(pointAppearance, getModifiers()));
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		
 		String type = modifiers.get("type").toString();
 		
-		AppearanceState appearance = getModifiedAppearance(lineApp,
+		AppearanceState appearance = getModifiedAppearance(lineAppearance,
 				getModifiers());
 		
 		if (type.equals("Segment")) {
@@ -225,7 +225,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 
 		cindy3d.addLineStrip(vertices,
-				getModifiedAppearance(lineApp, getModifiers()), false);
+				getModifiedAppearance(lineAppearance, getModifiers()), false);
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 
 		cindy3d.addLineStrip(vertices,
-				getModifiedAppearance(lineApp, getModifiers()), true);
+				getModifiedAppearance(lineAppearance, getModifiers()), true);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			}
 		}
 		cindy3d.addPolygon(vertices, normal,
-				getModifiedAppearance(surfaceApp, getModifiers()));
+				getModifiedAppearance(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (center.size() != 3 || normal.size() != 3) return;
 		cindy3d.addCircle(center.get(0), center.get(1), center.get(2),
 				normal.get(0), normal.get(1), normal.get(2), radius,
-				getModifiedAppearance(surfaceApp, getModifiers()));
+				getModifiedAppearance(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
@@ -346,7 +346,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
-				getModifiedAppearance(surfaceApp, getModifiers()));
+				getModifiedAppearance(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
@@ -396,7 +396,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
-				getModifiedAppearance(surfaceApp, getModifiers()));
+				getModifiedAppearance(surfaceAppearance, getModifiers()));
 	}
 	
 	@CindyScript("drawsphere3d")
@@ -404,7 +404,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (center.size() != 3)
 			return;
 		cindy3d.addSphere(center.get(0), center.get(1), center.get(2), radius,
-				getModifiedAppearance(surfaceApp, getModifiers()));
+				getModifiedAppearance(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
@@ -413,9 +413,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("gsave3d")
 	public void gsave3d() {
-		pointAppearanceStack.push(new AppearanceState(pointApp));
-		lineAppearanceStack.push(new AppearanceState(lineApp));
-		surfaceAppearanceStack.push(new AppearanceState(surfaceApp));
+		pointAppearanceStack.push(new AppearanceState(pointAppearance));
+		lineAppearanceStack.push(new AppearanceState(lineAppearance));
+		surfaceAppearanceStack.push(new AppearanceState(surfaceAppearance));
 	}
 
 	/**
@@ -426,17 +426,17 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("grestore3d")
 	public void grestore3d() {
 		if (!pointAppearanceStack.isEmpty())
-			pointApp = pointAppearanceStack.pop();
+			pointAppearance = pointAppearanceStack.pop();
 		if (!lineAppearanceStack.isEmpty())
-			lineApp = lineAppearanceStack.pop();
+			lineAppearance = lineAppearanceStack.pop();
 		if (!surfaceAppearanceStack.isEmpty())
-			surfaceApp = surfaceAppearanceStack.pop();
+			surfaceAppearance = surfaceAppearanceStack.pop();
 	}
 	
 	@CindyScript("alpha3d")
 	public void alpha3d(double alpha) {
 		alpha = Math.max(0, Math.min(1, alpha));
-		surfaceApp.setAlpha(alpha);
+		surfaceAppearance.setAlpha(alpha);
 	}
 
 	/**
@@ -445,9 +445,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("color3d")
 	public void color3d(ArrayList<Double> vec) {
-		setColorState(pointApp, vec);
-		setColorState(lineApp, vec);
-		setColorState(surfaceApp, vec);
+		setColorState(pointAppearance, vec);
+		setColorState(lineAppearance, vec);
+		setColorState(surfaceAppearance, vec);
 	}
 	
 	/**
@@ -457,9 +457,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("shininess3d")
 	public void shininess3d(int shininess) {
 		shininess = Math.max(0, Math.min(128, shininess));
-		pointApp.setShininess(shininess);
-		lineApp.setShininess(shininess);
-		surfaceApp.setShininess(shininess);
+		pointAppearance.setShininess(shininess);
+		lineAppearance.setShininess(shininess);
+		surfaceAppearance.setShininess(shininess);
 	}
 
 	/**
@@ -470,9 +470,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	public void size3d(double size) {
 		if (size <= 0)
 			return;
-		pointApp.setSize(size);
-		lineApp.setSize(size);
-		surfaceApp.setSize(size);
+		pointAppearance.setSize(size);
+		lineAppearance.setSize(size);
+		surfaceAppearance.setSize(size);
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("pointcolor3d")
 	public void pointcolor3d(ArrayList<Double> vec) {
-		setColorState(pointApp, vec);
+		setColorState(pointAppearance, vec);
 	}
 
 	/**
@@ -490,7 +490,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("pointsize3d")
 	public void pointsize3d(double size) {
-		pointApp.setSize(Math.max(0, size));
+		pointAppearance.setSize(Math.max(0, size));
 	}
 	
 	/**
@@ -499,7 +499,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("pointshininess3d")
 	public void pointshininess3d(int shininess) {
-		pointApp.setShininess(Math.max(0, Math.min(128, shininess)));
+		pointAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
 	}
 
 	/**
@@ -508,7 +508,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("linecolor3d")
 	public void linecolor3d(ArrayList<Double> vec) {
-		setColorState(lineApp, vec);
+		setColorState(lineAppearance, vec);
 	}
 
 	/**
@@ -517,7 +517,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("lineshininess3d")
 	public void lineshininess3d(int shininess) {
-		lineApp.setShininess(Math.max(0, Math.min(128, shininess)));
+		lineAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
 	}
 
 	/**
@@ -526,7 +526,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("linesize3d")
 	public void linesize3d(double size) {
-		lineApp.setSize(Math.max(0, size));
+		lineAppearance.setSize(Math.max(0, size));
 	}
 
 	/**
@@ -535,7 +535,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("surfacecolor3d")
 	public void surfacecolor3d(ArrayList<Double> vec) {
-		setColorState(surfaceApp, vec);
+		setColorState(surfaceAppearance, vec);
 	}
 	
 	/**
@@ -544,7 +544,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("surfaceshininess3d")
 	public void surfaceshininess3d(int shininess) {
-		surfaceApp.setShininess(Math.max(0, Math.min(128, shininess)));
+		surfaceAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
 	}
 	
 	/**
@@ -553,7 +553,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("surfacealpha3d")
 	public void surfacealpha3d(double alpha) {
-		surfaceApp.setAlpha(Math.max(0, Math.min(1, alpha)));
+		surfaceAppearance.setAlpha(Math.max(0, Math.min(1, alpha)));
 	}
 	
 	@CindyScript("background3d")
