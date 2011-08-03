@@ -4,7 +4,7 @@ import javax.media.opengl.GL2;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-import de.tum.in.cindy3dplugin.jogl.lighting.LightManager.LightType;
+import de.tum.in.cindy3dplugin.LightInfo.LightType;
 
 public class DirectionalLight extends Light {
 	

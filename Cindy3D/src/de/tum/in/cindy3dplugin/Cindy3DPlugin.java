@@ -9,11 +9,9 @@ import de.cinderella.api.cs.CindyScript;
 import de.cinderella.api.cs.CindyScriptPlugin;
 import de.cinderella.math.Vec;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
+import de.tum.in.cindy3dplugin.LightInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 import de.tum.in.cindy3dplugin.jogl.Util;
-import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
-import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
-import de.tum.in.cindy3dplugin.jogl.lighting.LightManager.LightType;
 
 /**
  * Implementation of the plugin interface
@@ -570,7 +568,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	
 	@CindyScript("disablelight3d")
 	public void disablelight3d(int light) {
-		if (light < 0 || light >= LightManager.MAX_LIGHTS) {
+		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
 		
@@ -579,7 +577,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
-		if (light < 0 || light >= LightManager.MAX_LIGHTS) {
+		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
 		cindy3d.setLight(light, getLightModifiers(LightType.POINT_LIGHT));
@@ -587,7 +585,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
-		if (light < 0 || light >= LightManager.MAX_LIGHTS) {
+		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
 		cindy3d.setLight(light, getLightModifiers(LightType.DIRECTIONAL_LIGHT));
@@ -617,12 +615,18 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		
 		value = modifiers.get("position");
 		if (value instanceof double[]) {
-			info.position = Util.toVector((double[])value);
+			info.position = (double[])value;
+			if (info.position.length != 3) {
+				info.position = null;
+			}
 		}
 		
 		value = modifiers.get("direction");
 		if (value instanceof double[]) {
-			info.direction = Util.toVector((double[])value);
+			info.direction = (double[])value;
+			if (info.direction.length != 3) {
+				info.direction = null;
+			}
 		}
 		
 		return info;

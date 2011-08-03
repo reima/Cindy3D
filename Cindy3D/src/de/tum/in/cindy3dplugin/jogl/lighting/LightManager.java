@@ -2,25 +2,19 @@ package de.tum.in.cindy3dplugin.jogl.lighting;
 
 import javax.media.opengl.GL2;
 
-import org.apache.commons.math.geometry.Vector3D;
+import de.tum.in.cindy3dplugin.Cindy3DViewer;
+import de.tum.in.cindy3dplugin.LightInfo;
+import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.jogl.Util;
 
-public class LightManager {
-	
-	public static final int MAX_LIGHTS = 8;
-	
-	public enum LightType {
-		POINT_LIGHT,
-		DIRECTIONAL_LIGHT,
-		SPOT_LIGHT,
-	}
-	
+public class LightManager {	
 	boolean compileShader = false;
 	
-	Light[] lights = new Light[MAX_LIGHTS];
+	Light[] lights = new Light[Cindy3DViewer.MAX_LIGHTS];
 	
 	public LightManager() {
 		LightInfo info = new LightInfo();
-		info.position = new Vector3D(0,0,0);
+		info.position = new double[] {0,0,0};
 		info.type = LightType.POINT_LIGHT;
 		setLight(0, info);
 	}
@@ -64,13 +58,13 @@ public class LightManager {
 				PointLight pLight = (PointLight)lights[light];
 				
 				if (info.position != null) {
-					pLight.setPosition(info.position);
+					pLight.setPosition(Util.toVector(info.position));
 				}
 				break;
 			case DIRECTIONAL_LIGHT:
 				DirectionalLight dLight = (DirectionalLight)lights[light];
 				if (info.direction != null) {
-					dLight.setDirection(info.direction);
+					dLight.setDirection(Util.toVector(info.direction));
 				}
 				break;
 			case SPOT_LIGHT:

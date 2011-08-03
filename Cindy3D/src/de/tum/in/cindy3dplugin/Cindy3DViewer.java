@@ -2,9 +2,9 @@ package de.tum.in.cindy3dplugin;
 
 import java.awt.Color;
 
-import de.tum.in.cindy3dplugin.jogl.lighting.LightInfo;
-
 public interface Cindy3DViewer {
+	public static final int MAX_LIGHTS = 8;
+	
 	enum MeshTopology {
 		OPEN,
 		CLOSE_X,
