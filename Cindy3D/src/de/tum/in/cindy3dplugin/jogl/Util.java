@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -253,5 +253,11 @@ public class Util {
 				color.getComponents(null), 0);
 		gl.getGL2().glMateriali(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS,
 				shininess);
+	}
+	
+	public static Vector3D transformVector(RealMatrix matrix, Vector3D vec) {
+		double[] tmp = matrix.operate(new double[] { vec.getX(), vec.getY(),
+				vec.getZ(), 1 });
+		return new Vector3D(tmp[0], tmp[1], tmp[2]);
 	}
 }

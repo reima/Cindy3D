@@ -19,10 +19,10 @@ public class JOGLViewerTest {
 		viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
-		materials(viewer);
+//		materials(viewer);
 //		colorSpiral(viewer);
 //		circles(viewer);
-//		lines(viewer);
+		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
 //		enneper(viewer, true);
@@ -184,97 +184,97 @@ public class JOGLViewerTest {
 	public static void lines(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
 		
-		//viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
-		//viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
+		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
+		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
 
-		//viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
-		
-		double r = 1;
-		int n = 750;
-		double[][] vertices = new double[n][3];
-		for (int i=0; i<n; ++i) {
-			vertices[i][2] = 0;
-			vertices[i][0] = r*Math.sin(i*2*Math.PI/n);
-			vertices[i][1] = r*Math.cos(i*2*Math.PI/n);
-		}
-		
-//		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
+		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
+
+//		double r = 1;
+//		int n = 750;
+//		double[][] vertices = new double[n][3];
+//		for (int i=0; i<n; ++i) {
+//			vertices[i][2] = 0;
+//			vertices[i][0] = r*Math.sin(i*2*Math.PI/n);
+//			vertices[i][1] = r*Math.cos(i*2*Math.PI/n);
+//		}
+//		
+////		double[][] vertices2 = new double[][] {{0,0,0},{1,0,0},{1,0,1},{0,0,1}};
+////		
+////		
+////		
+////		viewer.addPolygon(vertices2, null, appearance);
+////		
+////		appearance.setAlpha(0.25);
+////		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
+////				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
+//		
+//		double size = 10;
+//		int sizeCount = 50;
 //		
 //		
+//		double[][] vert = new double[sizeCount*sizeCount][3];
 //		
-//		viewer.addPolygon(vertices2, null, appearance);
+//		for (int i=0; i<sizeCount; ++i) {
+//			for (int j=0; j<sizeCount; ++j) {
+//				double x = -size/2.0 + i*size/sizeCount;
+//				double z = -size/2.0 + j*size/sizeCount;
+//				
+//				vert[i*sizeCount+j][0] = x;
+//				vert[i*sizeCount+j][1] = 0.1*(x*x+z*z)-1;
+//				vert[i*sizeCount+j][2] = z;
+//			}
+//		}
+//		appearance.setColor(Color.BLUE);
+//		appearance.setAlpha(0.5);
+//		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
 //		
-//		appearance.setAlpha(0.25);
-//		viewer.addMesh(2, 3, new double[][] { { 0, 0, 0 }, { 1, 1, 0 },
-//				{ 2, 0, 0 }, { 0, 0, 1 }, { 1, 1, 1 }, { 2, 0, 1 } }, true, appearance);
-		
-		double size = 10;
-		int sizeCount = 50;
-		
-		
-		double[][] vert = new double[sizeCount*sizeCount][3];
-		
-		for (int i=0; i<sizeCount; ++i) {
-			for (int j=0; j<sizeCount; ++j) {
-				double x = -size/2.0 + i*size/sizeCount;
-				double z = -size/2.0 + j*size/sizeCount;
-				
-				vert[i*sizeCount+j][0] = x;
-				vert[i*sizeCount+j][1] = 0.1*(x*x+z*z)-1;
-				vert[i*sizeCount+j][2] = z;
-			}
-		}
-		appearance.setColor(Color.BLUE);
-		appearance.setAlpha(0.5);
-		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
-		
-		vert = new double[sizeCount*sizeCount][3];
-		
-		for (int i=0; i<sizeCount; ++i) {
-			for (int j=0; j<sizeCount; ++j) {
-				double x = -size/2.0 + i*size/sizeCount;
-				double z = -size/2.0 + j*size/sizeCount;
-				
-				vert[i*sizeCount+j][0] = x;
-				vert[i*sizeCount+j][1] = -0.1*(x*x+z*z)+2;
-				vert[i*sizeCount+j][2] = z;
-			}
-		}
-		appearance.setColor(Color.RED);
-		appearance.setAlpha(0.5);
-		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
-		
-		vert = new double[sizeCount*sizeCount][3];
-		
-		for (int i=0; i<sizeCount; ++i) {
-			for (int j=0; j<sizeCount; ++j) {
-				double x = -size/2.0 + i*size/sizeCount;
-				double z = -size/2.0 + j*size/sizeCount;
-				
-				vert[i*sizeCount+j][0] = x;
-				vert[i*sizeCount+j][1] = z;
-				vert[i*sizeCount+j][2] = -0.1*(x*x+z*z)+2;
-			}
-		}
-		appearance.setColor(Color.YELLOW);
-		appearance.setAlpha(0.5);
-		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
-		
-		vert = new double[sizeCount*sizeCount][3];
-		
-		for (int i=0; i<sizeCount; ++i) {
-			for (int j=0; j<sizeCount; ++j) {
-				double x = -size/2.0 + i*size/sizeCount;
-				double z = -size/2.0 + j*size/sizeCount;
-				
-				vert[i*sizeCount+j][0] = x;
-				vert[i*sizeCount+j][1] = z;
-				vert[i*sizeCount+j][2] = 0.1*(x*x+z*z)-2;
-			}
-		}
-		appearance.setColor(Color.GREEN);
-		appearance.setAlpha(0.5);
-		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
+//		vert = new double[sizeCount*sizeCount][3];
+//		
+//		for (int i=0; i<sizeCount; ++i) {
+//			for (int j=0; j<sizeCount; ++j) {
+//				double x = -size/2.0 + i*size/sizeCount;
+//				double z = -size/2.0 + j*size/sizeCount;
+//				
+//				vert[i*sizeCount+j][0] = x;
+//				vert[i*sizeCount+j][1] = -0.1*(x*x+z*z)+2;
+//				vert[i*sizeCount+j][2] = z;
+//			}
+//		}
+//		appearance.setColor(Color.RED);
+//		appearance.setAlpha(0.5);
+//		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
+//		
+//		vert = new double[sizeCount*sizeCount][3];
+//		
+//		for (int i=0; i<sizeCount; ++i) {
+//			for (int j=0; j<sizeCount; ++j) {
+//				double x = -size/2.0 + i*size/sizeCount;
+//				double z = -size/2.0 + j*size/sizeCount;
+//				
+//				vert[i*sizeCount+j][0] = x;
+//				vert[i*sizeCount+j][1] = z;
+//				vert[i*sizeCount+j][2] = -0.1*(x*x+z*z)+2;
+//			}
+//		}
+//		appearance.setColor(Color.YELLOW);
+//		appearance.setAlpha(0.5);
+//		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
+//		
+//		vert = new double[sizeCount*sizeCount][3];
+//		
+//		for (int i=0; i<sizeCount; ++i) {
+//			for (int j=0; j<sizeCount; ++j) {
+//				double x = -size/2.0 + i*size/sizeCount;
+//				double z = -size/2.0 + j*size/sizeCount;
+//				
+//				vert[i*sizeCount+j][0] = x;
+//				vert[i*sizeCount+j][1] = z;
+//				vert[i*sizeCount+j][2] = 0.1*(x*x+z*z)-2;
+//			}
+//		}
+//		appearance.setColor(Color.GREEN);
+//		appearance.setAlpha(0.5);
+//		viewer.addMesh(sizeCount, sizeCount, vert, true, MeshTopology.OPEN, appearance);
 		
 		// viewer.addLineStrip(vertices, appearance, true);
 	}
