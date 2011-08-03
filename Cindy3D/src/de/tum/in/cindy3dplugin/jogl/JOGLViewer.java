@@ -99,7 +99,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		
 		applyHints(qualityHints[4]);
 	}
-	
+
 	private void applyHints(RenderHints hints) {
 		if (renderHints != null && renderHints.equals(hints)) {
 			return;
@@ -391,34 +391,47 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		renderer.getLightManager().disableLight(light);
 	}
 
+	
+	/**
+	 * supported hints:
+	 * - quality, range [0,8]
+	 * - renderMode, "fixedfunction" or "programmable"
+	 * - samplingRate, range [1,oo[
+	 * 
+	 * quality selects from a fixed set of render hints, which can be modified
+	 * by specifying renderMode and samplingRate. Providing a valid render mode
+	 * resets the sampling rate to 1. 
+	 */
 	@Override
 	public void setRenderHints(Hashtable<String, Object> hintsMap) {
-		requestedRenderHints = new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 1);
-		
+		requestedRenderHints = new RenderHints(
+				RenderMode.FIXED_FUNCTION_PIPELINE, 1);
+
 		Object value;
 		value = hintsMap.get("quality");
 		if (value instanceof Double) {
-			int quality = ((Double)value).intValue();
-			quality = Math.max(0, Math.min(quality, qualityHints.length-1));
+			int quality = ((Double) value).intValue();
+			quality = Math.max(0, Math.min(quality, qualityHints.length - 1));
 			requestedRenderHints = qualityHints[quality];
 		}
-		
+
 		value = hintsMap.get("renderMode");
 		if (value instanceof String) {
-			String renderMode = (String)value;
+			String renderMode = (String) value;
 			if (renderMode.equals("fixedfunction")) {
 				requestedRenderHints.setSamplingRate(1);
-				requestedRenderHints.setRenderMode(RenderMode.FIXED_FUNCTION_PIPELINE);
-			}
-			else if (renderMode.equals("programmable")) {
+				requestedRenderHints
+						.setRenderMode(RenderMode.FIXED_FUNCTION_PIPELINE);
+			} else if (renderMode.equals("programmable")) {
 				requestedRenderHints.setSamplingRate(1);
-				requestedRenderHints.setRenderMode(RenderMode.PROGRAMMABLE_PIPELINE);
+				requestedRenderHints
+						.setRenderMode(RenderMode.PROGRAMMABLE_PIPELINE);
 			}
 		}
-		
+
 		value = hintsMap.get("samplingRate");
 		if (value instanceof Double) {
-			requestedRenderHints.setSamplingRate(((Double)value).intValue());
+			requestedRenderHints.setSamplingRate(((Double) value).intValue());
 		}
 	}
 }
