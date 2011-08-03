@@ -9,6 +9,7 @@ import de.cinderella.api.cs.CindyScript;
 import de.cinderella.api.cs.CindyScriptPlugin;
 import de.cinderella.math.Vec;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
+import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.LightInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 import de.tum.in.cindy3dplugin.jogl.Util;
@@ -319,9 +320,10 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 		String type = modifiers.get("normaltype").toString();
 
-		boolean perVertex = false;
-		if (type.equals("pervertex"))
-			perVertex = true;
+		NormalType normalType = NormalType.PER_FACE;
+		if (type.equals("pervertex")) {
+			normalType = NormalType.PER_VERTEX;
+		}
 
 		double[][] vertices = new double[points.size()][3];
 		for (int i = 0; i < points.size(); ++i) {
@@ -343,7 +345,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			topology = MeshTopology.CLOSE_XY;
 		}
 		
-		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
+		cindy3d.addMesh(rows, columns, vertices, normalType, topology,
 				getModifiedAppearance(surfaceAppearance, getModifiers()));
 	}
 	

@@ -81,10 +81,10 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 	protected void render(JOGLRenderState jrs, Mesh m) {
 		GL2 gl2 = jrs.gl.getGL2();
 		MeshBuffer mb;
-		mb = meshBuffers.get(m.identifier);
+		mb = meshBuffers.get(m.getIdentifier());
 		if (mb == null) {
 			mb = new MeshBuffer(jrs.gl.getGL2(), m);
-			meshBuffers.put(m.identifier, mb);
+			meshBuffers.put(m.getIdentifier(), mb);
 		}
 
 		Util.setMaterial(jrs.gl, m.color, m.shininess);

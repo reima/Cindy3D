@@ -74,7 +74,7 @@ public class LightManager {
 	
 	public String getShaderFillIn() {
 		String str = "vec3 eye = -normalize(ecPoint);\n";
-		for (int i=0; i<MAX_LIGHTS; ++i) {
+		for (int i = 0; i < Cindy3DViewer.MAX_LIGHTS; ++i) {
 			if (lights[i] != null && lights[i].isEnabled()) {
 				str += lights[i].getShaderFillIn(i) + "\n";
 			}
@@ -98,7 +98,7 @@ public class LightManager {
 		gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
 		
 		gl.glLoadIdentity();
-		for (int i=0; i<MAX_LIGHTS; ++i) {
+		for (int i = 0; i < Cindy3DViewer.MAX_LIGHTS; ++i) {
 			if (lights[i] != null) {
 				lights[i].setGLState(gl, GL2.GL_LIGHT0 + i);
 			}

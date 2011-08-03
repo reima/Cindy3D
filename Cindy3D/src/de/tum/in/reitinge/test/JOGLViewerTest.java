@@ -6,6 +6,7 @@ import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.LightInfo;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
+import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.LightInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 
@@ -20,10 +21,10 @@ public class JOGLViewerTest {
 //		materials(viewer);
 //		colorSpiral(viewer);
 //		circles(viewer);
-		lines(viewer);
+//		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
-//		enneper(viewer, true);
+		enneper(viewer, true);
 //		lights(viewer);
 		viewer.end();
 	}
@@ -91,7 +92,7 @@ public class JOGLViewerTest {
 		
 		app.setAlpha(0.8);
 		app.setColor(new Color(0.5f, 0.5f, 1.0f));
-		viewer.addMesh(2*rr+1, 2*ss+1, vertices, true, MeshTopology.OPEN, app);
+		viewer.addMesh(2*rr+1, 2*ss+1, vertices, NormalType.PER_VERTEX, MeshTopology.OPEN, app);
 	}
 	
 	public static void colorSpiral(Cindy3DViewer viewer) {
@@ -174,7 +175,7 @@ public class JOGLViewerTest {
 		}
 		appearance.setColor(Color.RED);
 		//appearance.setAlpha(0.7);
-		viewer.addMesh(rings, segments, vert, true, MeshTopology.CLOSE_XY, appearance);
+		viewer.addMesh(rings, segments, vert, NormalType.PER_VERTEX, MeshTopology.CLOSE_XY, appearance);
 		
 		//viewer.addPoint(0, 0, 0, appearance);
 	}
@@ -294,97 +295,90 @@ public class JOGLViewerTest {
 				{      -1, -golden,       0 },
 		};
 		
-		for (double[] vert : verts) {
-			appearance.setAlpha(0.5);
-			viewer.addSphere(vert[0], vert[1], vert[2], 0.1, appearance);
+		int[][] edges = {
+				{ 0, 1 },
+				{ 0, 4 },
+				{ 0, 6 },
+				{ 0, 8 },
+				{ 0, 9 },
+				{ 1, 4 },
+				{ 1, 6 },
+				{ 1, 10 },
+				{ 1, 11 },
+				{ 2, 3 }, 
+				{ 2, 5 },
+				{ 2, 7 },
+				{ 2, 8 },
+				{ 2, 9 },
+				{ 3, 5 },
+				{ 3, 7 },
+				{ 3, 10 },
+				{ 3, 11 },
+				{ 4, 5 },
+				{ 4, 8 },
+				{ 4, 10 },
+				{ 5, 8 },
+				{ 5, 10 },
+				{ 6, 7 },
+				{ 6, 9 },
+				{ 6, 11 },
+				{ 7, 9 },
+				{ 7, 11 },
+				{ 8, 9 },
+				{ 10, 11 },
+		};
+		
+		for (int[] edge : edges) {
+			double vert1[] = verts[edge[0]];
+			double vert2[] = verts[edge[1]];
+			viewer.addSegment(vert1[0], vert1[1], vert1[2], vert2[0], vert2[1],
+					vert2[2], appearance);
 		}
 		
-		return;
+		for (int[] edge : edges) {
+			double vert1[] = verts[edge[0]];
+			double vert2[] = verts[edge[1]];
+			viewer.addSegment(2*vert1[0], 2*vert1[1], 2*vert1[2], 2*vert2[0], 2*vert2[1],
+					2*vert2[2], appearance);
+		}
 		
-//		int[][] edges = {
-//				{ 0, 1 },
-//				{ 0, 4 },
-//				{ 0, 6 },
-//				{ 0, 8 },
-//				{ 0, 9 },
-//				{ 1, 4 },
-//				{ 1, 6 },
-//				{ 1, 10 },
-//				{ 1, 11 },
-//				{ 2, 3 }, 
-//				{ 2, 5 },
-//				{ 2, 7 },
-//				{ 2, 8 },
-//				{ 2, 9 },
-//				{ 3, 5 },
-//				{ 3, 7 },
-//				{ 3, 10 },
-//				{ 3, 11 },
-//				{ 4, 5 },
-//				{ 4, 8 },
-//				{ 4, 10 },
-//				{ 5, 8 },
-//				{ 5, 10 },
-//				{ 6, 7 },
-//				{ 6, 9 },
-//				{ 6, 11 },
-//				{ 7, 9 },
-//				{ 7, 11 },
-//				{ 8, 9 },
-//				{ 10, 11 },
-//		};
-//		
-//		for (int[] edge : edges) {
-//			double vert1[] = verts[edge[0]];
-//			double vert2[] = verts[edge[1]];
-//			viewer.addSegment(vert1[0], vert1[1], vert1[2], vert2[0], vert2[1],
-//					vert2[2], appearance);
-//		}
-//		
-//		for (int[] edge : edges) {
-//			double vert1[] = verts[edge[0]];
-//			double vert2[] = verts[edge[1]];
-//			viewer.addSegment(2*vert1[0], 2*vert1[1], 2*vert1[2], 2*vert2[0], 2*vert2[1],
-//					2*vert2[2], appearance);
-//		}
-//		
-//		int[][] triangles = {
-//				{0,1,4},{0,1,6},{0,4,8},{0,6,9},{0,8,9},
-//				{1,4,10},{1,6,11},{1,10,11},
-//				{2,3,5},{2,3,7},{2,5,8},{2,7,9},{2,8,9},
-//				{3,5,10},{3,7,11},{3,10,11},
-//				{4,5,8},{4,5,10},
-//				{6,7,9},{6,7,11}
-//		};
-//		
-//		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.BLACK};
-//		
-//		appearance.setColor(Color.RED);
-//		appearance.setAlpha(0.3);
-//		
-//		int h=0;
-//		for (int[] triangle : triangles) {
-//			double[][] v = new double[3][3];
-//			for (int i=0; i<3; ++i) {
-//				v[i] = verts[triangle[i]];
-//			}
-//			appearance.setColor(col[(h++)%col.length]);
-//			viewer.addPolygon(v, null, appearance);
-//		}
-//		
-//		appearance.setColor(Color.BLUE);
-//		appearance.setAlpha(0.3);
-//		
-//		h=3;
-//		for (int[] triangle : triangles) {
-//			double[][] v = new double[3][3];
-//			for (int i=0; i<3; ++i) {
-//				v[i] = verts[triangle[i]].clone();
-//				for (int j=0; j<3; ++j)
-//					v[i][j] *= 2;
-//			}
-//			appearance.setColor(col[(h++)%col.length]);
-//			viewer.addPolygon(v, null, appearance);
-//		}
+		int[][] triangles = {
+				{0,1,4},{0,1,6},{0,4,8},{0,6,9},{0,8,9},
+				{1,4,10},{1,6,11},{1,10,11},
+				{2,3,5},{2,3,7},{2,5,8},{2,7,9},{2,8,9},
+				{3,5,10},{3,7,11},{3,10,11},
+				{4,5,8},{4,5,10},
+				{6,7,9},{6,7,11}
+		};
+		
+		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.BLACK};
+		
+		appearance.setColor(Color.RED);
+		appearance.setAlpha(0.3);
+		
+		int h=0;
+		for (int[] triangle : triangles) {
+			double[][] v = new double[3][3];
+			for (int i=0; i<3; ++i) {
+				v[i] = verts[triangle[i]];
+			}
+			appearance.setColor(col[(h++)%col.length]);
+			viewer.addPolygon(v, null, appearance);
+		}
+		
+		appearance.setColor(Color.BLUE);
+		appearance.setAlpha(0.3);
+		
+		h=3;
+		for (int[] triangle : triangles) {
+			double[][] v = new double[3][3];
+			for (int i=0; i<3; ++i) {
+				v[i] = verts[triangle[i]].clone();
+				for (int j=0; j<3; ++j)
+					v[i][j] *= 2;
+			}
+			appearance.setColor(col[(h++)%col.length]);
+			viewer.addPolygon(v, null, appearance);
+		}
 	}
 }

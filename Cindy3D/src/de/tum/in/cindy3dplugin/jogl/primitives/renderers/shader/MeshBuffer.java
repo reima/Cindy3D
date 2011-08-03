@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
 
+import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 
@@ -22,12 +23,15 @@ public class MeshBuffer {
 	}
 
 	private void createBuffers(GL2 gl2, Mesh m) {
-		if (m.perVertexNormals) {
-			vertexCount = m.gridWidth * m.gridHeight;
-			indexCount = m.faceCount * 3;
+		double[][] positions = m.getPositions();
+		double[][] normals = m.getNormals();
+		
+		if (m.getNormalType() == NormalType.PER_VERTEX) {
+			vertexCount = m.getGridWidth() * m.getGridHeight();
+			indexCount = m.getFaceCount() * 3;
 			hasIndexBuffer = true;
 		} else {
-			vertexCount = m.faceCount * 3;
+			vertexCount = m.getFaceCount() * 3;
 			indexCount = 0;
 			hasIndexBuffer = false;
 		}
@@ -36,18 +40,18 @@ public class MeshBuffer {
 		DoubleBuffer vertices = DoubleBuffer.allocate(vertexCount * (3 + 3));
 
 		IntBuffer indices = null;
-		if (m.perVertexNormals) {
+		if (m.getNormalType() == NormalType.PER_VERTEX) {
 			indices = IntBuffer.allocate(indexCount);
 			for (int i = 0; i < vertexCount; ++i) {
-				vertices.put(m.positions[i]);
-				vertices.put(m.normals[i]);
+				vertices.put(positions[i]);
+				vertices.put(normals[i]);
 			}
 		}
 
 		// Iterate over all grid cells (each of which consists of two faces)
 		int faceIndex = 0;
-		for (int gridY = 0; gridY < m.gridYMax; ++gridY) {
-			for (int gridX = 0; gridX < m.gridXMax; ++gridX) {
+		for (int gridY = 0; gridY < m.getGridYMax(); ++gridY) {
+			for (int gridX = 0; gridX < m.getGridXMax(); ++gridX) {
 				/*
 				 *    v1----v2
 				 *    |    / |
@@ -56,15 +60,15 @@ public class MeshBuffer {
 				 *    | /    |
 				 *    v3----v4
 				 */
-				int gridXPlus1 = (gridX + 1) % m.gridWidth;
-				int gridYPlus1 = (gridY + 1) % m.gridHeight;
+				int gridXPlus1 = (gridX + 1) % m.getGridWidth();
+				int gridYPlus1 = (gridY + 1) % m.getGridHeight();
 
 				int v1Index = m.getVertexIndex(gridX,      gridY);
 				int v2Index = m.getVertexIndex(gridXPlus1, gridY);
 				int v3Index = m.getVertexIndex(gridX,      gridYPlus1);
 				int v4Index = m.getVertexIndex(gridXPlus1, gridYPlus1);
 
-				if (m.perVertexNormals) {
+				if (m.getNormalType() == NormalType.PER_VERTEX) {
 					// f1
 					indices.put(v1Index);
 					indices.put(v2Index);
@@ -77,21 +81,21 @@ public class MeshBuffer {
 				} else {
 					// f1
 					int f1Index = faceIndex++;
-					vertices.put(m.positions[v1Index]);
-					vertices.put(m.normals[f1Index]);
-					vertices.put(m.positions[v2Index]);
-					vertices.put(m.normals[f1Index]);
-					vertices.put(m.positions[v3Index]);
-					vertices.put(m.normals[f1Index]);
+					vertices.put(positions[v1Index]);
+					vertices.put(normals[f1Index]);
+					vertices.put(positions[v2Index]);
+					vertices.put(normals[f1Index]);
+					vertices.put(positions[v3Index]);
+					vertices.put(normals[f1Index]);
 
 					// f2
 					int f2Index = faceIndex++;
-					vertices.put(m.positions[v2Index]);
-					vertices.put(m.normals[f2Index]);
-					vertices.put(m.positions[v3Index]);
-					vertices.put(m.normals[f2Index]);
-					vertices.put(m.positions[v4Index]);
-					vertices.put(m.normals[f2Index]);
+					vertices.put(positions[v2Index]);
+					vertices.put(normals[f2Index]);
+					vertices.put(positions[v3Index]);
+					vertices.put(normals[f2Index]);
+					vertices.put(positions[v4Index]);
+					vertices.put(normals[f2Index]);
 				}
 			}
 		}

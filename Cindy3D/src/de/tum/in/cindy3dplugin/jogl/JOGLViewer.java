@@ -232,8 +232,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
-			boolean perVertexNormals, MeshTopology topology, AppearanceState appearance) {
-		scene.addMesh(new Mesh(rows, columns, vertices, perVertexNormals,
+			NormalType normalType, MeshTopology topology, AppearanceState appearance) {
+		scene.addMesh(new Mesh(rows, columns, vertices, normalType,
 				appearance.getColor(), appearance.getShininess(), appearance.getAlpha(),
 				topology));
 	}

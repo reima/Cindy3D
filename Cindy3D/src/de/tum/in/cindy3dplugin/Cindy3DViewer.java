@@ -10,7 +10,12 @@ public interface Cindy3DViewer {
 		CLOSE_X,
 		CLOSE_Y,
 		CLOSE_XY
-	};
+	}
+	
+	enum NormalType {
+		PER_VERTEX,
+		PER_FACE
+	}
 	
 	/**
 	 * Marks the beginning of a new scene
@@ -55,7 +60,7 @@ public interface Cindy3DViewer {
 	void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, MeshTopology topology, AppearanceState appearance);
 	void addMesh(int rows, int columns, double[][] vertices,
-			boolean perVertexNormals, MeshTopology topology, AppearanceState appearance);
+			NormalType normalType, MeshTopology topology, AppearanceState appearance);
 	void setBackgroundColor(Color color);
 	void setDepthRange(double near, double far);
 	void setLight(int light, LightInfo info);

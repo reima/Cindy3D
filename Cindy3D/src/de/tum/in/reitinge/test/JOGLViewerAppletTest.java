@@ -7,6 +7,7 @@ import java.awt.Color;
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
+import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 
 public class JOGLViewerAppletTest extends Applet {
@@ -62,6 +63,6 @@ public class JOGLViewerAppletTest extends Applet {
 		
 		app.setAlpha(0.8);
 		app.setColor(new Color(0.5f, 0.5f, 1.0f));
-		viewer.addMesh(2*rr+1, 2*ss+1, vertices, true, MeshTopology.OPEN, app);
+		viewer.addMesh(2*rr+1, 2*ss+1, vertices, NormalType.PER_VERTEX, MeshTopology.OPEN, app);
 	}
 }
