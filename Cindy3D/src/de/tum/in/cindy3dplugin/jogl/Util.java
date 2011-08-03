@@ -250,7 +250,7 @@ public class Util {
 
 	public static void setMaterial(GL gl, Color color, int shininess) {
 		gl.getGL2().glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE,
-				color.getColorComponents(null), 0);
+				color.getComponents(null), 0);
 		gl.getGL2().glMateriali(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS,
 				shininess);
 	}
