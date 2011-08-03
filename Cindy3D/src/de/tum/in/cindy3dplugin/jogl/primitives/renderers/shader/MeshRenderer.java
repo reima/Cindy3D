@@ -87,8 +87,6 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 			meshBuffers.put(m.getIdentifier(), mb);
 		}
 
-		Util.setMaterial(jrs.gl, m.color, m.shininess);
-		
 		mb.render(gl2);
 	}
 }

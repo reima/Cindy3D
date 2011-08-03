@@ -81,8 +81,6 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 				(float) circle.normalY, (float) circle.normalZ);
 		gl2.glUniform1f(radiusSqLoc, (float) (circle.radius * circle.radius));
 
-		Util.setMaterial(jrs.gl, circle.color, circle.shininess);
-
 		RealMatrix transform = MatrixUtils.createRealIdentityMatrix(4);
 		transform.setColumn(3, new double[] { circle.centerX, circle.centerY,
 				circle.centerZ, 1 });

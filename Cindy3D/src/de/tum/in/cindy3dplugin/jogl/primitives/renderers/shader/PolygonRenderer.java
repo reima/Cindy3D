@@ -57,8 +57,6 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	protected void render(JOGLRenderState jrs, Polygon polygon) {
 		GL2 gl2 = jrs.gl.getGL2();
 
-		Util.setMaterial(jrs.gl, polygon.color, polygon.shininess);
-
 		gl2.glBegin(GL2.GL_POLYGON);
 		for (int i = 0; i < polygon.positions.length; ++i) {
 			gl2.glNormal3d(polygon.normals[i].getX(),

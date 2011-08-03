@@ -124,8 +124,6 @@ public class LineRenderer extends LineRendererBase {
 		gl2.glUniform3f(directionLoc, (float) direction.getX(),
 				(float) direction.getY(), (float) direction.getZ());
 
-		Util.setMaterial(jrs.gl, line.color, line.shininess);
-
 		gl2.glBegin(GL2.GL_QUADS);
 			gl2.glVertex3d(-1, -1, -1);
 			gl2.glVertex3d(-1, -1, 1);

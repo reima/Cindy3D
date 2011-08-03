@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.media.opengl.GL;
 
+import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Primitive;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
@@ -21,9 +22,12 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 			return;
 		
 		preRender(jrs);
-		for (T primitive : c)
-			if (primitive.isOpaque() == jrs.renderOpaque)
+		for (T primitive : c) {
+			if (primitive.isOpaque() == jrs.renderOpaque) {
+				Util.setMaterial(jrs.gl, primitive.color, primitive.shininess);
 				render(jrs, primitive);
+			}
+		}
 		postRender(jrs);
 	}
 }

@@ -53,8 +53,6 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 	@Override
 	protected void render(JOGLRenderState jrs, Point point) {
 		GL2 gl = jrs.gl.getGL2();
-		gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE,
-				point.color.getComponents(null), 0);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glPushMatrix();

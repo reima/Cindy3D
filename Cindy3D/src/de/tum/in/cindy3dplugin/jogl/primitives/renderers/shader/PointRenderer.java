@@ -84,8 +84,6 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 				(float) point.z);
 		gl2.glUniform1f(radiusLoc, (float) point.size);
 		
-		Util.setMaterial(jrs.gl, point.color, point.shininess);
-
 		// gl2.glFlush();
 		gl2.glUniform1f(modeLoc, renderMode);
 			
