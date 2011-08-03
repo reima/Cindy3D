@@ -568,6 +568,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.setDepthRange(near, far);
 	}
 	
+	@CindyScript("renderhints3d")
+	public void renderhints3d() {
+		cindy3d.setRenderHints(modifiers);
+	}
+	
 	@CindyScript("disablelight3d")
 	public void disablelight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {

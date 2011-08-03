@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Hashtable;
 import java.util.logging.Level;
 
 import javax.media.opengl.GLCapabilities;
@@ -21,14 +22,17 @@ import org.apache.commons.math.geometry.Vector3D;
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.LightInfo;
+import de.tum.in.cindy3dplugin.jogl.RenderHints.RenderMode;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.fixedfunc.FixedfuncPrimitiveRendererFactory;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader.ShaderPrimitiveRendererFactory;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 import de.tum.in.cindy3dplugin.jogl.primitives.Point;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
+import de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
 
@@ -38,7 +42,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	
 	boolean standalone;
 	private Container container;
-	private GLCanvas canvas;
+	private GLCanvas canvas = null;
 	
 	private JOGLRenderer renderer;
 
@@ -48,6 +52,21 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private double[] mousePosition = new double[2];
 	
 	private boolean drawPending = false;
+
+	private final RenderHints[] qualityHints = new RenderHints[] {
+			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 1),
+			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 2),
+			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 4),
+			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 8),
+			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 1),
+			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 2),
+			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 3),
+			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 4),
+			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 8),
+	};
+	
+	private RenderHints renderHints = null;
+	private RenderHints requestedRenderHints = null; 
 	
 	public JOGLViewer() {
 		this(null);
@@ -73,13 +92,49 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 		try {
 			GLProfile.initSingleton(true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Util.logger.log(Level.SEVERE, e.toString(), e);
+		}
+		
+		applyHints(qualityHints[4]);
+	}
+	
+	private void applyHints(RenderHints hints) {
+		if (renderHints != null && renderHints.equals(hints)) {
+			return;
+		}
+		
+		renderHints = hints;
+		
+		try {
 			GLProfile profile = GLProfile.getDefault();
 			GLCapabilities caps = new GLCapabilities(profile);
+			
+			if (hints.getRenderMode() == RenderMode.FIXED_FUNCTION_PIPELINE) {
+				if (hints.getSamplingRate() > 1) {
+					caps.setSampleBuffers(true);
+					caps.setNumSamples(hints.getSamplingRate());
+				}
+				renderer = new DefaultRenderer(scene, camera,
+						new FixedfuncPrimitiveRendererFactory());
+			} else {
+				if (hints.getSamplingRate() == 1) {
+					renderer = new DefaultRenderer(scene, camera,
+							new ShaderPrimitiveRendererFactory());
+				} else {
+					renderer = new SupersampledFBORenderer(scene, camera,
+							hints.getSamplingRate(),
+							new ShaderPrimitiveRendererFactory());
+				}
+			}
+			
+			if (canvas != null) {
+				canvas.destroy();
+				this.container.remove(canvas);
+			}
+			
 			canvas = new GLCanvas(caps);
-//			renderer = new DefaultRenderer(scene, camera,
-//					new ShaderPrimitiveRendererFactory());
-			renderer = new SupersampledFBORenderer(scene, camera,
-					new ShaderPrimitiveRendererFactory());
 			canvas.addGLEventListener(renderer);
 			canvas.addMouseListener(this);
 			canvas.addMouseMotionListener(this);
@@ -95,6 +150,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void begin() {
 		Util.logger.info("begin()");
+		
+		if (requestedRenderHints != null) {
+			applyHints(requestedRenderHints);
+		}
 		scene.clear();
 	}
 
@@ -330,5 +389,36 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void disableLight(int light) {
 		renderer.getLightManager().disableLight(light);
+	}
+
+	@Override
+	public void setRenderHints(Hashtable<String, Object> hintsMap) {
+		requestedRenderHints = new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 1);
+		
+		Object value;
+		value = hintsMap.get("quality");
+		if (value instanceof Double) {
+			int quality = ((Double)value).intValue();
+			quality = Math.max(0, Math.min(quality, qualityHints.length-1));
+			requestedRenderHints = qualityHints[quality];
+		}
+		
+		value = hintsMap.get("renderMode");
+		if (value instanceof String) {
+			String renderMode = (String)value;
+			if (renderMode.equals("fixedfunction")) {
+				requestedRenderHints.setSamplingRate(1);
+				requestedRenderHints.setRenderMode(RenderMode.FIXED_FUNCTION_PIPELINE);
+			}
+			else if (renderMode.equals("programmable")) {
+				requestedRenderHints.setSamplingRate(1);
+				requestedRenderHints.setRenderMode(RenderMode.PROGRAMMABLE_PIPELINE);
+			}
+		}
+		
+		value = hintsMap.get("samplingRate");
+		if (value instanceof Double) {
+			requestedRenderHints.setSamplingRate(((Double)value).intValue());
+		}
 	}
 }

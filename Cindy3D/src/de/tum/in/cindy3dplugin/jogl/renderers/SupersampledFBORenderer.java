@@ -17,8 +17,9 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 	private int framebuffer = 0;
 	
 	public SupersampledFBORenderer(Scene scene, ModelViewerCamera camera,
-			PrimitiveRendererFactory prf) {
+			int superSampleFactor, PrimitiveRendererFactory prf) {
 		super(scene, camera, prf);
+		this.superSampleFactor = superSampleFactor;
 		width = height = 1;
 	}
 	

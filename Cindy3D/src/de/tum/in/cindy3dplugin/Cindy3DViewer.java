@@ -1,6 +1,7 @@
 package de.tum.in.cindy3dplugin;
 
 import java.awt.Color;
+import java.util.Hashtable;
 
 public interface Cindy3DViewer {
 	public static final int MAX_LIGHTS = 8;
@@ -65,4 +66,5 @@ public interface Cindy3DViewer {
 	void setDepthRange(double near, double far);
 	void setLight(int light, LightInfo info);
 	void disableLight(int light);
+	void setRenderHints(Hashtable<String, Object> modifiers);
 }
