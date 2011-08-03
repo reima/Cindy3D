@@ -1,6 +1,7 @@
 package de.tum.in.reitinge.test;
 
 import java.awt.Color;
+import java.util.Hashtable;
 
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
@@ -14,8 +15,14 @@ public class JOGLViewerTest {
 	public static void main(String[] args) {
 		JOGLViewer viewer = new JOGLViewer();
 		
+		Hashtable<String, Object> hintsMap = new Hashtable<String,Object>();
+		
+		hintsMap.put("renderMode", "fixedfunction");	
+
+		viewer.setRenderHints(hintsMap);
+		
 		//viewer.setBackgroundColor(Color.white);
-		viewer.setBackgroundColor(Color.black);
+		//viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
 //		materials(viewer);
@@ -23,8 +30,8 @@ public class JOGLViewerTest {
 //		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
-//		icosahedron(viewer);
-		enneper(viewer, true);
+		icosahedron(viewer);
+//		enneper(viewer, true);
 //		lights(viewer);
 		viewer.end();
 	}
@@ -351,10 +358,10 @@ public class JOGLViewerTest {
 				{6,7,9},{6,7,11}
 		};
 		
-		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.BLACK};
+		Color[] col = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.CYAN, Color.WHITE, Color.WHITE};
 		
 		appearance.setColor(Color.RED);
-		appearance.setAlpha(0.3);
+		//appearance.setAlpha(0.3);
 		
 		int h=0;
 		for (int[] triangle : triangles) {
@@ -367,7 +374,7 @@ public class JOGLViewerTest {
 		}
 		
 		appearance.setColor(Color.BLUE);
-		appearance.setAlpha(0.3);
+		//appearance.setAlpha(0.3);
 		
 		h=3;
 		for (int[] triangle : triangles) {

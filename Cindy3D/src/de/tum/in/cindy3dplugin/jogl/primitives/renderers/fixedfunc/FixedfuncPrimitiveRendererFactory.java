@@ -33,7 +33,7 @@ public class FixedfuncPrimitiveRendererFactory implements
 
 	@Override
 	public PrimitiveRenderer<Polygon> createPolygonRenderer() {
-		return new DummyRenderer<Polygon>();
+		return new PolygonRenderer();
 	}
 
 }

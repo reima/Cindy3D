@@ -67,6 +67,7 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 					.getY(), polygon.positions[i].getZ());
 		}
 		gl2.glEnd();
+		
 	}
 
 	@Override
