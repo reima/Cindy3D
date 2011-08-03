@@ -28,7 +28,7 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 
 		MeshBuffer mb;
 		while (it.hasNext()) {
-			mb = (MeshBuffer) it.next();
+			mb = it.next();
 			mb.dispose(gl.getGL2());
 		}
 	}
@@ -88,20 +88,7 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 		}
 
 		Util.setMaterial(jrs.gl, m.color, m.shininess);
-
-		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, mb.vertexBuffer);
-
-		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
-		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
-
-		if (mb.hasIndexBuffer) {
-			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, mb.indexBuffer);
-			gl2.glPointSize(5);
-			gl2.glDrawElements(GL2.GL_TRIANGLES, mb.indexCount,
-					GL2.GL_UNSIGNED_INT, 0);
-		} else {
-			//gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, (m.m - 1)*(m.n - 1) * 2 * 3);
-			gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, mb.vertexCount);
-		}
+		
+		mb.render(gl2);
 	}
 }

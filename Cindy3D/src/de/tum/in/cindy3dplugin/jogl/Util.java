@@ -30,7 +30,12 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 public class Util {
 	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
 	private static final boolean FILE_LOGGING = false;
-	
+	public static final int SIZEOF_DOUBLE = 8;
+	public static final int SIZEOF_INT = 4;
+
+	private static String shaderLightFillIn = "";
+	public static Logger logger;
+
 	public static float[] matrixToFloatArray(RealMatrix m) {
 		int rows = m.getRowDimension();
 		int cols = m.getColumnDimension();
@@ -67,8 +72,6 @@ public class Util {
 		return new double[] {v.getX(), v.getY(), v.getZ()};
 	}
 	
-	private static String shaderLightFillIn = "";
-		
 	public static void readShaderSource(ClassLoader context, URL url,
 			StringBuffer result) {
 		try {
@@ -227,8 +230,6 @@ public class Util {
 		});
 	}
 	
-	public static Logger logger;
-
 	public static void initLogger() {
 		try {
 			logger = Logger.getLogger("log");

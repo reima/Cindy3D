@@ -5,19 +5,17 @@ import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
 
+import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 
 public class MeshBuffer {
-	private static final int SIZEOF_DOUBLE = 8;
-	private static final int SIZEOF_INT = 4;
+	private int vertexBuffer;
+	private int indexBuffer;
 
-	int vertexBuffer;
-	int indexBuffer;
+	private boolean hasIndexBuffer;
 
-	boolean hasIndexBuffer;
-
-	int indexCount;
-	int vertexCount;
+	private int indexCount;
+	private int vertexCount;
 
 	public MeshBuffer(GL2 gl2, Mesh m) {
 		createBuffers(gl2, m);
@@ -34,7 +32,8 @@ public class MeshBuffer {
 			hasIndexBuffer = false;
 		}
 
-		DoubleBuffer vertices = DoubleBuffer.allocate(vertexCount * 3 * 2);
+		// Position (3 doubles) + normal (3 doubles)
+		DoubleBuffer vertices = DoubleBuffer.allocate(vertexCount * (3 + 3));
 
 		IntBuffer indices = null;
 		if (m.perVertexNormals) {
@@ -97,14 +96,13 @@ public class MeshBuffer {
 			}
 		}
 
-		int tmp[] = new int[1];
-
 		vertices.flip();
+		int tmp[] = new int[1];
 		gl2.glGenBuffers(1, tmp, 0);
 		vertexBuffer = tmp[0];
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
 		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()
-				* SIZEOF_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
+				* Util.SIZEOF_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 
 		if (hasIndexBuffer) {
@@ -113,10 +111,24 @@ public class MeshBuffer {
 			indexBuffer = tmp[0];
 			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl2.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
-					* SIZEOF_INT, indices, GL2.GL_STATIC_DRAW);
+					* Util.SIZEOF_INT, indices, GL2.GL_STATIC_DRAW);
 			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
 		} else {
 			indexBuffer = 0;
+		}
+	}
+	
+	public void render(GL2 gl2) {
+		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
+		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
+		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
+
+		if (hasIndexBuffer) {
+			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+			gl2.glDrawElements(GL2.GL_TRIANGLES, indexCount,
+					GL2.GL_UNSIGNED_INT, 0);
+		} else {
+			gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, vertexCount);
 		}
 	}
 
