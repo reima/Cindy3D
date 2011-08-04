@@ -4,6 +4,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory;
 
@@ -17,8 +18,9 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 	private int framebuffer = 0;
 	
 	public SupersampledFBORenderer(Scene scene, ModelViewerCamera camera,
-			int superSampleFactor, PrimitiveRendererFactory prf) {
-		super(scene, camera, prf);
+			LightManager lightManager, int superSampleFactor,
+			PrimitiveRendererFactory prf) {
+		super(scene, camera, lightManager, prf);
 		this.superSampleFactor = superSampleFactor;
 		width = height = 1;
 	}

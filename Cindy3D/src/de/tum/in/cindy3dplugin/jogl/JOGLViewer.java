@@ -23,6 +23,7 @@ import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.LightInfo;
 import de.tum.in.cindy3dplugin.jogl.RenderHints.RenderMode;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
@@ -40,14 +41,15 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
 	private static final double POINT_SCALE = 0.05;
 	
-	boolean standalone;
+	private boolean standalone;
 	private Container container;
 	private GLCanvas canvas = null;
 	
-	private JOGLRenderer renderer;
+	private JOGLRenderer renderer = null;
 
 	private Scene scene = new Scene();
 	private ModelViewerCamera camera = new ModelViewerCamera();
+	private LightManager lightManager = new LightManager();
 	
 	private double[] mousePosition = new double[2];
 	
@@ -116,15 +118,15 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 					caps.setSampleBuffers(true);
 					caps.setNumSamples(hints.getSamplingRate());
 				}
-				renderer = new DefaultRenderer(scene, camera,
+				renderer = new DefaultRenderer(scene, camera, lightManager,
 						new FixedfuncPrimitiveRendererFactory());
 			} else {
 				if (hints.getSamplingRate() == 1) {
-					renderer = new DefaultRenderer(scene, camera,
+					renderer = new DefaultRenderer(scene, camera, lightManager,
 							new ShaderPrimitiveRendererFactory());
 				} else {
 					renderer = new SupersampledFBORenderer(scene, camera,
-							hints.getSamplingRate(),
+							lightManager, hints.getSamplingRate(),
 							new ShaderPrimitiveRendererFactory());
 				}
 			}
@@ -383,12 +385,12 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 	@Override
 	public void setLight(int light, LightInfo info) {
-		renderer.getLightManager().setLight(light, info);
+		lightManager.setLight(light, info);
 	}
 
 	@Override
 	public void disableLight(int light) {
-		renderer.getLightManager().disableLight(light);
+		lightManager.disableLight(light);
 	}
 
 	
@@ -404,7 +406,6 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void setRenderHints(Hashtable<String, Object> hintsMap) {
-		
 		requestedRenderHints = renderHints.clone();
 
 		Object value;

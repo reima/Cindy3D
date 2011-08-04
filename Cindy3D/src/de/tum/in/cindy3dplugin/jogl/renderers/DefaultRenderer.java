@@ -8,6 +8,7 @@ import javax.media.opengl.GLException;
 
 import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
 import de.tum.in.cindy3dplugin.jogl.Util;
+import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
@@ -25,8 +26,9 @@ public class DefaultRenderer extends JOGLRenderer {
 	private PrimitiveRenderer<Polygon> polygonRenderer;
 	private PrimitiveRenderer<Mesh> meshRenderer;
 	
-	public DefaultRenderer(Scene scene, ModelViewerCamera camera, PrimitiveRendererFactory prf) {
-		super(scene, camera);
+	public DefaultRenderer(Scene scene, ModelViewerCamera camera,
+			LightManager lightManager, PrimitiveRendererFactory prf) {
+		super(scene, camera, lightManager);
 		pointRenderer = prf.createPointRenderer();
 		circleRenderer = prf.createCircleRenderer();
 		lineRenderer = prf.createLineRenderer();
@@ -127,7 +129,6 @@ public class DefaultRenderer extends JOGLRenderer {
 				CullMode.CULL_NONE);
 
 		if (lightManager.getCompileShader()) {
-			
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
 			
 			if (!pointRenderer.loadShader(gl))

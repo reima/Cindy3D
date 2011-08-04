@@ -11,11 +11,11 @@ public abstract class JOGLRenderer implements GLEventListener {
 	protected ModelViewerCamera camera;
 	protected LightManager lightManager;
 	
-	public JOGLRenderer(Scene scene, ModelViewerCamera camera) {
+	public JOGLRenderer(Scene scene, ModelViewerCamera camera,
+			LightManager lightManager) {
 		this.scene = scene;
 		this.camera = camera;
-		
-		lightManager = new LightManager();
+		this.lightManager = lightManager;
 	}
 
 	public void setScene(Scene scene) {
