@@ -12,13 +12,13 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
    vec3  VP;           // direction from surface to light position
    vec3  halfVector;   // direction of maximum highlights
 
-   if (dot(normal, eye) < 0)
+   if (dot(normal, eye) < 0.0)
    {
-       normal *= -1;
+       normal *= -1.0;
    }
 
    // Compute vector from surface to light position
-   VP = vec3 (gl_LightSource[i].position) - ecPosition3;
+   VP = vec3(gl_LightSource[i].position) - ecPosition3;
 
    // Compute distance between surface and light position
    d = length(VP);
