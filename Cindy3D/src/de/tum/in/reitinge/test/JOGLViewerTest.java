@@ -22,12 +22,12 @@ public class JOGLViewerTest {
 		viewer.setRenderHints(hintsMap);
 		
 		//viewer.setBackgroundColor(Color.white);
-		//viewer.setBackgroundColor(Color.black);
+		viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
-//		materials(viewer);
+		materials(viewer);
 //		colorSpiral(viewer);
-		circles(viewer);
+//		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
