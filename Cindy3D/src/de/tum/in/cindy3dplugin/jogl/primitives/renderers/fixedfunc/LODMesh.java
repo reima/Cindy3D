@@ -94,6 +94,9 @@ public class LODMesh {
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
 		gl2.glVertexPointer(vertexSize, GL2.GL_DOUBLE, vertexSize
 				* Util.SIZEOF_DOUBLE, 0);
+		// TODO: This assumes that the vertex positions can be reused as
+		// normals. It works for the unit sphere but probably not for anything
+		// else.
 		gl2.glNormalPointer(GL2.GL_DOUBLE, vertexSize * Util.SIZEOF_DOUBLE,
 				0);
 		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
