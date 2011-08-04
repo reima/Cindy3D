@@ -23,6 +23,8 @@ public class ModelViewerCamera {
 	private double aspectRatio;
 	private RealMatrix perspectiveTransform;
 	
+	private double lodFactor;
+	
 	private Plane[] clippingPlanes = new Plane[6];
 	
 	public ModelViewerCamera() {
@@ -84,12 +86,17 @@ public class ModelViewerCamera {
 		return transform;
 	}
 	
-	public void setPerspective(double fieldOfView, double aspect, double zNear, double zFar) {
+	public void setPerspective(double fieldOfView, int width, int height, double zNear, double zFar) {
+		if (height <= 0)
+			height = 1;
+		this.aspectRatio = (double) width / height;
 		this.fieldOfView = fieldOfView;
-		this.aspectRatio = aspect;
 		this.zNear = zNear;
 		this.zFar = zFar;
 		updatePerspectiveTransform();
+		
+		lodFactor = 2.0 * Math.tan(0.5 * fieldOfView / aspectRatio)
+				/ ((double) height); 
 	}
 	
 	public RealMatrix getPerspectiveTransform() {
@@ -223,5 +230,9 @@ public class ModelViewerCamera {
 	
 	public Plane[] getClippingPlanes() {
 		return clippingPlanes;
+	}
+	
+	public double getWorldSpaceError(float screenSpaceError, float distance) {
+		return lodFactor * screenSpaceError * distance;
 	}
 }

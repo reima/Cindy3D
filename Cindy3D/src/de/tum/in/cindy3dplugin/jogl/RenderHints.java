@@ -8,14 +8,21 @@ public class RenderHints {
 
 	private int samplingRate = 1;
 	private RenderMode renderMode;
+	private double allowedScreenSpaceError;
 
-	public RenderHints(RenderMode renderMode, int samplingRate) {
+	public RenderHints(RenderMode renderMode, int samplingRate,
+			double allowedScreenSpaceError) {
 		this.renderMode = renderMode;
 		this.samplingRate = samplingRate;
+		this.allowedScreenSpaceError = allowedScreenSpaceError;
 	}
 
 	public void setRenderMode(RenderMode renderMode) {
 		this.renderMode = renderMode;
+	}
+	
+	public RenderMode getRenderMode() {
+		return renderMode;
 	}
 	
 	public void setSamplingRate(int samplingRate) {
@@ -26,8 +33,12 @@ public class RenderHints {
 		return samplingRate;
 	}
 	
-	public RenderMode getRenderMode() {
-		return renderMode;
+	public void setAllowedScreenSpaceError(double allowedScreenSpaceError) {
+		this.allowedScreenSpaceError = allowedScreenSpaceError;
+	}
+	
+	public double getAllowedScreenSpaceError() {
+		return allowedScreenSpaceError;
 	}
 	
 	@Override
@@ -41,5 +52,10 @@ public class RenderHints {
 			return false;
 		}
 		return true;
+	}
+	
+	public RenderHints clone() {
+		return new RenderHints(renderMode, samplingRate,
+				allowedScreenSpaceError);
 	}
 }

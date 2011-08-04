@@ -54,15 +54,15 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	private boolean drawPending = false;
 
 	private final RenderHints[] qualityHints = new RenderHints[] {
-			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 1),
-			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 2),
-			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 4),
-			new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 8),
-			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 1),
-			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 2),
-			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 3),
-			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 4),
-			new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 8),
+		new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 1, 1),
+		new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 2, 1),
+		new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 4, 1),
+		new RenderHints(RenderMode.FIXED_FUNCTION_PIPELINE, 8, 1),
+		new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 1, 1),
+		new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 2, 1),
+		new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 3, 1),
+		new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 4, 1),
+		new RenderHints(RenderMode.PROGRAMMABLE_PIPELINE, 8, 1),
 	};
 	
 	private RenderHints renderHints = null;
@@ -377,8 +377,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 
 	@Override
 	public void setDepthRange(double near, double far) {
-		camera.setPerspective(camera.getFieldOfView(), camera.getAspectRatio(),
-				near, far);
+		camera.setPerspective(camera.getFieldOfView(), canvas.getWidth(),
+				canvas.getHeight(), near, far);
 	}
 
 	@Override
@@ -404,8 +404,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void setRenderHints(Hashtable<String, Object> hintsMap) {
-		requestedRenderHints = new RenderHints(
-				RenderMode.FIXED_FUNCTION_PIPELINE, 1);
+		
+		requestedRenderHints = renderHints.clone();
 
 		Object value;
 		value = hintsMap.get("quality");

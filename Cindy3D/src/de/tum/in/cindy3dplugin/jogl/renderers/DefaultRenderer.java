@@ -81,10 +81,7 @@ public class DefaultRenderer extends JOGLRenderer {
 			int height) {
 		Util.logger.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
 		GL2 gl = drawable.getGL().getGL2();
-		if (height <= 0)
-			height = 1;
-		double aspect = (double) width / height;
-		camera.setPerspective(camera.getFieldOfView(), aspect, camera
+		camera.setPerspective(camera.getFieldOfView(), width, height, camera
 				.getZNear(), camera.getZFar());
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
