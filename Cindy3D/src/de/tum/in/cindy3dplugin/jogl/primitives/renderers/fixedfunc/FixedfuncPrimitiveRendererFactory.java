@@ -13,7 +13,7 @@ public class FixedfuncPrimitiveRendererFactory implements
 
 	@Override
 	public PrimitiveRenderer<Circle> createCircleRenderer() {
-		return new DummyRenderer<Circle>();
+		return new CircleRenderer();
 	}
 
 	@Override

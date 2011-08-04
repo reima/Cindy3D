@@ -3,20 +3,15 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.apache.commons.math.geometry.Rotation;
-import org.apache.commons.math.geometry.Vector3D;
-import org.apache.commons.math.linear.MatrixUtils;
-import org.apache.commons.math.linear.RealMatrix;
-
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
-import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.CircleRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
-public class CircleRenderer extends PrimitiveRenderer<Circle> {
+public class CircleRenderer extends CircleRendererBase {
 	private ShaderProgram program = null;
 	private int centerLoc;
 	private int radiusSqLoc;
@@ -75,31 +70,14 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 	@Override
 	protected void render(JOGLRenderState jrs, Circle circle) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUniform3f(centerLoc, (float) circle.centerX,
-				(float) circle.centerY, (float) circle.centerZ);
-		gl2.glUniform3f(normalLoc, (float) circle.normalX,
-				(float) circle.normalY, (float) circle.normalZ);
+		gl2.glUniform3f(centerLoc, (float) circle.center.getX(),
+				(float) circle.center.getY(), (float) circle.center.getZ());
+		gl2.glUniform3f(normalLoc, (float) circle.normal.getX(),
+				(float) circle.normal.getY(), (float) circle.normal.getZ());
 		gl2.glUniform1f(radiusSqLoc, (float) (circle.radius * circle.radius));
 
-		RealMatrix transform = MatrixUtils.createRealIdentityMatrix(4);
-		transform.setColumn(3, new double[] { circle.centerX, circle.centerY,
-				circle.centerZ, 1 });
-
-		Rotation rotation = new Rotation(Vector3D.PLUS_K, new Vector3D(
-				circle.normalX, circle.normalY, circle.normalZ));
-		RealMatrix rotationMatrix = MatrixUtils.createRealIdentityMatrix(4);
-		rotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
-
-		RealMatrix scaleMatrix = MatrixUtils
-				.createRealDiagonalMatrix(new double[] { circle.radius,
-						circle.radius, circle.radius, 1 });
-
-		transform = transform.multiply(rotationMatrix).multiply(scaleMatrix);
-
-		gl2.glUniformMatrix4fv(transformLoc, 1, true, Util
-				.matrixToFloatArray(transform), 0);
-
-		// gl2.glFlush();
+		gl2.glUniformMatrix4fv(transformLoc, 1, true, buildTransform(circle), 0);
+		
 		gl2.glBegin(GL2.GL_QUADS);
 			gl2.glVertex2f(-1, -1);
 			gl2.glVertex2f(1, -1);
@@ -107,5 +85,4 @@ public class CircleRenderer extends PrimitiveRenderer<Circle> {
 			gl2.glVertex2f(-1, 1);
 		gl2.glEnd();
 	}
-
 }
