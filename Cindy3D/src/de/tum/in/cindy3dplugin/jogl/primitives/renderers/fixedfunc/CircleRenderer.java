@@ -10,25 +10,30 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.CircleRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class CircleRenderer extends CircleRendererBase {
-	private int displayList; // TODO: different LOD levels
+	private int displayListBase; // Display lists for different LOD levels
+	private static final int LOD_COUNT = 8;
 
 	@Override
 	public boolean loadShader(GL gl) {
 		GL2 gl2 = gl.getGL2();
-		displayList = gl2.glGenLists(1);
-		gl2.glNewList(displayList, GL2.GL_COMPILE);
+		displayListBase = gl2.glGenLists(8);
 		GLU glu = new GLU();
 		GLUquadric q = glu.gluNewQuadric();
 		glu.gluQuadricNormals(q, GLU.GLU_OUTSIDE);
-		glu.gluDisk(q, 0, 1, 8, 8);
+		for (int i = 0; i < LOD_COUNT; ++i) {
+			gl2.glNewList(displayListBase + i, GL2.GL_COMPILE);
+			int stacks = 2 * i;
+			int slices = 2 * stacks;
+			glu.gluDisk(q, 0, 1, slices, stacks);
+			gl2.glEndList();
+		}
 		glu.gluDeleteQuadric(q);
-		gl2.glEndList();
 		return true;
 	}
 
 	@Override
 	public void dispose(GL gl) {
-		gl.getGL2().glDeleteLists(displayList, 1);
+		gl.getGL2().glDeleteLists(displayListBase, LOD_COUNT);
 	}
 
 	@Override
@@ -52,7 +57,7 @@ public class CircleRenderer extends CircleRendererBase {
 
 		gl.glMultTransposeMatrixf(buildTransform(circle), 0);
 		
-		gl.glCallList(displayList);
+		gl.glCallList(displayListBase + 4);
 		gl.glPopMatrix();
 	}
 }
