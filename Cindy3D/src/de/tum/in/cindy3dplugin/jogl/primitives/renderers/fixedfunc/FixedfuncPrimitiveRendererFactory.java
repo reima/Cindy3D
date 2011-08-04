@@ -23,7 +23,7 @@ public class FixedfuncPrimitiveRendererFactory implements
 
 	@Override
 	public PrimitiveRenderer<Mesh> createMeshRenderer() {
-		return new DummyRenderer<Mesh>();
+		return new MeshRenderer();
 	}
 
 	@Override

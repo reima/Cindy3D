@@ -86,7 +86,7 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 		
 		// gl2.glFlush();
 		gl2.glUniform1f(modeLoc, renderMode);
-			
+
 		gl2.glBegin(GL2.GL_QUADS);
 		gl2.glVertex2f(-1, -1);
 		gl2.glVertex2f(1, -1);

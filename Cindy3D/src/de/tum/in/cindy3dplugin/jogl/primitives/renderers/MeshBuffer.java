@@ -1,4 +1,4 @@
-package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
+package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
@@ -76,8 +76,8 @@ public class MeshBuffer {
 
 					// f2
 					indices.put(v2Index);
-					indices.put(v3Index);
 					indices.put(v4Index);
+					indices.put(v3Index);
 				} else {
 					// f1
 					int f1Index = faceIndex++;
@@ -92,9 +92,9 @@ public class MeshBuffer {
 					int f2Index = faceIndex++;
 					vertices.put(positions[v2Index]);
 					vertices.put(normals[f2Index]);
-					vertices.put(positions[v3Index]);
-					vertices.put(normals[f2Index]);
 					vertices.put(positions[v4Index]);
+					vertices.put(normals[f2Index]);
+					vertices.put(positions[v3Index]);
 					vertices.put(normals[f2Index]);
 				}
 			}
