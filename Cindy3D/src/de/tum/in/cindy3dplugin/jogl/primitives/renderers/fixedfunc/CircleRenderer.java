@@ -8,7 +8,6 @@ import javax.media.opengl.glu.GLUquadric;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.CircleRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
-import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
 public class CircleRenderer extends CircleRendererBase {
 	private int displayList; // TODO: different LOD levels
