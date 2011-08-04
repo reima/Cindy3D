@@ -17,7 +17,7 @@ public class JOGLViewerTest {
 		
 		Hashtable<String, Object> hintsMap = new Hashtable<String,Object>();
 		
-		hintsMap.put("renderMode", "fixedfunction");	
+		hintsMap.put("quality", 0.0);
 
 		viewer.setRenderHints(hintsMap);
 		
@@ -30,8 +30,8 @@ public class JOGLViewerTest {
 //		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
-		icosahedron(viewer);
-//		enneper(viewer, true);
+//		icosahedron(viewer);
+		enneper(viewer, true);
 //		lights(viewer);
 		viewer.end();
 	}

@@ -1,6 +1,5 @@
 package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 
-import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.media.opengl.GL;
@@ -11,12 +10,11 @@ import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
-import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.MeshBuffer;
+import de.tum.in.cindy3dplugin.jogl.primitives.renderers.MeshRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
-public class MeshRenderer extends PrimitiveRenderer<Mesh> {
-	private HashMap<Integer, MeshBuffer> meshBuffers;
-
+public class MeshRenderer extends MeshRendererBase {
 	private ShaderProgram program = null;
 
 	@Override
@@ -35,7 +33,12 @@ public class MeshRenderer extends PrimitiveRenderer<Mesh> {
 
 	@Override
 	public boolean loadShader(GL gl) {
-		meshBuffers = new HashMap<Integer, MeshBuffer>();
+//		if (!super.loadShader(gl))
+//		{
+//			return false;
+//		}
+		
+		super.loadShader(gl);
 
 		GL2 gl2 = gl.getGL2();
 
