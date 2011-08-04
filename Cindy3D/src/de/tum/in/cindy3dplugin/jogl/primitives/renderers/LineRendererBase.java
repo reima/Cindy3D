@@ -65,10 +65,6 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 
 	protected static RealMatrix buildOBBTransform(Endpoints endPoints,
 			double radius) {
-
-		// After shifting the end points of the ray/line to the maximal
-		// visible positions, the size and orientation fo the OBB is needed
-
 		// Length of the OBB
 		double dist = Vector3D.distance(endPoints.p1, endPoints.p2) / 2.0;
 		Vector3D direction = endPoints.p2.subtract(endPoints.p1).normalize();

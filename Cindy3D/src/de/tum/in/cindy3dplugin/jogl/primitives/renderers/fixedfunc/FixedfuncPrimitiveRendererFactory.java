@@ -18,7 +18,7 @@ public class FixedfuncPrimitiveRendererFactory implements
 
 	@Override
 	public PrimitiveRenderer<Line> createLineRenderer() {
-		return new DummyRenderer<Line>();
+		return new LineRenderer();
 	}
 
 	@Override
