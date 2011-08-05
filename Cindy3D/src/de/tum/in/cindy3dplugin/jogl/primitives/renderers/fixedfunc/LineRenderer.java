@@ -57,8 +57,8 @@ public class LineRenderer extends LineRendererBase {
 		// All computations are made in camera space, so first
 		// transform the two points of the line into camera space
 		// by multiplying with the modelview matrix			
-		Vector3D p1 = Util.transformVector(modelView, line.p1);
-		Vector3D p2 = Util.transformVector(modelView, line.p2);
+		Vector3D p1 = Util.transformPoint(modelView, line.p1);
+		Vector3D p2 = Util.transformPoint(modelView, line.p2);
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
 				line.lineType);

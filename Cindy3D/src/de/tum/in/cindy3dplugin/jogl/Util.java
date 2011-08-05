@@ -41,8 +41,8 @@ public class Util {
 	public static float[] matrixToFloatArray(RealMatrix m) {
 		int rows = m.getRowDimension();
 		int cols = m.getColumnDimension();
-		
-		float[] result = new float[rows*cols];
+
+		float[] result = new float[rows * cols];
 		double[][] data = m.getData();
 		int offset = 0;
 		for (int row = 0; row < rows; ++row) {
@@ -50,15 +50,15 @@ public class Util {
 				result[offset] = (float) data[row][col];
 			}
 		}
-		
+
 		return result;
 	}
 
 	public static float[] matrixToFloatArrayTransposed(RealMatrix m) {
 		int rows = m.getRowDimension();
 		int cols = m.getColumnDimension();
-		
-		float[] result = new float[rows*cols];
+
+		float[] result = new float[rows * cols];
 		double[][] data = m.getData();
 		int offset = 0;
 		for (int row = 0; row < rows; ++row) {
@@ -66,12 +66,12 @@ public class Util {
 				result[offset] = (float) data[col][row];
 			}
 		}
-		
+
 		return result;
 	}
 	
 	public static double[] vectorToDoubleArray(Vector3D v) {
-		return new double[] {v.getX(), v.getY(), v.getZ()};
+		return new double[] { v.getX(), v.getY(), v.getZ() };
 	}
 	
 	public static void readShaderSource(ClassLoader context, URL url,
@@ -290,9 +290,15 @@ public class Util {
 				shininess);
 	}
 	
-	public static Vector3D transformVector(RealMatrix matrix, Vector3D vec) {
+	public static Vector3D transformPoint(RealMatrix matrix, Vector3D vec) {
 		double[] tmp = matrix.operate(new double[] { vec.getX(), vec.getY(),
 				vec.getZ(), 1 });
+		return new Vector3D(tmp[0], tmp[1], tmp[2]);
+	}
+	
+	public static Vector3D transformVector(RealMatrix matrix, Vector3D vec) {
+		double[] tmp = matrix.operate(new double[] { vec.getX(), vec.getY(),
+				vec.getZ(), 0 });
 		return new Vector3D(tmp[0], tmp[1], tmp[2]);
 	}
 }
