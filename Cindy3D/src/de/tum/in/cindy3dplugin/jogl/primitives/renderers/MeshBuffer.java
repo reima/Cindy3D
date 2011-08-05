@@ -3,6 +3,7 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
@@ -18,11 +19,11 @@ public class MeshBuffer {
 	private int indexCount;
 	private int vertexCount;
 
-	public MeshBuffer(GL2 gl2, Mesh m) {
-		createBuffers(gl2, m);
+	public MeshBuffer(GL gl, Mesh m) {
+		createBuffers(gl, m);
 	}
 
-	private void createBuffers(GL2 gl2, Mesh m) {
+	private void createBuffers(GL gl, Mesh m) {
 		double[][] positions = m.getPositions();
 		double[][] normals = m.getNormals();
 		
@@ -102,27 +103,29 @@ public class MeshBuffer {
 
 		vertices.flip();
 		int tmp[] = new int[1];
-		gl2.glGenBuffers(1, tmp, 0);
+		gl.glGenBuffers(1, tmp, 0);
 		vertexBuffer = tmp[0];
-		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
-		gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()
-				* Util.SIZEOF_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
-		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
+		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vertexBuffer);
+		gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.capacity()
+				* Util.SIZEOF_DOUBLE, vertices, GL.GL_STATIC_DRAW);
+		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
 		if (hasIndexBuffer) {
 			indices.flip();
-			gl2.glGenBuffers(1, tmp, 0);
+			gl.glGenBuffers(1, tmp, 0);
 			indexBuffer = tmp[0];
-			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-			gl2.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
-					* Util.SIZEOF_INT, indices, GL2.GL_STATIC_DRAW);
-			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
+			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+			gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
+					* Util.SIZEOF_INT, indices, GL.GL_STATIC_DRAW);
+			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
 		} else {
 			indexBuffer = 0;
 		}
 	}
 	
-	public void render(GL2 gl2) {
+	public void render(GL gl) {
+		GL2 gl2 = gl.getGL2();
+		
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
 		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
 		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
