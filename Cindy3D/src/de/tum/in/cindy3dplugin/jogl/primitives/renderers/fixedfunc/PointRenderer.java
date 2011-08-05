@@ -11,86 +11,90 @@ import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 public class PointRenderer extends PrimitiveRenderer<Point> {
 	private static final int LOD_COUNT = 8;
 	
-    private LODMesh[] meshes = new LODMesh[LOD_COUNT];
+	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
+
+	private LODMesh createMesh(GL gl, int stacks, int slices) {
+		GL2 gl2 = gl.getGL2();
+		
+		int vertexCount = 2 + slices * (stacks - 1);
+		int faceCount = 2 * slices + // stacks at poles, triangles
+				(stacks - 2) * slices * 2; // inner stacks loops, quads (2
+										   // triangles)
+		
+		LODMesh mesh = new LODMesh(3, vertexCount, faceCount);
+		
+		/*
+		 * Generate vertices
+		 */
+		double[] vertex = new double[3];
+		
+		vertex[0] = vertex[1] = 0;
+		vertex[2] = -1;
+		mesh.putVertex(vertex);
+		
+		for (int stack = 1; stack < stacks; ++stack) {
+			double latitude = (((double) stack) / stacks - 0.5) * Math.PI;
+			for (int slice = 0; slice < slices; ++slice) {
+				double longitude = ((double) slice) / slices * Math.PI * 2;
+				vertex[0] = Math.cos(longitude)*Math.cos(latitude);
+				vertex[1] = Math.sin(longitude)*Math.cos(latitude);
+				vertex[2] = Math.sin(latitude);
+				mesh.putVertex(vertex);
+			}
+		}
+		
+		vertex[0] = vertex[1] = 0;
+		vertex[2] = 1;
+		mesh.putVertex(vertex);
+	
+		/*
+		 * Generate indices
+		 */
+		int stackOffset = 0;		// First vertex of current stack
+		int nextStackOffset = 1;	// First vertex of next stack
+		
+		// South pole
+		for (int slice = 0; slice < slices; ++slice) {
+			mesh.putFace(
+					stackOffset,
+					nextStackOffset + (slice + 1) % slices,
+					nextStackOffset + slice);
+		}
+		
+		for (int stack = 1; stack < stacks - 1; ++stack) {
+			stackOffset = nextStackOffset;
+			nextStackOffset += slices;
+			for (int slice = 0; slice < slices; ++slice) {
+				mesh.putFace(
+						stackOffset     + slice,
+						nextStackOffset + (slice + 1) % slices,
+						nextStackOffset + slice);
+				mesh.putFace(
+						stackOffset     + slice,
+						stackOffset     + (slice + 1) % slices,
+						nextStackOffset + (slice + 1) % slices);
+			}
+		}
+		
+		// North pole
+		for (int slice = 0; slice < slices; ++slice) {
+			mesh.putFace(
+					nextStackOffset + slices,
+					nextStackOffset + slice,
+					nextStackOffset + (slice + 1) % slices);
+		}
+	
+		mesh.finish(gl2);
+		return mesh;
+	}
 
 	@Override
 	public boolean init(GL gl) {
-		GL2 gl2 = gl.getGL2();
-		
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {
 			int stacks = lod + 2;
 			int slices = 2 * stacks;
 			
-			int vertexCount = 2 + slices * (stacks - 1);
-			int faceCount = 2 * slices + // stacks at poles, triangles
-					(stacks - 2) * slices * 2; // inner stacks loops, quads (2
-											   // triangles)
-			
-			LODMesh mesh = new LODMesh(3, vertexCount, faceCount);
-			
-			/*
-			 * Generate vertices
-			 */
-			double[] vertex = new double[3];
-			
-			vertex[0] = vertex[1] = 0;
-			vertex[2] = -1;
-			mesh.putVertex(vertex);
-			
-			for (int stack = 1; stack < stacks; ++stack) {
-				double latitude = (((double) stack) / stacks - 0.5) * Math.PI;
-				for (int slice = 0; slice < slices; ++slice) {
-					double longitude = ((double) slice) / slices * Math.PI * 2;
-					vertex[0] = Math.cos(longitude)*Math.cos(latitude);
-					vertex[1] = Math.sin(longitude)*Math.cos(latitude);
-					vertex[2] = Math.sin(latitude);
-					mesh.putVertex(vertex);
-				}
-			}
-			
-			vertex[0] = vertex[1] = 0;
-			vertex[2] = 1;
-			mesh.putVertex(vertex);
-
-			/*
-			 * Generate indices
-			 */
-			int stackOffset = 0;		// First vertex of current stack
-			int nextStackOffset = 1;	// First vertex of next stack
-			
-			// South pole
-			for (int slice = 0; slice < slices; ++slice) {
-				mesh.putFace(
-						stackOffset,
-						nextStackOffset + (slice + 1) % slices,
-						nextStackOffset + slice);
-			}
-			
-			for (int stack = 1; stack < stacks - 1; ++stack) {
-				stackOffset = nextStackOffset;
-				nextStackOffset += slices;
-				for (int slice = 0; slice < slices; ++slice) {
-					mesh.putFace(
-							stackOffset     + slice,
-							nextStackOffset + (slice + 1) % slices,
-							nextStackOffset + slice);
-					mesh.putFace(
-							stackOffset     + slice,
-							stackOffset     + (slice + 1) % slices,
-							nextStackOffset + (slice + 1) % slices);
-				}
-			}
-			
-			// North pole
-			for (int slice = 0; slice < slices; ++slice) {
-				mesh.putFace(
-						nextStackOffset + slices,
-						nextStackOffset + slice,
-						nextStackOffset + (slice + 1) % slices);
-			}
-
-			mesh.finish(gl2);
-			meshes[lod] = mesh;
+			meshes[lod] = createMesh(gl, stacks, slices);
 		}
 		
 		return true;

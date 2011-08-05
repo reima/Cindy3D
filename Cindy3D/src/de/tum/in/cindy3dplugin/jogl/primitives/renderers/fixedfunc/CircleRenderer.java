@@ -11,72 +11,76 @@ public class CircleRenderer extends CircleRendererBase {
 	private static final int LOD_COUNT = 8;
 	
 	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
+	
+	private LODMesh createMesh(GL gl, int loops, int slices) {
+		GL2 gl2 = gl.getGL2();
+		
+		int vertexCount = 1 + slices * loops;
+		int faceCount = slices + // inner loop, triangles
+				(loops - 1) * slices * 2; // outer loops, quads (2
+										  // triangles)
+		
+		LODMesh mesh = new LODMesh(2, vertexCount, faceCount);
+		
+		/*
+		 * Generate vertices
+		 */
+		double[] vertex = new double[2];
+		
+		vertex[0] = vertex[1] = 0;
+		mesh.putVertex(vertex);
+		
+		for (int loop = 0; loop < loops; ++loop) {
+			double radius = ((double) (loop + 1)) / loops;
+			for (int slice = 0; slice < slices; ++slice) {
+				double angle = ((double) slice) / slices * Math.PI * 2;
+				vertex[0] = Math.cos(angle) * radius;
+				vertex[1] = Math.sin(angle) * radius;
+				mesh.putVertex(vertex);
+			}
+		}
+		
+		/*
+		 * Generate indices
+		 */
+		int loopOffset = 0; 	// First vertex of current loop
+		int nextLoopOffset = 1;	// First vertex of next loop
+		
+		// Inner loop
+		for (int slice = 0; slice < slices; ++slice) {
+			mesh.putFace(
+					loopOffset,
+					nextLoopOffset + slice,
+					nextLoopOffset + (slice + 1) % slices);
+		}
+
+		// Outer loops
+		for (int loop = 1; loop < loops; ++loop) {
+			loopOffset = nextLoopOffset;
+			nextLoopOffset += slices;
+			for (int slice = 0; slice < slices; ++slice) {
+				mesh.putFace(
+						loopOffset     + slice,
+						nextLoopOffset + slice,
+						nextLoopOffset + (slice + 1) % slices);
+				mesh.putFace(
+						loopOffset     + slice,
+						nextLoopOffset + (slice + 1) % slices,
+						loopOffset     + (slice + 1) % slices);
+			}
+		}
+		
+		mesh.finish(gl2);
+		
+		return mesh;
+	}
 
 	@Override
 	public boolean init(GL gl) {
-		GL2 gl2 = gl.getGL2();
-				
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {
 			int loops = lod + 1;
 			int slices = 4 * loops;
-			
-			int vertexCount = 1 + slices * loops;
-			int faceCount = slices + // inner loop, triangles
-					(loops - 1) * slices * 2; // outer loops, quads (2
-											  // triangles)
-			
-			LODMesh mesh = new LODMesh(2, vertexCount, faceCount);
-			
-			/*
-			 * Generate vertices
-			 */
-			double[] vertex = new double[2];
-			
-			vertex[0] = vertex[1] = 0;
-			mesh.putVertex(vertex);
-			
-			for (int loop = 0; loop < loops; ++loop) {
-				double radius = ((double) (loop + 1)) / loops;
-				for (int slice = 0; slice < slices; ++slice) {
-					double angle = ((double) slice) / slices * Math.PI * 2;
-					vertex[0] = Math.cos(angle) * radius;
-					vertex[1] = Math.sin(angle) * radius;
-					mesh.putVertex(vertex);
-				}
-			}
-			
-			/*
-			 * Generate indices
-			 */
-			int loopOffset = 0; 	// First vertex of current loop
-			int nextLoopOffset = 1;	// First vertex of next loop
-			
-			// Inner loop
-			for (int slice = 0; slice < slices; ++slice) {
-				mesh.putFace(
-						loopOffset,
-						nextLoopOffset + slice,
-						nextLoopOffset + (slice + 1) % slices);
-			}
-
-			// Outer loops
-			for (int loop = 1; loop < loops; ++loop) {
-				loopOffset = nextLoopOffset;
-				nextLoopOffset += slices;
-				for (int slice = 0; slice < slices; ++slice) {
-					mesh.putFace(
-							loopOffset     + slice,
-							nextLoopOffset + slice,
-							nextLoopOffset + (slice + 1) % slices);
-					mesh.putFace(
-							loopOffset     + slice,
-							nextLoopOffset + (slice + 1) % slices,
-							loopOffset     + (slice + 1) % slices);
-				}
-			}
-			
-			mesh.finish(gl2);
-			meshes[lod] = mesh;
+			meshes[lod] = createMesh(gl, loops, slices);
 		}
 
 		return true;
