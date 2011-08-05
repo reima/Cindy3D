@@ -31,7 +31,7 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public class Util {
 	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
-	private static final boolean FILE_LOGGING = true;
+	private static final boolean FILE_LOGGING = false;
 	public static final int SIZEOF_DOUBLE = 8;
 	public static final int SIZEOF_INT = 4;
 

@@ -7,6 +7,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLException;
 
 import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
+import de.tum.in.cindy3dplugin.jogl.RenderHints;
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
@@ -26,9 +27,10 @@ public class DefaultRenderer extends JOGLRenderer {
 	private PrimitiveRenderer<Polygon> polygonRenderer;
 	private PrimitiveRenderer<Mesh> meshRenderer;
 	
-	public DefaultRenderer(Scene scene, ModelViewerCamera camera,
-			LightManager lightManager, PrimitiveRendererFactory prf) {
-		super(scene, camera, lightManager);
+	public DefaultRenderer(RenderHints renderHints, Scene scene,
+			ModelViewerCamera camera, LightManager lightManager,
+			PrimitiveRendererFactory prf) {
+		super(renderHints, scene, camera, lightManager);
 		pointRenderer = prf.createPointRenderer();
 		circleRenderer = prf.createCircleRenderer();
 		lineRenderer = prf.createLineRenderer();
@@ -118,7 +120,7 @@ public class DefaultRenderer extends JOGLRenderer {
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
-		Util.logger.info("display()");
+//		Util.logger.info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
 		float[] backgroundColor = new float[4];
@@ -132,7 +134,7 @@ public class DefaultRenderer extends JOGLRenderer {
 				Util.matrixToFloatArrayTransposed(camera.getTransform()), 0);
 			
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera, true,
-				CullMode.CULL_NONE);
+				CullMode.CULL_NONE, renderHints);
 
 		if (lightManager.getCompileShader()) {
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());

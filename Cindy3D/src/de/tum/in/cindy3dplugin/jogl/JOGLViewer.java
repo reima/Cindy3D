@@ -122,15 +122,15 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 					caps.setSampleBuffers(true);
 					caps.setNumSamples(hints.getSamplingRate());
 				}
-				renderer = new DefaultRenderer(scene, camera, lightManager,
-						new FixedfuncPrimitiveRendererFactory());
+				renderer = new DefaultRenderer(hints, scene, camera,
+						lightManager, new FixedfuncPrimitiveRendererFactory());
 			} else {
 				if (hints.getSamplingRate() == 1) {
-					renderer = new DefaultRenderer(scene, camera, lightManager,
-							new ShaderPrimitiveRendererFactory());
+					renderer = new DefaultRenderer(hints, scene, camera,
+							lightManager, new ShaderPrimitiveRendererFactory());
 				} else {
-					renderer = new SupersampledFBORenderer(scene, camera,
-							lightManager, hints.getSamplingRate(),
+					renderer = new SupersampledFBORenderer(hints, scene,
+							camera, lightManager, hints.getSamplingRate(),
 							new ShaderPrimitiveRendererFactory());
 				}
 			}
