@@ -10,7 +10,7 @@ import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	@Override
-	public boolean loadShader(GL gl) {
+	public boolean init(GL gl) {
 		return true;
 	}
 

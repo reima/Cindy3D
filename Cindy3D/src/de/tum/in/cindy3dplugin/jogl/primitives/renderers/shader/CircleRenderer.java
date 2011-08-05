@@ -19,8 +19,17 @@ public class CircleRenderer extends CircleRendererBase {
 	private int transformLoc;
 
 	@Override
-	public boolean loadShader(GL gl) {
+	public boolean init(GL gl) {
+		return reloadShaders(gl);
+	}
+
+	@Override
+	public boolean reloadShaders(GL gl) {
 		GL2 gl2 = gl.getGL2();
+		
+		if (program != null) {
+			program.destroy(gl2);
+		}
 
 		program = new ShaderProgram();
 		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,

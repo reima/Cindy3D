@@ -9,7 +9,10 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Primitive;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
 public abstract class PrimitiveRenderer<T extends Primitive> {
-	public abstract boolean loadShader(GL gl);
+	public abstract boolean init(GL gl);
+	public boolean reloadShaders(GL gl) {
+		return true;
+	}
 
 	public abstract void dispose(GL gl);
 	

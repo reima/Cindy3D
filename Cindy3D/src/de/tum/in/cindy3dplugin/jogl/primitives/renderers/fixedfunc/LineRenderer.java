@@ -17,7 +17,7 @@ public class LineRenderer extends LineRendererBase {
 	private int displayList; // TODO: different LOD levels
 	
 	@Override
-	public boolean loadShader(GL gl) {
+	public boolean init(GL gl) {
 		GL2 gl2 = gl.getGL2();
 		displayList = gl2.glGenLists(1);
 		

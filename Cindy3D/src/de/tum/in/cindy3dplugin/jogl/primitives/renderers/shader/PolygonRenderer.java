@@ -15,17 +15,19 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	private ShaderProgram program = null;
 
 	@Override
-	public void dispose(GL gl) {
-		if (program != null)
-			program.destroy(gl.getGL2());
+	public boolean init(GL gl) {
+		return reloadShaders(gl);
 	}
-
+	
 	@Override
-	public boolean loadShader(GL gl) {
+	public boolean reloadShaders(GL gl) {
 		GL2 gl2 = gl.getGL2();
+		
+		if (program != null) {
+			program.destroy(gl2);
+		}
 
 		program = new ShaderProgram();
-		
 		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
 				"polygon.vert");
 		if (!vertexShader.compile(gl2))
@@ -45,6 +47,13 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 			return false;
 
 		return true;
+	}
+	
+	@Override
+	public void dispose(GL gl) {
+		if (program != null) {
+			program.destroy(gl.getGL2());
+		}
 	}
 	
 	@Override

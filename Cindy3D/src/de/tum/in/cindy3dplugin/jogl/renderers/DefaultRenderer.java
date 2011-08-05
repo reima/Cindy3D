@@ -68,18 +68,17 @@ public class DefaultRenderer extends JOGLRenderer {
 	
 			gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
 			gl.glEnable(GL2.GL_LIGHTING);
-//			gl.glEnable(GL2.GL_LIGHT0);
-//			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[] { 5.0f,
-//					5.0f, 5.0f, 1.0f }, 0);
-//			gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, new float[] { 1.0f,
-//					1.0f, 1.0f, 1.0f }, 0);
-	
-//			gl.glEnable(GL2.GL_LIGHT1);
-//			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[] { 0.0f,
-//					-10.0f, 0.0f, 1.0f }, 0);
-//			gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, new float[] { 1.0f,
-//					1.0f, 1.0f, 1.0f }, 0);
-	
+			
+			if (!pointRenderer.init(gl))
+				Util.logger.severe("Point renderer initialization failed");
+			if (!circleRenderer.init(gl))
+				Util.logger.severe("Circle renderer initialization failed");
+			if (!lineRenderer.init(gl))
+				Util.logger.severe("Line renderer initialization failed");
+			if (!polygonRenderer.init(gl))
+				Util.logger.severe("Polygon renderer initialization failed");
+			if (!meshRenderer.init(gl))
+				Util.logger.severe("Mesh renderer initialization failed");
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
 			Util.logger.log(Level.SEVERE, e.toString(), e);
@@ -139,16 +138,16 @@ public class DefaultRenderer extends JOGLRenderer {
 		if (lightManager.getCompileShader()) {
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
 			
-			if (!pointRenderer.loadShader(gl))
-				Util.logger.severe("Point renderer initialization failed");
-			if (!circleRenderer.loadShader(gl))
-				Util.logger.severe("Circle renderer initialization failed");
-			if (!lineRenderer.loadShader(gl))
-				Util.logger.severe("Line renderer initialization failed");
-			if (!polygonRenderer.loadShader(gl))
-				Util.logger.severe("Polygon renderer initialization failed");
-			if (!meshRenderer.loadShader(gl))
-				Util.logger.severe("Mesh renderer initialization failed");
+			if (!pointRenderer.reloadShaders(gl))
+				Util.logger.severe("Point renderer shader loading failed");
+			if (!circleRenderer.reloadShaders(gl))
+				Util.logger.severe("Circle renderer shader loading failed");
+			if (!lineRenderer.reloadShaders(gl))
+				Util.logger.severe("Line renderer shader loading failed");
+			if (!polygonRenderer.reloadShaders(gl))
+				Util.logger.severe("Polygon renderer shader loading failed");
+			if (!meshRenderer.reloadShaders(gl))
+				Util.logger.severe("Mesh renderer shader loading failed");
 			
 			lightManager.setCompileShader(false);
 		}

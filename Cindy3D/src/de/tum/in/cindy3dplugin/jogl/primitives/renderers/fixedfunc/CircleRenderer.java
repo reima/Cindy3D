@@ -13,7 +13,7 @@ public class CircleRenderer extends CircleRendererBase {
 	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
 
 	@Override
-	public boolean loadShader(GL gl) {
+	public boolean init(GL gl) {
 		GL2 gl2 = gl.getGL2();
 				
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {

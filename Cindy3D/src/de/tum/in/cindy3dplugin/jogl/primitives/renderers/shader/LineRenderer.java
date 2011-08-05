@@ -24,14 +24,17 @@ public class LineRenderer extends LineRendererBase {
 	private int lengthLoc;
 
 	@Override
-	public void dispose(GL gl) {
-		if (program != null)
-			program.destroy(gl.getGL2());
+	public boolean init(GL gl) {
+		return reloadShaders(gl);
 	}
 
 	@Override
-	public boolean loadShader(GL gl) {
+	public boolean reloadShaders(GL gl) {
 		GL2 gl2 = gl.getGL2();
+		
+		if (program != null) {
+			program.destroy(gl2);
+		}
 
 		program = new ShaderProgram();
 		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
@@ -62,6 +65,13 @@ public class LineRenderer extends LineRendererBase {
 				"cylinderLength");
 
 		return true;
+	}
+
+	@Override
+	public void dispose(GL gl) {
+		if (program != null) {
+			program.destroy(gl.getGL2());
+		}
 	}
 
 	@Override
