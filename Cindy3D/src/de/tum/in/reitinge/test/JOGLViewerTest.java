@@ -25,13 +25,13 @@ public class JOGLViewerTest {
 		viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
-		materials(viewer);
+//		materials(viewer);
 //		colorSpiral(viewer);
 //		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
-//		enneper(viewer, true);
+		enneper(viewer, true);
 //		lights(viewer);
 		viewer.end();
 	}

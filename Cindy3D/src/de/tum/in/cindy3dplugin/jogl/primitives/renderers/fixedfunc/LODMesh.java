@@ -5,9 +5,6 @@ import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
 
-import org.apache.commons.math.geometry.Vector3D;
-import org.apache.commons.math.linear.RealMatrix;
-
 import de.tum.in.cindy3dplugin.jogl.Util;
 
 public class LODMesh {
@@ -93,11 +90,8 @@ public class LODMesh {
 		gl2.glDeleteBuffers(2, new int[] { vertexBuffer, indexBuffer }, 0);
 	}
 	
-	public boolean isSufficient(RealMatrix modelViewMatrix,
-			double allowedWorldSpaceError) {
-		Vector3D transformedVector = Util.transformVector(modelViewMatrix,
-				new Vector3D(maxEdgeLength, 0, 0));
-		double worldSpaceError = transformedVector.getNorm();
+	public boolean isSufficient(double scale, double allowedWorldSpaceError) {
+		double worldSpaceError = scale * maxEdgeLength;
 		return worldSpaceError <= allowedWorldSpaceError;
 	}
 

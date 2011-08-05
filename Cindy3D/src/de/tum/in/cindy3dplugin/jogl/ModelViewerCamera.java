@@ -164,8 +164,9 @@ public class ModelViewerCamera {
 		this.zFar = zFar;
 		updatePerspectiveTransform();
 
-		lodFactor = 2.0 * Math.tan(0.5 * this.fieldOfView / aspectRatio)
-				/ ((double) height);
+		lodFactor = 2.0
+				* Math.tan(0.5 * this.fieldOfView / aspectRatio / 180.0
+						* Math.PI) / ((double) height);
 	}
 	
 	/**
