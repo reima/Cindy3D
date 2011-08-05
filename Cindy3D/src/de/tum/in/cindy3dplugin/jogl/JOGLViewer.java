@@ -80,6 +80,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		
 		if (container == null) {
 			standalone = true;
+			Util.logger.info("Creating standalone frame");
 			JFrame frame = new JFrame("Cindy3D (JOGL)");
 			frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			frame.setLayout(new BorderLayout());
@@ -93,16 +94,19 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		camera.lookAt(new Vector3D(0, 0, 5), Vector3D.ZERO, Vector3D.PLUS_J);
 
 		try {
+			Util.logger.info("Trying to call GLProfile.initSingleton");
 			GLProfile.initSingleton(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Util.logger.log(Level.SEVERE, e.toString(), e);
 		}
 		
-		applyHints(qualityHints[4]);
+		applyHints(qualityHints[0]);
 	}
 
 	private void applyHints(RenderHints hints) {
+		Util.logger.info("Creating renderer");
+		
 		if (renderHints != null && renderHints.equals(hints)) {
 			return;
 		}
@@ -131,10 +135,17 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				}
 			}
 			
+			Util.logger.info("GLProfile: " + profile);
+			Util.logger.info("GLCapabilities: " + caps);
+			
 			if (canvas != null) {
 				canvas.destroy();
 				this.container.remove(canvas);
 			}
+			
+			Util.logger.info("Renderer: " + renderer);
+			
+			Util.logger.info("Creating canvas");
 			
 			canvas = new GLCanvas(caps);
 			canvas.addGLEventListener(renderer);
@@ -142,6 +153,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			canvas.addMouseMotionListener(this);
 			canvas.addMouseWheelListener(this);
 			canvas.setSize(this.container.getSize());
+			
+			Util.logger.info("Canvas: " + canvas.getClass().getCanonicalName());
+			
 			this.container.add(canvas, BorderLayout.CENTER);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -164,9 +178,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		Util.logger.info("end()");
 
 		try {
+			Util.logger.info("Setting container visible");
 			if (!container.isVisible()) {
 				container.setVisible(true);
 			}
+			Util.logger.info("Calling canvas.display()");
 			canvas.display();
 		} catch (Exception e) {
 			Util.logger.log(Level.SEVERE, e.toString(), e);
@@ -190,7 +206,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
-		// log.info("addPoint(" + x + "," + y + "," + z + ")");
+//		Util.logger.info("addPoint(" + x + "," + y + "," + z + ")");
 		scene.addPoint(new Point(x, y, z, appearance.getSize() * POINT_SCALE,
 				appearance.getColor(), appearance.getShininess(), 1));
 	}
@@ -198,8 +214,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addCircle(double cx, double cy, double cz, double nx,
 			double ny, double nz, double radius, AppearanceState appearance) {
-		Util.logger.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
-				+ "," + nz + "," + radius + ")");
+//		Util.logger.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
+//				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
 				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}
@@ -207,8 +223,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addSegment(double x1, double y1, double z1, double x2,
 			double y2, double z2, AppearanceState appearance) {
-		Util.logger.info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
-				+ "," + z2 + ")");
+//		Util.logger.info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+//				+ "," + z2 + ")");
 		
 		addPoint(x1, y1, z1, appearance);
 		addPoint(x2, y2, z2, appearance);
@@ -221,8 +237,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addLine(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		Util.logger.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
-				+ "," + z2 + ")");
+//		Util.logger.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+//				+ "," + z2 + ")");
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
 				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
 				LineType.LINE));
@@ -231,8 +247,8 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addRay(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-		Util.logger.info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
-				+ "," + z2 + ")");
+//		Util.logger.info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+//				+ "," + z2 + ")");
 		
 		addPoint(x1, y1, z1, appearance);
 		
@@ -244,16 +260,6 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addPolygon(double[][] vertices, double[][] normals,
 			AppearanceState appearance) {
-//		String str = "addPolygon(";
-//		for (int i = 0; i < vertices.length; ++i) {
-//			if (i != 0)
-//				str += ", ";
-//			str += "[" + vertices[i][0] + "," + vertices[i][1] + ","
-//					+ vertices[i][2] + "]";
-//		}
-//		str += ")";
-//		Util.logger.info(str);
-		
 		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor(),
 				appearance.getShininess(), appearance.getAlpha()));
 	}
@@ -301,8 +307,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	
 	@Override
 	public void addSphere(double cx, double cy, double cz, double radius,
-			AppearanceState appearance)
-	{
+			AppearanceState appearance)	{
 		scene.addPoint(new Point(cx, cy, cz, radius, appearance
 				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}

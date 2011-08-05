@@ -43,6 +43,12 @@ public class DefaultRenderer extends JOGLRenderer {
 		try {
 			// drawable.setGL(new DebugGL2(drawable.getGL().getGL2()));
 			GL2 gl = drawable.getGL().getGL2();
+			
+			Util.logger.info("Chosen caps: " + drawable.getChosenGLCapabilities());
+			Util.logger.info("GL_VENDOR: " + gl.glGetString(GL2.GL_VENDOR));
+			Util.logger.info("GL_RENDERER: " + gl.glGetString(GL2.GL_RENDERER));
+			Util.logger.info("GL_VERSION: " + gl.glGetString(GL2.GL_VERSION));
+			
 			gl.glMatrixMode(GL2.GL_PROJECTION);
 			gl.glLoadIdentity();
 			gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -112,7 +118,7 @@ public class DefaultRenderer extends JOGLRenderer {
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
-//		 Util.logger.info("display()");
+		Util.logger.info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
 		float[] backgroundColor = new float[4];

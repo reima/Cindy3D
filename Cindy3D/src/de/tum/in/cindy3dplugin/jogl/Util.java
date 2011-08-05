@@ -11,6 +11,7 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import java.util.logging.SimpleFormatter;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.swing.JFileChooser;
 
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
@@ -29,7 +31,7 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 
 public class Util {
 	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
-	private static final boolean FILE_LOGGING = false;
+	private static final boolean FILE_LOGGING = true;
 	public static final int SIZEOF_DOUBLE = 8;
 	public static final int SIZEOF_INT = 4;
 
@@ -179,15 +181,18 @@ public class Util {
 			// Can't get protection domain. This is the case if Cindy3D is
 			// running inside an applet. But that's ok, as JNLP handles the
 			// class and native libraries loading for us.
+			Util.logger.log(Level.INFO, e.toString(), e);
 			return;
 		}
 		
 		File jarFile = new File(jarPath);
 		if (!jarFile.isFile()) {
 			// Not loaded from JAR file, do nothing
+			Util.logger.info("Not loaded from jar");
 			return;
 		}
 		final String basePath = jarFile.getParent();
+		Util.logger.info("Base path: " + basePath);
 
 		// Prevent gluegen from trying to load native library via
 		// System.loadLibrary("gluegen-rt").
@@ -197,6 +202,8 @@ public class Util {
 		String path = basePath + File.separator
 				+ System.mapLibraryName("gluegen-rt");
 		System.load(path);
+		
+		Util.logger.info("Loaded " + path);
 
 		// Next, override the gluegen JNI library loader action
 		JNILibLoaderBase.setLoadingAction(new LoaderAction() {
@@ -214,15 +221,26 @@ public class Util {
 			@Override
 			public boolean loadLibrary(String libname, boolean ignoreError) {
 				boolean result = true;
+				Util.logger.info("Requested library " + libname);
 				try {
 					// Load JNI library from JAR directory
 					String path = basePath + File.separator
 							+ System.mapLibraryName(libname);
 					System.load(path);
+					Util.logger.info("Loaded " + path);
 				} catch (UnsatisfiedLinkError e) {
-					result = false;
-					if (!ignoreError) {
-						throw e;
+//					Util.logger.log(Level.INFO, e.toString(), e);
+					Util.logger.info("Library load failed, trying fallback to System.loadLibrary");
+					try {
+						System.loadLibrary(libname);
+						Util.logger.info("Loaded system library " + libname);
+					} catch (UnsatisfiedLinkError e2) {
+						Util.logger.info("System library load failed");
+//						Util.logger.log(Level.INFO, e.toString(), e2);
+						result = false;
+						if (!ignoreError) {
+							throw e2;
+						}
 					}
 				}
 				return result;
@@ -234,12 +252,28 @@ public class Util {
 		try {
 			logger = Logger.getLogger("log");
 			if (FILE_LOGGING) {
-				FileHandler fh = new FileHandler("C:\\tmp\\cindy.log", false);
-				fh.setFormatter(new SimpleFormatter());
-				logger.addHandler(fh);
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Select log file");
+				int returnVal = fileChooser.showSaveDialog(null);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File logFile = fileChooser.getSelectedFile();
+					FileHandler fh = new FileHandler(logFile.getAbsolutePath(),
+							false);
+					fh.setFormatter(new SimpleFormatter());
+					logger.addHandler(fh);
+				}
 			}
 			//log.setLevel(Level.ALL);
-			logger.log(Level.INFO, "Log started");
+			logger.info("Log started");
+			Properties p = System.getProperties();
+			String props = "";
+			for (Object key : p.keySet()) {
+				props += key + ": ";
+				props += p.get(key);
+				props += System.getProperty("line.separator");
+			}
+			logger.info("System properties:"
+					+ System.getProperty("line.separator") + props);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
