@@ -166,6 +166,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#begin()
+	 */
 	@Override
 	public void begin() {
 		Util.logger.info("begin()");
@@ -176,6 +179,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		scene.clear();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#end()
+	 */
 	@Override
 	public void end() {
 		Util.logger.info("end()");
@@ -192,6 +198,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#shutdown()
+	 */
 	@Override
 	public void shutdown() {
 		Util.logger.info("shutdown()");
@@ -201,11 +210,17 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		container = null;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setBackgroundColor(java.awt.Color)
+	 */
 	@Override
 	public void setBackgroundColor(Color color) {
 		scene.setBackgroundColor(color);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addPoint(double, double, double, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
@@ -214,6 +229,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				appearance.getColor(), appearance.getShininess(), 1));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addCircle(double, double, double, double, double, double, double, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addCircle(double cx, double cy, double cz, double nx,
 			double ny, double nz, double radius, AppearanceState appearance) {
@@ -223,6 +241,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addSegment(double, double, double, double, double, double, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addSegment(double x1, double y1, double z1, double x2,
 			double y2, double z2, AppearanceState appearance) {
@@ -237,6 +258,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				LineType.SEGMENT));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addLine(double, double, double, double, double, double, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addLine(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
@@ -247,6 +271,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				LineType.LINE));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addRay(double, double, double, double, double, double, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addRay(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
@@ -260,6 +287,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				LineType.RAY));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addPolygon(double[][], double[][], de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addPolygon(double[][] vertices, double[][] normals,
 			AppearanceState appearance) {
@@ -267,6 +297,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				appearance.getShininess(), appearance.getAlpha()));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addLineStrip(double[][], de.tum.in.cindy3dplugin.AppearanceState, boolean)
+	 */
 	@Override
 	public void addLineStrip(double[][] vertices, AppearanceState appearance,
 			boolean closed) {
@@ -293,6 +326,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addMesh(int, int, double[][], double[][], de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			double[][] normals, MeshTopology topology, AppearanceState appearance) {
@@ -300,6 +336,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				.getColor(), appearance.getShininess(), appearance.getAlpha(), topology));
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addMesh(int, int, double[][], de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType, de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
 			NormalType normalType, MeshTopology topology, AppearanceState appearance) {
@@ -308,6 +347,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				topology));
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#addSphere(double, double, double, double, de.tum.in.cindy3dplugin.AppearanceState)
+	 */
 	@Override
 	public void addSphere(double cx, double cy, double cz, double radius,
 			AppearanceState appearance)	{
@@ -315,32 +357,50 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		mousePosition[0] = e.getX();
 		mousePosition[1] = e.getY();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
@@ -360,12 +420,18 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		mousePosition[1] = e.getY();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
+	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		camera.mouseWheelMoved(e.getWheelRotation());
@@ -385,23 +451,31 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setDepthRange(double, double)
+	 */
 	@Override
 	public void setDepthRange(double near, double far) {
 		camera.setPerspective(camera.getFieldOfView(), canvas.getWidth(),
 				canvas.getHeight(), near, far);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setLight(int, de.tum.in.cindy3dplugin.LightInfo)
+	 */
 	@Override
 	public void setLight(int light, LightInfo info) {
 		lightManager.setLight(light, info);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#disableLight(int)
+	 */
 	@Override
 	public void disableLight(int light) {
 		lightManager.disableLight(light);
 	}
 
-	
 	/**
 	 * supported hints:
 	 * - quality, range [0,8]
@@ -411,6 +485,9 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 * quality selects from a fixed set of render hints, which can be modified
 	 * by specifying renderMode and samplingRate. Providing a valid render mode
 	 * resets the sampling rate to 1. 
+	 */
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setRenderHints(java.util.Hashtable)
 	 */
 	@Override
 	public void setRenderHints(Hashtable<String, Object> hints) {
