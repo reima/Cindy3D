@@ -9,10 +9,11 @@
 		<property name="pluginfolder" location="${env.CINDERELLA_PLUGIN_DIR}/Cindy3D"/>
 		<property name="plugin" location="Cindy3D.jar"/>
 		<property name="applet" location="deploy/cindy3d-applet.jar"/>
+		<path id="libraries">
+			<fileset dir="${3rdpartydir}" includes="*.jar"/>
+		</path>
 	</target>
-	<path id="libraries">
-		<fileset dir="lib/3rd-party" includes="*.jar"/>
-	</path>
+	
 
 	<!-- no changes necessary below this line -->
 	
@@ -58,11 +59,14 @@
 		</copy>
 	</target>
 
-	<target name="doc" description="Generate Javadoc">
-		<javadoc packagenames="de.tum.in.cindy3dplugin"
+	<target name="doc" depends="init" description="Generate Javadoc">
+		<javadoc packagenames="de.tum.in.cindy3dplugin.*"
 				 sourcepath="src"
-				 classpath="lib/cindy2.jar"
 				 destdir="doc">
+			<classpath>
+				<pathelement location="${cindy2jar}"/>
+				<path refid="libraries"/>
+			</classpath>
 		</javadoc>
 	</target>
 	

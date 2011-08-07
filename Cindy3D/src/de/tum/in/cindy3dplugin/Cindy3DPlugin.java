@@ -314,11 +314,12 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	
 	/**
 	 * Draws a grid based mesh.
-	 *
-	 * @note Normals are generated automatically according to the modifier
-	 *       "normaltype". "perFace" is the default and generates one normal per
-	 *       grid cell. "perVertex" assigns a separate normal to each grid point
-	 *       by averaging the normals of the incident grid cells.
+	 * 
+	 * Normals are generated automatically according to the modifier
+	 * "normaltype". "perFace" is the default and generates one normal per grid
+	 * cell. "perVertex" assigns a separate normal to each grid point by
+	 * averaging the normals of the incident grid cells.
+	 * 
 	 * @param rows
 	 *            Number of rows of vertices
 	 * @param columns
