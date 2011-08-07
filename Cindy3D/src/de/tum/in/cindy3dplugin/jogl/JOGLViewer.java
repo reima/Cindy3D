@@ -424,11 +424,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		value = hintsMap.get("renderMode");
 		if (value instanceof String) {
 			String renderMode = (String) value;
-			if (renderMode.equals("fixedfunction")) {
+			if (renderMode.equalsIgnoreCase("fixedfunction")) {
 				requestedRenderHints.setSamplingRate(1);
 				requestedRenderHints
 						.setRenderMode(RenderMode.FIXED_FUNCTION_PIPELINE);
-			} else if (renderMode.equals("programmable")) {
+			} else if (renderMode.equalsIgnoreCase("programmable")) {
 				requestedRenderHints.setSamplingRate(1);
 				requestedRenderHints
 						.setRenderMode(RenderMode.PROGRAMMABLE_PIPELINE);

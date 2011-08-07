@@ -198,13 +198,13 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		AppearanceState appearance = getModifiedAppearance(lineAppearance,
 				getModifiers());
 		
-		if (type.equals("Segment")) {
+		if (type.equalsIgnoreCase("segment")) {
 			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
 					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
-		} else if (type.equals("Line")) {
+		} else if (type.equalsIgnoreCase("line")) {
 			cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2),
 					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
-		} else if (type.equals("Ray")) {
+		} else if (type.equalsIgnoreCase("ray")) {
 			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2),
 					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
 		}
@@ -322,7 +322,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		String type = modifiers.get("normaltype").toString();
 
 		NormalType normalType = NormalType.PER_FACE;
-		if (type.equals("pervertex")) {
+		if (type.equalsIgnoreCase("pervertex")) {
 			normalType = NormalType.PER_VERTEX;
 		}
 
@@ -336,13 +336,13 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		
 		String topologyStr = modifiers.get("topology").toString();
 		MeshTopology topology = MeshTopology.OPEN;
-		if (topologyStr.equals("open")) {
+		if (topologyStr.equalsIgnoreCase("open")) {
 			topology = MeshTopology.OPEN;
-		} else if (topologyStr.equals("closex")) {
+		} else if (topologyStr.equalsIgnoreCase("closex")) {
 			topology = MeshTopology.CLOSE_X;
-		} else if (topologyStr.equals("closey")) {
+		} else if (topologyStr.equalsIgnoreCase("closey")) {
 			topology = MeshTopology.CLOSE_Y;
-		} else if (topologyStr.equals("closexy")) {
+		} else if (topologyStr.equalsIgnoreCase("closexy")) {
 			topology = MeshTopology.CLOSE_XY;
 		}
 		
@@ -386,13 +386,13 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 		String topologyStr = modifiers.get("topology").toString();
 		MeshTopology topology = MeshTopology.OPEN;
-		if (topologyStr.equals("open")) {
+		if (topologyStr.equalsIgnoreCase("open")) {
 			topology = MeshTopology.OPEN;
-		} else if (topologyStr.equals("closex")) {
+		} else if (topologyStr.equalsIgnoreCase("closex")) {
 			topology = MeshTopology.CLOSE_X;
-		} else if (topologyStr.equals("closey")) {
+		} else if (topologyStr.equalsIgnoreCase("closey")) {
 			topology = MeshTopology.CLOSE_Y;
-		} else if (topologyStr.equals("closexy")) {
+		} else if (topologyStr.equalsIgnoreCase("closexy")) {
 			topology = MeshTopology.CLOSE_XY;
 		}
 		
@@ -640,9 +640,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		value = modifiers.get("frame");
 		if (value instanceof String) {
 			String frame = (String)value;
-			if (frame.equals("world")) {
+			if (frame.equalsIgnoreCase("world")) {
 				info.frame = LightFrame.WORLD;
-			} else if (frame.equals("camera")) {
+			} else if (frame.equalsIgnoreCase("camera")) {
 				info.frame = LightFrame.CAMERA;
 			}
 		}
