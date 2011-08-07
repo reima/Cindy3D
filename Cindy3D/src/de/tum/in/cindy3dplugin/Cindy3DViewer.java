@@ -279,7 +279,7 @@ public interface Cindy3DViewer {
 	 * Sets light source parameters.
 	 * 
 	 * @param light
-	 *            Light index, between 0 and <code>MAX_LIGHTS - 1<code>
+	 *            Light index, between 0 and <code>MAX_LIGHTS</code>-1
 	 * @param info
 	 *            Light parameters to set
 	 */
@@ -289,7 +289,7 @@ public interface Cindy3DViewer {
 	 * Disables a light source.
 	 * 
 	 * @param light
-	 *            Light index, between 0 and <code>MAX_LIGHTS - 1<code>
+	 *            Light index, between 0 and <code>MAX_LIGHTS</code>-1
 	 */
 	void disableLight(int light);
 
