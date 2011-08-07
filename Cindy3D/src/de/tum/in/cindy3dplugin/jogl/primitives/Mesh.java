@@ -11,7 +11,9 @@ import de.tum.in.cindy3dplugin.jogl.Util;
 public class Mesh extends Primitive {
 	private static int meshCounter = 0;
 
-	private int gridWidth, gridHeight;
+	private int rowCount, columnCount;
+	private int columnMax, rowMax;
+	private int faceCount;
 
 	private double[][] positions;
 	private double[][] normals;
@@ -21,14 +23,11 @@ public class Mesh extends Primitive {
 	private int identifier;
 	private MeshTopology topology;
 
-	private int gridXMax, gridYMax;
-	private int faceCount;
-
-	public Mesh(int height, int width, double[][] positions,
+	public Mesh(int rowCount, int columnCount, double[][] positions,
 			double[][] normals, Color color, int shininess, double alpha,
 			MeshTopology topology) {
 		super(color, shininess, alpha);
-		init(width, height, positions, normals,
+		init(rowCount, columnCount, positions, normals,
 				normals == null ? NormalType.PER_VERTEX : NormalType.PER_FACE,
 				topology);
 		if (normals == null) {
@@ -36,18 +35,18 @@ public class Mesh extends Primitive {
 		}
 	}
 
-	public Mesh(int height, int width, double[][] positions,
+	public Mesh(int rowCount, int columnCount, double[][] positions,
 			NormalType normalType, Color color, int shininess, double alpha,
 			MeshTopology topology) {
 		super(color, shininess, alpha);
-		init(width, height, positions, null, normalType, topology);
+		init(rowCount, columnCount, positions, null, normalType, topology);
 		computeNormals();
 	}
 
-	private void init(int width, int height, double[][] positions,
+	private void init(int rowCount, int columnCount, double[][] positions,
 			double[][] normals, NormalType normalType, MeshTopology topology) {
-		this.gridWidth = width;
-		this.gridHeight = height;
+		this.rowCount = rowCount;
+		this.columnCount = columnCount;
 		this.positions = positions;
 		this.normals = normals;
 		this.normalType = normalType;
@@ -56,26 +55,26 @@ public class Mesh extends Primitive {
 
 		switch (this.topology) {
 		case OPEN:
-			gridXMax = gridWidth - 1;
-			gridYMax = gridHeight - 1;
+			columnMax = columnCount - 1;
+			rowMax = rowCount - 1;
 			break;
 		case CLOSE_X:
-			gridXMax = gridWidth;
-			gridYMax = gridHeight - 1;
+			columnMax = columnCount;
+			rowMax = rowCount - 1;
 			break;
 		case CLOSE_Y:
-			gridXMax = gridWidth - 1;
-			gridYMax = gridHeight;
+			columnMax = columnCount - 1;
+			rowMax = rowCount;
 			break;
 		case CLOSE_XY:
-			gridXMax = gridWidth;
-			gridYMax = gridHeight;
+			columnMax = columnCount;
+			rowMax = rowCount;
 			break;
 		default:
 			return;
 		}
 
-		faceCount = gridXMax * gridYMax * 2;
+		faceCount = columnMax * rowMax * 2;
 	}
 
 	public double[][] getPositions() {
@@ -98,24 +97,24 @@ public class Mesh extends Primitive {
 		return faceCount;
 	}
 
-	public int getGridXMax() {
-		return gridXMax;
+	public int getColumnMax() {
+		return columnMax;
 	}
 
-	public int getGridYMax() {
-		return gridYMax;
+	public int getRowMax() {
+		return rowMax;
 	}
 
-	public int getGridWidth() {
-		return gridWidth;
+	public int getColumnCount() {
+		return columnCount;
 	}
 
-	public int getGridHeight() {
-		return gridHeight;
+	public int getRowCount() {
+		return rowCount;
 	}
 
 	public int getVertexIndex(int x, int y) {
-		return y * gridWidth + x;
+		return y * columnCount + x;
 	}
 
 	private void computeNormals() {
@@ -125,13 +124,13 @@ public class Mesh extends Primitive {
 		Vector3D[] vertexNormals = null;
 
 		if (normalType == NormalType.PER_VERTEX) {
-			vertexNormals = new Vector3D[gridWidth * gridHeight];
+			vertexNormals = new Vector3D[columnCount * rowCount];
 			for (int i = 0; i < vertexNormals.length; ++i) {
 				vertexNormals[i] = Vector3D.ZERO;
 			}
 		}
 
-		Vector3D[] positions = new Vector3D[gridWidth * gridHeight];
+		Vector3D[] positions = new Vector3D[columnCount * rowCount];
 		for (int i = 0; i < positions.length; ++i) {
 			positions[i] = new Vector3D(this.positions[i][0],
 					this.positions[i][1], this.positions[i][2]);
@@ -139,8 +138,8 @@ public class Mesh extends Primitive {
 
 		// Iterate over all grid cells (each of which consists of two faces)
 		int faceIndex = 0;
-		for (int gridY = 0; gridY < gridYMax; ++gridY) {
-			for (int gridX = 0; gridX < gridXMax; ++gridX) {
+		for (int row = 0; row < rowMax; ++row) {
+			for (int column = 0; column < columnMax; ++column) {
 				/*
 				 *    v1----v2
 				 *    |    / |
@@ -149,13 +148,13 @@ public class Mesh extends Primitive {
 				 *    | /    |
 				 *    v3----v4
 				 */
-				int gridXPlus1 = (gridX + 1) % gridWidth;
-				int gridYPlus1 = (gridY + 1) % gridHeight;
+				int rowPlus1 = (row + 1) % rowCount;
+				int columnPlus1 = (column + 1) % columnCount;
 
-				int v1Index = getVertexIndex(gridX, gridY);
-				int v2Index = getVertexIndex(gridXPlus1, gridY);
-				int v3Index = getVertexIndex(gridX, gridYPlus1);
-				int v4Index = getVertexIndex(gridXPlus1, gridYPlus1);
+				int v1Index = getVertexIndex(column,      row);
+				int v2Index = getVertexIndex(columnPlus1, row);
+				int v3Index = getVertexIndex(column,      rowPlus1);
+				int v4Index = getVertexIndex(columnPlus1, rowPlus1);
 
 				Vector3D v1 = positions[v1Index];
 				Vector3D v2 = positions[v2Index];
@@ -184,7 +183,7 @@ public class Mesh extends Primitive {
 		}
 
 		if (normalType == NormalType.PER_VERTEX) {
-			normals = new double[gridWidth * gridHeight][3];
+			normals = new double[columnCount * rowCount][3];
 			for (int i = 0; i < vertexNormals.length; ++i) {
 				normals[i] = Util.vectorToDoubleArray(vertexNormals[i]
 						.normalize());

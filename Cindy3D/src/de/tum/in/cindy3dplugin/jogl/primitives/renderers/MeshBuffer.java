@@ -28,7 +28,7 @@ public class MeshBuffer {
 		double[][] normals = m.getNormals();
 		
 		if (m.getNormalType() == NormalType.PER_VERTEX) {
-			vertexCount = m.getGridWidth() * m.getGridHeight();
+			vertexCount = m.getColumnCount() * m.getRowCount();
 			indexCount = m.getFaceCount() * 3;
 			hasIndexBuffer = true;
 		} else {
@@ -51,8 +51,8 @@ public class MeshBuffer {
 
 		// Iterate over all grid cells (each of which consists of two faces)
 		int faceIndex = 0;
-		for (int gridY = 0; gridY < m.getGridYMax(); ++gridY) {
-			for (int gridX = 0; gridX < m.getGridXMax(); ++gridX) {
+		for (int row = 0; row < m.getRowMax(); ++row) {
+			for (int column = 0; column < m.getColumnMax(); ++column) {
 				/*
 				 *    v1----v2
 				 *    |    / |
@@ -61,13 +61,13 @@ public class MeshBuffer {
 				 *    | /    |
 				 *    v3----v4
 				 */
-				int gridXPlus1 = (gridX + 1) % m.getGridWidth();
-				int gridYPlus1 = (gridY + 1) % m.getGridHeight();
+				int rowPlus1 = (row + 1) % m.getRowCount();
+				int columnPlus1 = (column + 1) % m.getColumnCount();
 
-				int v1Index = m.getVertexIndex(gridX,      gridY);
-				int v2Index = m.getVertexIndex(gridXPlus1, gridY);
-				int v3Index = m.getVertexIndex(gridX,      gridYPlus1);
-				int v4Index = m.getVertexIndex(gridXPlus1, gridYPlus1);
+				int v1Index = m.getVertexIndex(column,      row);
+				int v2Index = m.getVertexIndex(columnPlus1, row);
+				int v3Index = m.getVertexIndex(column,      rowPlus1);
+				int v4Index = m.getVertexIndex(columnPlus1, rowPlus1);
 
 				if (m.getNormalType() == NormalType.PER_VERTEX) {
 					// f1
@@ -125,10 +125,11 @@ public class MeshBuffer {
 	
 	public void render(GL gl) {
 		GL2 gl2 = gl.getGL2();
-		
+
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
-		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * 8, 0);
-		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * 8, 3 * 8);
+		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * Util.SIZEOF_DOUBLE, 0);
+		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * Util.SIZEOF_DOUBLE,
+				3 * Util.SIZEOF_DOUBLE);
 
 		if (hasIndexBuffer) {
 			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
