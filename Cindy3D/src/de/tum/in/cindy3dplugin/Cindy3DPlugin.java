@@ -359,12 +359,12 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		MeshTopology topology = MeshTopology.OPEN;
 		if (topologyStr.equalsIgnoreCase("open")) {
 			topology = MeshTopology.OPEN;
-		} else if (topologyStr.equalsIgnoreCase("closex")) {
-			topology = MeshTopology.CLOSE_X;
-		} else if (topologyStr.equalsIgnoreCase("closey")) {
-			topology = MeshTopology.CLOSE_Y;
-		} else if (topologyStr.equalsIgnoreCase("closexy")) {
-			topology = MeshTopology.CLOSE_XY;
+		} else if (topologyStr.equalsIgnoreCase("closerows")) {
+			topology = MeshTopology.CLOSE_ROWS;
+		} else if (topologyStr.equalsIgnoreCase("closecolumns")) {
+			topology = MeshTopology.CLOSE_COLUMNS;
+		} else if (topologyStr.equalsIgnoreCase("closeboth")) {
+			topology = MeshTopology.CLOSE_BOTH;
 		}
 
 		cindy3d.addMesh(rows, columns, vertices, normalType, topology,
@@ -415,11 +415,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (topologyStr.equalsIgnoreCase("open")) {
 			topology = MeshTopology.OPEN;
 		} else if (topologyStr.equalsIgnoreCase("closex")) {
-			topology = MeshTopology.CLOSE_X;
+			topology = MeshTopology.CLOSE_ROWS;
 		} else if (topologyStr.equalsIgnoreCase("closey")) {
-			topology = MeshTopology.CLOSE_Y;
+			topology = MeshTopology.CLOSE_COLUMNS;
 		} else if (topologyStr.equalsIgnoreCase("closexy")) {
-			topology = MeshTopology.CLOSE_XY;
+			topology = MeshTopology.CLOSE_BOTH;
 		}
 
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,

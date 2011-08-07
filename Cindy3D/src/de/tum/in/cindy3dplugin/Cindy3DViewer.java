@@ -3,17 +3,26 @@ package de.tum.in.cindy3dplugin;
 import java.awt.Color;
 import java.util.Hashtable;
 
+/**
+ * Interface every Cindy3D viewer must implement.
+ */
 public interface Cindy3DViewer {
+	/**
+	 * Total number of supported lights.
+	 */
 	public static final int MAX_LIGHTS = 8;
 	
-	enum MeshTopology {
+	/**
+	 * Topology on a grid-based mesh.
+	 */
+	public enum MeshTopology {
 		OPEN,
-		CLOSE_X,
-		CLOSE_Y,
-		CLOSE_XY
+		CLOSE_ROWS,
+		CLOSE_COLUMNS,
+		CLOSE_BOTH
 	}
 	
-	enum NormalType {
+	public enum NormalType {
 		PER_VERTEX,
 		PER_FACE
 	}

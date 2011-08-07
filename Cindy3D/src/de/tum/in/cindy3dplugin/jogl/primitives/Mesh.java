@@ -58,15 +58,15 @@ public class Mesh extends Primitive {
 			columnMax = columnCount - 1;
 			rowMax = rowCount - 1;
 			break;
-		case CLOSE_X:
+		case CLOSE_ROWS:
 			columnMax = columnCount;
 			rowMax = rowCount - 1;
 			break;
-		case CLOSE_Y:
+		case CLOSE_COLUMNS:
 			columnMax = columnCount - 1;
 			rowMax = rowCount;
 			break;
-		case CLOSE_XY:
+		case CLOSE_BOTH:
 			columnMax = columnCount;
 			rowMax = rowCount;
 			break;

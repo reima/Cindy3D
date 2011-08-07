@@ -184,7 +184,7 @@ public class JOGLViewerTest {
 		}
 		appearance.setColor(Color.RED);
 		//appearance.setAlpha(0.7);
-		viewer.addMesh(rings, segments, vert, NormalType.PER_VERTEX, MeshTopology.CLOSE_XY, appearance);
+		viewer.addMesh(rings, segments, vert, NormalType.PER_VERTEX, MeshTopology.CLOSE_BOTH, appearance);
 		
 		//viewer.addPoint(0, 0, 0, appearance);
 	}

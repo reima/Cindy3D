@@ -37,6 +37,9 @@ import de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
 
+/**
+ * JOGL implementation of <code>Cindy3DViewer</code>.
+ */
 public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		MouseMotionListener, MouseWheelListener {
 	private static final double POINT_SCALE = 0.05;
