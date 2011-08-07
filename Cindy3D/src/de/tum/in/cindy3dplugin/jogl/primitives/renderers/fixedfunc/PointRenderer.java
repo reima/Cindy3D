@@ -3,8 +3,6 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers.fixedfunc;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import org.apache.commons.math.geometry.Vector3D;
-
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Point;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
@@ -137,9 +135,9 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 	@Override
 	protected void render(JOGLRenderState jrs, Point point) {
 		GL2 gl2 = jrs.gl.getGL2();
-		
+
 		double distance = Util.transformPoint(jrs.camera.getTransform(),
-				new Vector3D(point.x, point.y, point.z)).getNorm()
+				point.center).getNorm()
 				- point.size;
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
 				jrs.renderHints.getAllowedScreenSpaceError(), distance);
@@ -154,11 +152,12 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glPushMatrix();
-		gl2.glTranslated(point.x, point.y, point.z);
+		gl2.glTranslated(point.center.getX(), point.center.getY(),
+				point.center.getZ());
 		gl2.glScaled(point.size, point.size, point.size);
-		
+
 		mesh.render(gl2);
-		
+
 		gl2.glPopMatrix();
 	}
 }

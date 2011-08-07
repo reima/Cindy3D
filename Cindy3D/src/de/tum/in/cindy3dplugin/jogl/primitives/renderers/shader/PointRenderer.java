@@ -87,8 +87,8 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 	@Override
 	protected void render(JOGLRenderState jrs, Point point) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUniform3f(centerLoc, (float) point.x, (float) point.y,
-				(float) point.z);
+		gl2.glUniform3f(centerLoc, (float) point.center.getX(),
+				(float) point.center.getY(), (float) point.center.getZ());
 		gl2.glUniform1f(radiusLoc, (float) point.size);
 		
 		// gl2.glFlush();
