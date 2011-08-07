@@ -9,9 +9,15 @@ public class LightInfo {
 		SPOT_LIGHT,
 	}
 	
+	public enum LightFrame {
+		CAMERA,
+		WORLD
+	}
+	
 	public Color ambient = null;
 	public Color diffuse = null;
 	public Color specular = null;
+	public LightFrame frame = null;
 	public double[] position = null;
 	public double[] direction = null;
 	

@@ -4,12 +4,15 @@ import java.awt.Color;
 
 import javax.media.opengl.GL2;
 
+import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightInfo.LightType;
 
 public abstract class Light {
 	private Color ambientColor = new Color(0.0f, 0.0f, 0.0f);
 	private Color diffuseColor = new Color(1.0f, 1.0f, 1.0f);
 	private Color specularColor = new Color(1.0f, 1.0f, 1.0f);
+	
+	protected LightFrame frame = LightFrame.CAMERA;
 	
 	protected boolean enabled = false;
 	
@@ -42,6 +45,10 @@ public abstract class Light {
 		specularColor = specular;
 	}
 	
+	public void setLightFrame(LightFrame frame) {
+		this.frame = frame;
+	}
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}

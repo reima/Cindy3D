@@ -10,6 +10,7 @@ import de.cinderella.api.cs.CindyScriptPlugin;
 import de.cinderella.math.Vec;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
+import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 import de.tum.in.cindy3dplugin.jogl.Util;
@@ -633,6 +634,16 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			info.direction = (double[])value;
 			if (info.direction.length != 3) {
 				info.direction = null;
+			}
+		}
+		
+		value = modifiers.get("frame");
+		if (value instanceof String) {
+			String frame = (String)value;
+			if (frame.equals("world")) {
+				info.frame = LightFrame.WORLD;
+			} else if (frame.equals("camera")) {
+				info.frame = LightFrame.CAMERA;
 			}
 		}
 		

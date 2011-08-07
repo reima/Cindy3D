@@ -20,21 +20,21 @@ public class LightManager {
 	}
 	
 	public void setLight(int light, LightInfo info) {
-		
 		if (lights[light] == null || lights[light].getType() != info.type) {
 			compileShader = true;
 			
-			switch (info.type)
-			{
-				case POINT_LIGHT:
-					lights[light] = new PointLight();					
-					break;
-				case DIRECTIONAL_LIGHT:
-					lights[light] = new DirectionalLight();
-					break;
-				case SPOT_LIGHT:
-					lights[light] = new SpotLight();
-					break;
+			switch (info.type) {
+			case POINT_LIGHT:
+				lights[light] = new PointLight();
+				break;
+			case DIRECTIONAL_LIGHT:
+				lights[light] = new DirectionalLight();
+				break;
+			case SPOT_LIGHT:
+				lights[light] = new SpotLight();
+				break;
+			default:
+				return;
 			}
 		}
 		
@@ -51,6 +51,9 @@ public class LightManager {
 		}
 		if (info.specular != null) {
 			lights[light].setSpecularColor(info.specular);
+		}
+		if (info.frame != null) {
+			lights[light].setLightFrame(info.frame);
 		}
 
 		switch (info.type) {
@@ -91,19 +94,14 @@ public class LightManager {
 	}
 	
 	public void setGLState(GL2 gl) {
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glPushMatrix();
-		
 		// Viewer assumed to be at (0,0,0) in eye coordinates
 		gl.glLightModeli(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
 		
-		gl.glLoadIdentity();
 		for (int i = 0; i < Cindy3DViewer.MAX_LIGHTS; ++i) {
 			if (lights[i] != null) {
 				lights[i].setGLState(gl, GL2.GL_LIGHT0 + i);
 			}
 		}
-		gl.glPopMatrix();
 	}
 
 	public void disableLight(int light) {

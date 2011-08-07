@@ -8,6 +8,7 @@ import de.tum.in.cindy3dplugin.Cindy3DViewer;
 import de.tum.in.cindy3dplugin.LightInfo;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
+import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 
@@ -17,7 +18,7 @@ public class JOGLViewerTest {
 		
 		Hashtable<String, Object> hintsMap = new Hashtable<String,Object>();
 		
-		hintsMap.put("quality", 2.0);
+		hintsMap.put("quality", 5.0);
 
 		viewer.setRenderHints(hintsMap);
 		
@@ -31,8 +32,8 @@ public class JOGLViewerTest {
 //		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
-		enneper(viewer, true);
-//		lights(viewer);
+//		enneper(viewer, true);
+		lights(viewer);
 		viewer.end();
 	}
 	
@@ -59,6 +60,7 @@ public class JOGLViewerTest {
 		info.type = LightType.DIRECTIONAL_LIGHT;
 		info.direction = new double[]{0,1,0};
 		info.diffuse = new Color(1.0f,0.0f,0.0f);
+		info.frame = LightFrame.WORLD;
 		viewer.setLight(0, info);
 
 		appearance.setColor(Color.green);
