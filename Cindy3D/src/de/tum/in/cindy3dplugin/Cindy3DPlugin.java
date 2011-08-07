@@ -27,7 +27,6 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * @see Cindy3DPlugin#gsave3d()
 	 * @see Cindy3DPlugin#grestore3d()
 	 */
-
 	private Stack<AppearanceState> pointAppearanceStack;
 	/**
 	 * The current point appearance
@@ -47,7 +46,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	private AppearanceState lineAppearance;
 	
 	/**
-	 * Stack of saved polygon appearances
+	 * Stack of saved surface appearances
 	 * @see Cindy3DPlugin#gsave3d()
 	 * @see Cindy3DPlugin#grestore3d()
 	 */
@@ -62,6 +61,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	private Hashtable modifiers;
 
+	/**
+	 * Creates a new plugin instance
+	 */
 	public Cindy3DPlugin() {
 		pointAppearanceStack = new Stack<AppearanceState>();
 		pointAppearance = new AppearanceState(Color.RED, 60, 1, 1);
@@ -71,12 +73,18 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		surfaceAppearance = new AppearanceState(Color.GREEN, 60, 1, 1);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.cinderella.api.cs.CindyScriptPlugin#register()
+	 */
 	@Override
 	public void register() {
 		if (cindy3d == null)
 			cindy3d = new JOGLViewer(null);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.cinderella.api.cs.CindyScriptPlugin#unregister()
+	 */
 	@Override
 	public void unregister() {
 		if (cindy3d != null)
@@ -84,11 +92,17 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d = null;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.cinderella.api.cs.CindyScriptPlugin#setModifiers(java.util.Hashtable)
+	 */
 	@Override
 	public void setModifiers(Hashtable m) {
 		modifiers = m;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.cinderella.api.cs.CindyScriptPlugin#getModifiers()
+	 */
 	@Override
 	public Hashtable getModifiers() {
 		return modifiers;
@@ -114,22 +128,37 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		return "Cindy3D";
 	}
 
-	public AppearanceState getModifiedAppearance(AppearanceState initialState,
-			Hashtable modifiers) {
+	/**
+	 * Apply modifiers to a appearance state.
+	 * 
+	 * @param initialState
+	 *            Appearance to modify
+	 * @param modifiers
+	 *            Modifiers to apply. Recognized modifiers are "color", "size",
+	 *            "alpha", and "shininess".
+	 * @return Modified appearance
+	 */
+	private AppearanceState applyAppearanceModifiers(
+			AppearanceState initialState, Hashtable modifiers) {
 		AppearanceState result = new AppearanceState(initialState);
 		Object value = null;
 		value = modifiers.get("color");
 		if (value instanceof double[]) {
-			setColorState(result, (double[])value);
+			setColorState(result, (double[]) value);
 		}
 		value = modifiers.get("size");
 		if (value instanceof Double) {
-			result.setSize((Double)value);
+			result.setSize((Double) value);
 		}
 		value = modifiers.get("alpha");
 		if (value instanceof Double) {
-			double alpha = Math.max(0, Math.min(1, (Double)value));
+			double alpha = Math.max(0, Math.min(1, (Double) value));
 			result.setAlpha(alpha);
+		}
+		value = modifiers.get("shininess");
+		if (value instanceof Double) {
+			double shininess = Math.max(0, Math.min(128, (Double) value));
+			result.setShininess((int) shininess);
 		}
 		return result;
 	}
@@ -164,8 +193,10 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Draws a point in 3D space
-	 * @param vec Euclidean coordinates of the point
+	 * Draws a point.
+	 * 
+	 * @param vec
+	 *            Coordinates of the point
 	 */
 	@CindyScript("draw3d")
 	public void draw3d(ArrayList<Double> vec) {
@@ -173,46 +204,51 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			return;
 
 		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2),
-				getModifiedAppearance(pointAppearance, getModifiers()));
+				applyAppearanceModifiers(pointAppearance, getModifiers()));
 	}
 
 	/**
-	 * Draws a line in 3D space
-	 * @param vec1 Euclidean coordinates of the first endpoint
-	 * @param vec2 Euclidean coordinates of the second endpoint
+	 * Draws a line.
+	 * 
+	 * @param vec1
+	 *            Coordinates of the first end point
+	 * @param vec2
+	 *            Coordinates of the second end point
 	 */
 	@CindyScript("draw3d")
 	public void draw3d(ArrayList<Double> vec1, ArrayList<Double> vec2) {
 		if (vec1.size() != 3 || vec2.size() != 3)
 			return;
-		
+
 		// Fill in default modifiers
 		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
 		modifiers.put("type", "Segment");
-		
+
 		// Apply overrides
 		modifiers.putAll(this.modifiers);
-		
+
 		String type = modifiers.get("type").toString();
-		
-		AppearanceState appearance = getModifiedAppearance(lineAppearance,
+
+		AppearanceState appearance = applyAppearanceModifiers(lineAppearance,
 				getModifiers());
-		
+
 		if (type.equalsIgnoreCase("segment")) {
 			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
 					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
 		} else if (type.equalsIgnoreCase("line")) {
-			cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2),
-					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
+			cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2), vec2.get(0),
+					vec2.get(1), vec2.get(2), appearance);
 		} else if (type.equalsIgnoreCase("ray")) {
-			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2),
-					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
+			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2), vec2.get(0),
+					vec2.get(1), vec2.get(2), appearance);
 		}
 	}
 	
 	/**
-	 * Connects the given list of points by line segments
-	 * @param points List of points
+	 * Connects a list of points by line segments.
+	 * 
+	 * @param points
+	 *            List of points to connect
 	 */
 	@CindyScript("connect3d")
 	public void connect3d(ArrayList<Vec> points) {
@@ -225,12 +261,14 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 
 		cindy3d.addLineStrip(vertices,
-				getModifiedAppearance(lineAppearance, getModifiers()), false);
+				applyAppearanceModifiers(lineAppearance, getModifiers()), false);
 	}
 
 	/**
-	 * Draws the outline of a polygon
-	 * @param points Vertices of the polygon
+	 * Draws the outline of a polygon.
+	 * 
+	 * @param points
+	 *            Vertices of the polygon
 	 */
 	@CindyScript("drawpoly3d")
 	public void drawpoly3d(ArrayList<Vec> points) {
@@ -243,13 +281,14 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 
 		cindy3d.addLineStrip(vertices,
-				getModifiedAppearance(lineAppearance, getModifiers()), true);
+				applyAppearanceModifiers(lineAppearance, getModifiers()), true);
 	}
 
 	/**
 	 * Draws a polygon
 	 * 
-	 * @param points Vertices of the polygon
+	 * @param points
+	 *            Vertices of the polygon
 	 */
 	@CindyScript("fillpoly3d")
 	public void fillpoly3d(ArrayList<Vec> points) {
@@ -257,20 +296,23 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 	
 	/**
-	 * Draws a polygon with specifying vertex specific normals
-	 * @param points Vertices of the polygon
-	 * @param normals Normals for each vertex
+	 * Draws a polygon with specifying vertex normals
+	 * 
+	 * @param points
+	 *            Vertices of the polygon
+	 * @param normals
+	 *            Normals for each vertex
 	 */
 	@CindyScript("fillpoly3d")
 	public void fillpoly3d(ArrayList<Vec> points, ArrayList<Vec> normals) {
 		if (points.size() == 0
 				|| (normals != null && points.size() != normals.size()))
 			return;
-		
+
 		double vertices[][] = new double[points.size()][3];
 		double normal[][] = (normals == null) ? null : new double[normals
 				.size()][3];
-		
+
 		for (int i = 0; i < points.size(); ++i) {
 			vertices[i][0] = points.get(i).getXR();
 			vertices[i][1] = points.get(i).getYR();
@@ -282,29 +324,42 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			}
 		}
 		cindy3d.addPolygon(vertices, normal,
-				getModifiedAppearance(surfaceAppearance, getModifiers()));
+				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
-	 * Draws a filled circle with the specified center, radius and orientation
-	 * @param center Center
-	 * @param normal Orientation
-	 * @param radius Radius
+	 * Draws a filled circle.
+	 * 
+	 * @param center
+	 *            Center of the circle
+	 * @param normal
+	 *            Normal vector (orthogonal to the circle)
+	 * @param radius
+	 *            Radius of the circle
 	 */
 	@CindyScript("fillcircle3d")
-	public void fillcircle3d(ArrayList<Double> center, ArrayList<Double> normal,
-			double radius) {
-		if (center.size() != 3 || normal.size() != 3) return;
+	public void fillcircle3d(ArrayList<Double> center,
+			ArrayList<Double> normal, double radius) {
+		if (center.size() != 3 || normal.size() != 3)
+			return;
 		cindy3d.addCircle(center.get(0), center.get(1), center.get(2),
 				normal.get(0), normal.get(1), normal.get(2), radius,
-				getModifiedAppearance(surfaceAppearance, getModifiers()));
+				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
-	 * Draws a grid based mesh. Normals are generated automatically.
-	 * @param rows Number of rows of vertices
-	 * @param columns Number of columns of vertices
-	 * @param points Vertex positions
+	 * Draws a grid based mesh.
+	 *
+	 * @note Normals are generated automatically according to the modifier
+	 *       "normaltype". "perFace" is the default and generates one normal per
+	 *       grid cell. "perVertex" assigns a separate normal to each grid point
+	 *       by averaging the normals of the incident grid cells.
+	 * @param rows
+	 *            Number of rows of vertices
+	 * @param columns
+	 *            Number of columns of vertices
+	 * @param points
+	 *            Vertex positions
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points) {
@@ -333,7 +388,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			vertices[i][1] = v.getYR();
 			vertices[i][2] = v.getZR();
 		}
-		
+
 		String topologyStr = modifiers.get("topology").toString();
 		MeshTopology topology = MeshTopology.OPEN;
 		if (topologyStr.equalsIgnoreCase("open")) {
@@ -345,9 +400,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		} else if (topologyStr.equalsIgnoreCase("closexy")) {
 			topology = MeshTopology.CLOSE_XY;
 		}
-		
+
 		cindy3d.addMesh(rows, columns, vertices, normalType, topology,
-				getModifiedAppearance(surfaceAppearance, getModifiers()));
+				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
@@ -397,7 +452,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
-				getModifiedAppearance(surfaceAppearance, getModifiers()));
+				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 	
 	@CindyScript("drawsphere3d")
@@ -405,7 +460,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (center.size() != 3)
 			return;
 		cindy3d.addSphere(center.get(0), center.get(1), center.get(2), radius,
-				getModifiedAppearance(surfaceAppearance, getModifiers()));
+				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 	
 	/**
