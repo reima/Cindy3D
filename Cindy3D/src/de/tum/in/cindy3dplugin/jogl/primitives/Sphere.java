@@ -4,15 +4,15 @@ import java.awt.Color;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-public class Point extends Primitive {
+public class Sphere extends Primitive {
 	public Vector3D center;
-	public double size;
+	public double radius;
 
-	public Point(double x, double y, double z, double size, Color color,
+	public Sphere(double x, double y, double z, double radius, Color color,
 			int shininess, double alpha) {
 		super(color, shininess, alpha);
 		this.center = new Vector3D(x, y, z);
-		this.size = size;
+		this.radius = radius;
 	}
 
 	@Override

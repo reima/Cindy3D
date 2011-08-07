@@ -7,12 +7,12 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
-import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.primitives.Sphere;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
-public class PointRenderer extends PrimitiveRenderer<Point> {
+public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	private ShaderProgram program = null;
 	private int centerLoc;
 	private int radiusLoc;
@@ -85,11 +85,11 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 	}
 
 	@Override
-	protected void render(JOGLRenderState jrs, Point point) {
+	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUniform3f(centerLoc, (float) point.center.getX(),
-				(float) point.center.getY(), (float) point.center.getZ());
-		gl2.glUniform1f(radiusLoc, (float) point.size);
+		gl2.glUniform3f(centerLoc, (float) sphere.center.getX(),
+				(float) sphere.center.getY(), (float) sphere.center.getZ());
+		gl2.glUniform1f(radiusLoc, (float) sphere.radius);
 		
 		// gl2.glFlush();
 		gl2.glUniform1f(modeLoc, renderMode);

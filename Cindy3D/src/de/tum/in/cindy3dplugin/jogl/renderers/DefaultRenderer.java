@@ -13,7 +13,7 @@ import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
-import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.primitives.Sphere;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
@@ -21,7 +21,7 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactor
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
 public class DefaultRenderer extends JOGLRenderer {
-	private PrimitiveRenderer<Point> pointRenderer;
+	private PrimitiveRenderer<Sphere> sphereRenderer;
 	private PrimitiveRenderer<Circle> circleRenderer;
 	private PrimitiveRenderer<Line> lineRenderer;
 	private PrimitiveRenderer<Polygon> polygonRenderer;
@@ -31,7 +31,7 @@ public class DefaultRenderer extends JOGLRenderer {
 			ModelViewerCamera camera, LightManager lightManager,
 			PrimitiveRendererFactory prf) {
 		super(renderHints, scene, camera, lightManager);
-		pointRenderer = prf.createPointRenderer();
+		sphereRenderer = prf.createSphereRenderer();
 		circleRenderer = prf.createCircleRenderer();
 		lineRenderer = prf.createLineRenderer();
 		polygonRenderer = prf.createPolygonRenderer();
@@ -69,7 +69,7 @@ public class DefaultRenderer extends JOGLRenderer {
 			gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
 			gl.glEnable(GL2.GL_LIGHTING);
 			
-			if (!pointRenderer.init(gl))
+			if (!sphereRenderer.init(gl))
 				Util.logger.severe("Point renderer initialization failed");
 			if (!circleRenderer.init(gl))
 				Util.logger.severe("Circle renderer initialization failed");
@@ -103,7 +103,7 @@ public class DefaultRenderer extends JOGLRenderer {
 	private void renderPrimitives(JOGLRenderState jrs) {
 		if (!jrs.renderOpaque) {
 			jrs.cullMode = CullMode.CULL_FRONT;
-			pointRenderer.render(jrs, scene.getPoints());
+			sphereRenderer.render(jrs, scene.getSpheres());
 			jrs.cullMode = CullMode.CULL_NONE;
 		}
 		
@@ -113,7 +113,7 @@ public class DefaultRenderer extends JOGLRenderer {
 		meshRenderer.render(jrs, scene.getMeshes());
 
 		jrs.cullMode = CullMode.CULL_BACK;
-		pointRenderer.render(jrs, scene.getPoints());
+		sphereRenderer.render(jrs, scene.getSpheres());
 		jrs.cullMode = CullMode.CULL_NONE;
 	}
 
@@ -138,7 +138,7 @@ public class DefaultRenderer extends JOGLRenderer {
 		if (lightManager.getCompileShader()) {
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
 			
-			if (!pointRenderer.reloadShaders(gl))
+			if (!sphereRenderer.reloadShaders(gl))
 				Util.logger.severe("Point renderer shader loading failed");
 			if (!circleRenderer.reloadShaders(gl))
 				Util.logger.severe("Circle renderer shader loading failed");
@@ -293,7 +293,7 @@ public class DefaultRenderer extends JOGLRenderer {
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
-		pointRenderer.dispose(drawable.getGL());
+		sphereRenderer.dispose(drawable.getGL());
 		circleRenderer.dispose(drawable.getGL());
 		lineRenderer.dispose(drawable.getGL());
 		polygonRenderer.dispose(drawable.getGL());

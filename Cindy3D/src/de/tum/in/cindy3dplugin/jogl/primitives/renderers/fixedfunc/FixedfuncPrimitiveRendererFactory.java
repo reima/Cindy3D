@@ -3,7 +3,7 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers.fixedfunc;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
-import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.primitives.Sphere;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory;
@@ -27,8 +27,8 @@ public class FixedfuncPrimitiveRendererFactory implements
 	}
 
 	@Override
-	public PrimitiveRenderer<Point> createPointRenderer() {
-		return new PointRenderer();
+	public PrimitiveRenderer<Sphere> createSphereRenderer() {
+		return new SphereRenderer();
 	}
 
 	@Override

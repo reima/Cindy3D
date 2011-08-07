@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public class Scene {
 	private Color backgroundColor = Color.white;
-	private ArrayList<Point> points = new ArrayList<Point>();
+	private ArrayList<Sphere> spheres = new ArrayList<Sphere>();
 	private ArrayList<Circle> circles = new ArrayList<Circle>();
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Polygon> polygons = new ArrayList<Polygon>();
@@ -20,8 +20,8 @@ public class Scene {
 		return backgroundColor;
 	}
 
-	public Collection<Point> getPoints() {
-		return points;
+	public Collection<Sphere> getSpheres() {
+		return spheres;
 	}
 
 	public Collection<Circle> getCircles() {
@@ -41,19 +41,19 @@ public class Scene {
 	}
 
 	public void clear() {
-		points.clear();
+		spheres.clear();
 		circles.clear();
 		lines.clear();
 		polygons.clear();
 		meshes.clear();
 	}
 
-	public void addPoint(Point point) {
-		points.add(point);		
+	public void addSphere(Sphere sphere) {
+		spheres.add(sphere);
 	}
 
 	public void addCircle(Circle circle) {
-		circles.add(circle);		
+		circles.add(circle);
 	}
 
 	public void addLine(Line line) {
@@ -61,7 +61,7 @@ public class Scene {
 	}
 
 	public void addPolygon(Polygon polygon) {
-		polygons.add(polygon);		
+		polygons.add(polygon);
 	}
 
 	public void addMesh(Mesh mesh) {

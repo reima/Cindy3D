@@ -4,12 +4,12 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
-import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.primitives.Sphere;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
-public class PointRenderer extends PrimitiveRenderer<Point> {
+public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	private static final int LOD_COUNT = 8;
 	
 	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
@@ -133,18 +133,18 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 	}
 
 	@Override
-	protected void render(JOGLRenderState jrs, Point point) {
+	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();
 
 		double distance = Util.transformPoint(jrs.camera.getTransform(),
-				point.center).getNorm()
-				- point.size;
+				sphere.center).getNorm()
+				- sphere.radius;
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
 				jrs.renderHints.getAllowedScreenSpaceError(), distance);
 		LODMesh mesh = meshes[LOD_COUNT - 1];
 		int lod;
 		for (lod = 0; lod < LOD_COUNT; ++lod) {
-			if (meshes[lod].isSufficient(point.size, allowedWorldSpaceError)) {
+			if (meshes[lod].isSufficient(sphere.radius, allowedWorldSpaceError)) {
 				mesh = meshes[lod];
 				break;
 			}
@@ -152,9 +152,9 @@ public class PointRenderer extends PrimitiveRenderer<Point> {
 
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glPushMatrix();
-		gl2.glTranslated(point.center.getX(), point.center.getY(),
-				point.center.getZ());
-		gl2.glScaled(point.size, point.size, point.size);
+		gl2.glTranslated(sphere.center.getX(), sphere.center.getY(),
+				sphere.center.getZ());
+		gl2.glScaled(sphere.radius, sphere.radius, sphere.radius);
 
 		mesh.render(gl2);
 

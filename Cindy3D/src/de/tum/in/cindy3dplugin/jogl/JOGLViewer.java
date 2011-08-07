@@ -30,7 +30,7 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.fixedfunc.FixedfuncPrimitiveRendererFactory;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader.ShaderPrimitiveRendererFactory;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
-import de.tum.in.cindy3dplugin.jogl.primitives.Point;
+import de.tum.in.cindy3dplugin.jogl.primitives.Sphere;
 import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer;
@@ -207,7 +207,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
 //		Util.logger.info("addPoint(" + x + "," + y + "," + z + ")");
-		scene.addPoint(new Point(x, y, z, appearance.getSize() * POINT_SCALE,
+		scene.addSphere(new Sphere(x, y, z, appearance.getSize() * POINT_SCALE,
 				appearance.getColor(), appearance.getShininess(), 1));
 	}
 
@@ -273,11 +273,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 					vertices[i][2], appearance.getSize() * POINT_SCALE,
 					appearance.getColor(), appearance.getShininess(),
 					LineType.SEGMENT));
-			scene.addPoint(new Point(vertices[i][0], vertices[i][1],
+			scene.addSphere(new Sphere(vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * POINT_SCALE,
 					appearance.getColor(), appearance.getShininess() , 1.0));
 		}
-		scene.addPoint(new Point(vertices[0][0], vertices[0][1],
+		scene.addSphere(new Sphere(vertices[0][0], vertices[0][1],
 				vertices[0][2], appearance.getSize() * POINT_SCALE, appearance
 						.getColor(), appearance.getShininess(), 1.0));
 		if (closed) {
@@ -308,7 +308,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addSphere(double cx, double cy, double cz, double radius,
 			AppearanceState appearance)	{
-		scene.addPoint(new Point(cx, cy, cz, radius, appearance
+		scene.addSphere(new Sphere(cx, cy, cz, radius, appearance
 				.getColor(), appearance.getShininess(), appearance.getAlpha()));
 	}
 	

@@ -6,6 +6,6 @@ public interface PrimitiveRendererFactory {
 	public PrimitiveRenderer<Circle> createCircleRenderer();
 	public PrimitiveRenderer<Line> createLineRenderer();
 	public PrimitiveRenderer<Mesh> createMeshRenderer();
-	public PrimitiveRenderer<Point> createPointRenderer();
+	public PrimitiveRenderer<Sphere> createSphereRenderer();
 	public PrimitiveRenderer<Polygon> createPolygonRenderer();
 }
