@@ -129,41 +129,6 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Apply modifiers to a appearance state.
-	 * 
-	 * @param initialState
-	 *            Appearance to modify
-	 * @param modifiers
-	 *            Modifiers to apply. Recognized modifiers are "color", "size",
-	 *            "alpha", and "shininess".
-	 * @return Modified appearance
-	 */
-	private AppearanceState applyAppearanceModifiers(
-			AppearanceState initialState, Hashtable modifiers) {
-		AppearanceState result = new AppearanceState(initialState);
-		Object value = null;
-		value = modifiers.get("color");
-		if (value instanceof double[]) {
-			setColorState(result, (double[]) value);
-		}
-		value = modifiers.get("size");
-		if (value instanceof Double) {
-			result.setSize((Double) value);
-		}
-		value = modifiers.get("alpha");
-		if (value instanceof Double) {
-			double alpha = Math.max(0, Math.min(1, (Double) value));
-			result.setAlpha(alpha);
-		}
-		value = modifiers.get("shininess");
-		if (value instanceof Double) {
-			double shininess = Math.max(0, Math.min(128, (Double) value));
-			result.setShininess((int) shininess);
-		}
-		return result;
-	}
-
-	/**
 	 * Squares the given number
 	 * 
 	 * @param x
@@ -359,7 +324,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * @param columns
 	 *            Number of columns of vertices
 	 * @param points
-	 *            Vertex positions
+	 *            Vertex positions, in row-major order
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points) {
@@ -406,11 +371,16 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 	
 	/**
-	 * Draws a grid based mesh. Normals are specified manually
-	 * @param rows Number of rows of vertices
-	 * @param columns Number of columns of vertices
-	 * @param points Vertex positions
-	 * @param normals Vertex normals
+	 * Draws a grid based mesh with custom normals.
+	 * 
+	 * @param rows
+	 *            Number of rows of vertices
+	 * @param columns
+	 *            Number of columns of vertices
+	 * @param points
+	 *            Vertex positions, in row-major order
+	 * @param normals
+	 *            Vertex normals, in row-major order
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points,
@@ -418,10 +388,10 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (rows < 0 || columns < 0 || rows * columns != points.size()
 				|| rows * columns != normals.size())
 			return;
-		
+
 		double[][] vertices = new double[points.size()][3];
 		double[][] perVertex = new double[normals.size()][3];
-		for (int i=0; i<points.size(); ++i) {
+		for (int i = 0; i < points.size(); ++i) {
 			Vec v = points.get(i);
 			vertices[i][0] = v.getXR();
 			vertices[i][1] = v.getYR();
@@ -431,7 +401,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			perVertex[i][1] = v.getYR();
 			perVertex[i][2] = v.getZR();
 		}
-		
+
 		// Fill in default modifiers
 		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
 		modifiers.put("topology", "open");
@@ -450,11 +420,19 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		} else if (topologyStr.equalsIgnoreCase("closexy")) {
 			topology = MeshTopology.CLOSE_XY;
 		}
-		
+
 		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
-	
+
+	/**
+	 * Draws a sphere.
+	 * 
+	 * @param center
+	 *            Center of the sphere
+	 * @param radius
+	 *            Radius of the sphere
+	 */
 	@CindyScript("drawsphere3d")
 	public void sphere3d(ArrayList<Double> center, double radius) {
 		if (center.size() != 3)
@@ -464,7 +442,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 	
 	/**
-	 * Pushes the current appearance on the appearance stack
+	 * Pushes the current appearance on the appearance stack.
+	 * 
 	 * @see Cindy3DPlugin#grestore3d()
 	 */
 	@CindyScript("gsave3d")
@@ -476,7 +455,8 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 	/**
 	 * Removes the top element of the appearance stack and replaces the current
-	 * appearance with it
+	 * appearance with it.
+	 * 
 	 * @see Cindy3DPlugin#gsave3d()
 	 */
 	@CindyScript("grestore3d")
@@ -489,15 +469,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			surfaceAppearance = surfaceAppearanceStack.pop();
 	}
 	
-	@CindyScript("alpha3d")
-	public void alpha3d(double alpha) {
-		alpha = Math.max(0, Math.min(1, alpha));
-		surfaceAppearance.setAlpha(alpha);
-	}
-
 	/**
-	 * Set color state
-	 * @param vec Color vector
+	 * Sets the color of all appearances.
+	 * 
+	 * @param vec
+	 *            Color vector
 	 */
 	@CindyScript("color3d")
 	public void color3d(ArrayList<Double> vec) {
@@ -507,8 +483,66 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 	
 	/**
-	 * Set shininess state
-	 * @param shininess Shininess
+	 * Sets the color of the point appearance.
+	 * 
+	 * @param vec
+	 *            Color vector
+	 */
+	@CindyScript("pointcolor3d")
+	public void pointcolor3d(ArrayList<Double> vec) {
+		setColorState(pointAppearance, vec);
+	}
+
+	/**
+	 * Sets the color of the line appearance.
+	 * 
+	 * @param vec
+	 *            Color vector
+	 */
+	@CindyScript("linecolor3d")
+	public void linecolor3d(ArrayList<Double> vec) {
+		setColorState(lineAppearance, vec);
+	}
+
+	/**
+	 * Sets the color of the surface appearance.
+	 * 
+	 * @param vec
+	 *            Color vector
+	 */
+	@CindyScript("surfacecolor3d")
+	public void surfacecolor3d(ArrayList<Double> vec) {
+		setColorState(surfaceAppearance, vec);
+	}
+
+	/**
+	 * Sets the alpha value of all appearances.
+	 * 
+	 * @param alpha
+	 *            Alpha value between 0 and 1
+	 */
+	@CindyScript("alpha3d")
+	public void alpha3d(double alpha) {
+		alpha = Math.max(0, Math.min(1, alpha));
+		surfaceAppearance.setAlpha(alpha);
+	}
+	
+	/**
+	 * Sets the alpha value of the surface appearance.
+	 * 
+	 * @param alpha
+	 *            Alpha value between 0 and 1
+	 */
+	@CindyScript("surfacealpha3d")
+	public void surfacealpha3d(double alpha) {
+		surfaceAppearance.setAlpha(Math.max(0, Math.min(1, alpha)));
+	}
+
+	/**
+	 * Sets the shininess of all appearances.
+	 * 
+	 * @param shininess
+	 *            Shininess between 0 and 128
 	 */
 	@CindyScript("shininess3d")
 	public void shininess3d(int shininess) {
@@ -519,8 +553,43 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Set size state
-	 * @param size Size
+	 * Sets the shininess of the point appearance.
+	 * 
+	 * @param shininess
+	 *            Shininess between 0 and 128
+	 */
+	@CindyScript("pointshininess3d")
+	public void pointshininess3d(int shininess) {
+		pointAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
+	}
+
+	/**
+	 * Sets the shininess of the line appearance.
+	 * 
+	 * @param shininess
+	 *            Shininess between 0 and 128
+	 */
+	@CindyScript("lineshininess3d")
+	public void lineshininess3d(int shininess) {
+		lineAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
+	}
+
+	/**
+	 * Sets the shininess of the surface appearance.
+	 * 
+	 * @param shininess
+	 *            Shininess between 0 and 128
+	 */
+	@CindyScript("surfaceshininess3d")
+	public void surfaceshininess3d(int shininess) {
+		surfaceAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
+	}
+
+	/**
+	 * Sets the size of all appearances.
+	 * 
+	 * @param size
+	 *            Size
 	 */
 	@CindyScript("size3d")
 	public void size3d(double size) {
@@ -532,53 +601,21 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Set point color state
-	 * @param vec Color vector
-	 */
-	@CindyScript("pointcolor3d")
-	public void pointcolor3d(ArrayList<Double> vec) {
-		setColorState(pointAppearance, vec);
-	}
-
-	/**
-	 * Set point size state
-	 * @param size Point size
+	 * Sets the size of the point appearance.
+	 * 
+	 * @param size
+	 *            Point size
 	 */
 	@CindyScript("pointsize3d")
 	public void pointsize3d(double size) {
 		pointAppearance.setSize(Math.max(0, size));
 	}
-	
-	/**
-	 * Set point shininess state
-	 * @param shininess Point shininess
-	 */
-	@CindyScript("pointshininess3d")
-	public void pointshininess3d(int shininess) {
-		pointAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
-	}
 
 	/**
-	 * Set line color state
-	 * @param vec Color vector
-	 */
-	@CindyScript("linecolor3d")
-	public void linecolor3d(ArrayList<Double> vec) {
-		setColorState(lineAppearance, vec);
-	}
-
-	/**
-	 * Set line shininess state
-	 * @param shininess Line shininess
-	 */
-	@CindyScript("lineshininess3d")
-	public void lineshininess3d(int shininess) {
-		lineAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
-	}
-
-	/**
-	 * Set line size state
-	 * @param size Line size
+	 * Sets the size of the line appearance.
+	 * 
+	 * @param size
+	 *            Line size
 	 */
 	@CindyScript("linesize3d")
 	public void linesize3d(double size) {
@@ -586,32 +623,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Set surface color state
-	 * @param vec Color vector
+	 * Sets the background color.
+	 * 
+	 * @param vec
+	 *            Background color vector
 	 */
-	@CindyScript("surfacecolor3d")
-	public void surfacecolor3d(ArrayList<Double> vec) {
-		setColorState(surfaceAppearance, vec);
-	}
-	
-	/**
-	 * Set surface shininess state
-	 * @param shininess Surface shininess
-	 */
-	@CindyScript("surfaceshininess3d")
-	public void surfaceshininess3d(int shininess) {
-		surfaceAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
-	}
-	
-	/**
-	 * Set surface alpha state
-	 * @param alpha Surface alpha
-	 */
-	@CindyScript("surfacealpha3d")
-	public void surfacealpha3d(double alpha) {
-		surfaceAppearance.setAlpha(Math.max(0, Math.min(1, alpha)));
-	}
-	
 	@CindyScript("background3d")
 	public void background3d(ArrayList<Double> vec) {
 		if (vec.size() != 3)
@@ -619,16 +635,34 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.setBackgroundColor(Util.toColor(vec));
 	}
 	
+	/**
+	 * Sets the camera's depth range.
+	 * 
+	 * @param near
+	 *            Near distance. All objects with distance below
+	 *            <code>near</code> are not displayed.
+	 * @param far
+	 *            Far distance. All objects with distance above <code>far</code>
+	 *            are not displayed.
+	 */
 	@CindyScript("depthrange3d")
 	public void depthrange3d(double near, double far) {
 		cindy3d.setDepthRange(near, far);
 	}
 	
+	/**
+	 * Sets render hints.
+	 */
 	@CindyScript("renderhints3d")
 	public void renderhints3d() {
 		cindy3d.setRenderHints(modifiers);
 	}
 	
+	/**
+	 * Disables a single light source.
+	 * 
+	 * @param light Light index (between 0 and 7)
+	 */
 	@CindyScript("disablelight3d")
 	public void disablelight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
@@ -638,82 +672,158 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.disableLight(light);
 	}
 	
+	/**
+	 * Sets parameters for a point light.
+	 * 
+	 * @param light
+	 *            Light index (between 0 and 7)
+	 */
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
-		cindy3d.setLight(light, getLightModifiers(LightType.POINT_LIGHT));
+		cindy3d.setLight(light,
+				getLightInfoFromModifiers(LightType.POINT_LIGHT, modifiers));
 	}
-	
+
+	/**
+	 * Sets parameters for a directional light.
+	 * 
+	 * @param light
+	 *            Light index (between 0 and 7)
+	 */
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
-		cindy3d.setLight(light, getLightModifiers(LightType.DIRECTIONAL_LIGHT));
+		cindy3d.setLight(
+				light,
+				getLightInfoFromModifiers(LightType.DIRECTIONAL_LIGHT,
+						modifiers));
 	}
-	
-	private LightInfo getLightModifiers(LightType type) {
+
+	/**
+	 * Apply modifiers to a appearance state.
+	 * 
+	 * @param initialState
+	 *            Appearance to modify
+	 * @param modifiers
+	 *            Modifiers to apply. Recognized modifiers are "color", "size",
+	 *            "alpha", and "shininess".
+	 * @return Modified appearance
+	 */
+	private static AppearanceState applyAppearanceModifiers(
+			AppearanceState initialState, Hashtable modifiers) {
+		AppearanceState result = new AppearanceState(initialState);
+		Object value = null;
+		value = modifiers.get("color");
+		if (value instanceof double[]) {
+			setColorState(result, (double[]) value);
+		}
+		value = modifiers.get("size");
+		if (value instanceof Double) {
+			result.setSize((Double) value);
+		}
+		value = modifiers.get("alpha");
+		if (value instanceof Double) {
+			double alpha = Math.max(0, Math.min(1, (Double) value));
+			result.setAlpha(alpha);
+		}
+		value = modifiers.get("shininess");
+		if (value instanceof Double) {
+			double shininess = Math.max(0, Math.min(128, (Double) value));
+			result.setShininess((int) shininess);
+		}
+		return result;
+	}
+
+	/**
+	 * Translates modifiers to a <code>LightInfo</code> instance.
+	 * 
+	 * @param type
+	 *            Light type
+	 * @param modifiers
+	 *            Modifiers
+	 * @return Generated instance of <code>LightInfo</code>
+	 */
+	private static LightInfo getLightInfoFromModifiers(LightType type,
+			Hashtable modifiers) {
 		LightInfo info = new LightInfo();
-		
+
 		info.type = type;
-		
+
 		Object value;
-		
+
 		value = modifiers.get("ambient");
 		if (value instanceof double[]) {
-			info.ambient = Util.toColor((double[])value);
+			info.ambient = Util.toColor((double[]) value);
 		}
-		
+
 		value = modifiers.get("diffuse");
 		if (value instanceof double[]) {
-			info.diffuse = Util.toColor((double[])value);
+			info.diffuse = Util.toColor((double[]) value);
 		}
-		
+
 		value = modifiers.get("specular");
 		if (value instanceof double[]) {
-			info.specular = Util.toColor((double[])value);
+			info.specular = Util.toColor((double[]) value);
 		}
-		
+
 		value = modifiers.get("position");
 		if (value instanceof double[]) {
-			info.position = (double[])value;
+			info.position = (double[]) value;
 			if (info.position.length != 3) {
 				info.position = null;
 			}
 		}
-		
+
 		value = modifiers.get("direction");
 		if (value instanceof double[]) {
-			info.direction = (double[])value;
+			info.direction = (double[]) value;
 			if (info.direction.length != 3) {
 				info.direction = null;
 			}
 		}
-		
+
 		value = modifiers.get("frame");
 		if (value instanceof String) {
-			String frame = (String)value;
+			String frame = (String) value;
 			if (frame.equalsIgnoreCase("world")) {
 				info.frame = LightFrame.WORLD;
 			} else if (frame.equalsIgnoreCase("camera")) {
 				info.frame = LightFrame.CAMERA;
 			}
 		}
-		
+
 		return info;
 	}
 
-	protected void setColorState(AppearanceState appearance,
+	/**
+	 * Sets the color state of an appearance.
+	 * 
+	 * @param appearance
+	 *            Appearance
+	 * @param vec
+	 *            Color vector
+	 */
+	private static void setColorState(AppearanceState appearance,
 			ArrayList<Double> vec) {
 		if (vec.size() != 3)
 			return;
 		appearance.setColor(Util.toColor(vec));
 	}
-	
-	protected void setColorState(AppearanceState appearance,
-			double[] vec) {
+
+	/**
+	 * Sets the color state of an appearance.
+	 * 
+	 * @param appearance
+	 *            Appearance
+	 * @param vec
+	 *            Color vector
+	 */
+	private static void setColorState(AppearanceState appearance, double[] vec) {
 		if (vec.length != 3)
 			return;
 		appearance.setColor(Util.toColor(vec));
