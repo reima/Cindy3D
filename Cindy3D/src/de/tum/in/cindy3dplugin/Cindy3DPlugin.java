@@ -372,7 +372,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 	
 	/**
-	 * Draws a grid based mesh with custom normals.
+	 * Draws a grid based mesh with user-supplied normals.
 	 * 
 	 * @param rows
 	 *            Number of rows of vertices

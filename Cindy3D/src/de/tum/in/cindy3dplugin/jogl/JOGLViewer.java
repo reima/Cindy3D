@@ -413,18 +413,18 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 * resets the sampling rate to 1. 
 	 */
 	@Override
-	public void setRenderHints(Hashtable<String, Object> hintsMap) {
+	public void setRenderHints(Hashtable<String, Object> hints) {
 		requestedRenderHints = renderHints.clone();
 
 		Object value;
-		value = hintsMap.get("quality");
+		value = hints.get("quality");
 		if (value instanceof Double) {
 			int quality = ((Double) value).intValue();
 			quality = Math.max(0, Math.min(quality, qualityHints.length - 1));
 			requestedRenderHints = qualityHints[quality];
 		}
 
-		value = hintsMap.get("renderMode");
+		value = hints.get("renderMode");
 		if (value instanceof String) {
 			String renderMode = (String) value;
 			if (renderMode.equalsIgnoreCase("fixedfunction")) {
@@ -438,7 +438,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			}
 		}
 
-		value = hintsMap.get("samplingRate");
+		value = hints.get("samplingRate");
 		if (value instanceof Double) {
 			requestedRenderHints.setSamplingRate(((Double) value).intValue());
 		}
