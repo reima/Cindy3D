@@ -24,7 +24,7 @@ public class Mesh extends Primitive {
 	private MeshTopology topology;
 
 	public Mesh(int rowCount, int columnCount, double[][] positions,
-			double[][] normals, Color color, int shininess, double alpha,
+			double[][] normals, Color color, double shininess, double alpha,
 			MeshTopology topology) {
 		super(color, shininess, alpha);
 		init(rowCount, columnCount, positions, normals,
@@ -36,7 +36,7 @@ public class Mesh extends Primitive {
 	}
 
 	public Mesh(int rowCount, int columnCount, double[][] positions,
-			NormalType normalType, Color color, int shininess, double alpha,
+			NormalType normalType, Color color, double shininess, double alpha,
 			MeshTopology topology) {
 		super(color, shininess, alpha);
 		init(rowCount, columnCount, positions, null, normalType, topology);

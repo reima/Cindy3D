@@ -13,7 +13,7 @@ public class AppearanceState implements Cloneable {
 	/**
 	 * Shininess
 	 */
-	private int shininess;
+	private double shininess;
 	/**
 	 * Size
 	 */
@@ -35,7 +35,7 @@ public class AppearanceState implements Cloneable {
 	 * @param alpha
 	 *            alpha
 	 */
-	public AppearanceState(Color color, int shininess, double size, double alpha) {
+	public AppearanceState(Color color, double shininess, double size, double alpha) {
 		setColor(color);
 		setShininess(shininess);
 		setSize(size);
@@ -77,7 +77,7 @@ public class AppearanceState implements Cloneable {
 	 * @param shininess
 	 *            New shininess
 	 */
-	public void setShininess(int shininess) {
+	public void setShininess(double shininess) {
 		this.shininess = shininess;
 	}
 
@@ -86,7 +86,7 @@ public class AppearanceState implements Cloneable {
 	 * 
 	 * @return shininess
 	 */
-	public int getShininess() {
+	public double getShininess() {
 		return shininess;
 	}
 

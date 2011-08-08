@@ -9,7 +9,7 @@ public class Sphere extends Primitive {
 	public double radius;
 
 	public Sphere(double x, double y, double z, double radius, Color color,
-			int shininess, double alpha) {
+			double shininess, double alpha) {
 		super(color, shininess, alpha);
 		this.center = new Vector3D(x, y, z);
 		this.radius = radius;

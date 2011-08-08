@@ -313,11 +313,11 @@ public class Util {
 		}
 	}
 
-	public static void setMaterial(GL gl, Color color, int shininess) {
+	public static void setMaterial(GL gl, Color color, double shininess) {
 		gl.getGL2().glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE,
 				color.getComponents(null), 0);
-		gl.getGL2().glMateriali(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS,
-				shininess);
+		gl.getGL2().glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS,
+				(float) shininess);
 	}
 	
 	public static Vector3D transformPoint(RealMatrix matrix, Vector3D vec) {

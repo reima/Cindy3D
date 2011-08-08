@@ -546,7 +546,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            Shininess between 0 and 128
 	 */
 	@CindyScript("shininess3d")
-	public void shininess3d(int shininess) {
+	public void shininess3d(double shininess) {
 		shininess = Math.max(0, Math.min(128, shininess));
 		pointAppearance.setShininess(shininess);
 		lineAppearance.setShininess(shininess);
@@ -560,7 +560,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            Shininess between 0 and 128
 	 */
 	@CindyScript("pointshininess3d")
-	public void pointshininess3d(int shininess) {
+	public void pointshininess3d(double shininess) {
 		pointAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
 	}
 
@@ -571,7 +571,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            Shininess between 0 and 128
 	 */
 	@CindyScript("lineshininess3d")
-	public void lineshininess3d(int shininess) {
+	public void lineshininess3d(double shininess) {
 		lineAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
 	}
 
@@ -582,7 +582,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            Shininess between 0 and 128
 	 */
 	@CindyScript("surfaceshininess3d")
-	public void surfaceshininess3d(int shininess) {
+	public void surfaceshininess3d(double shininess) {
 		surfaceAppearance.setShininess(Math.max(0, Math.min(128, shininess)));
 	}
 
