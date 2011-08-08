@@ -23,7 +23,7 @@ public class LightModificationInfo {
 		 */
 		SPOT_LIGHT
 	}
-	
+
 	/**
 	 * Frame of reference for light source coordinates.
 	 */
@@ -37,20 +37,47 @@ public class LightModificationInfo {
 		 */
 		WORLD
 	}
-	
+
+	/**
+	 * Ambient color
+	 */
 	private Color ambient = null;
+	/**
+	 * Diffuse color
+	 */
 	private Color diffuse = null;
+	/**
+	 * Specular color
+	 */
 	private Color specular = null;
+	/**
+	 * Frame of reference
+	 */
 	private LightFrame frame = null;
+	/**
+	 * Position
+	 */
 	private double[] position = null;
+	/**
+	 * Direction
+	 */
 	private double[] direction = null;
-	
+
+	/**
+	 * Light type
+	 */
 	private LightType type;
-	
+
+	/**
+	 * Creates a LightModificationInfo for a given light source type.
+	 * 
+	 * @param type
+	 *            light source type
+	 */
 	public LightModificationInfo(LightType type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * @return true if the ambient color is set
 	 */
@@ -66,12 +93,13 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param ambient new ambient color
+	 * @param ambient
+	 *            new ambient color
 	 */
 	public void setAmbient(Color ambient) {
 		this.ambient = ambient;
 	}
-	
+
 	/**
 	 * @return true if the diffuse color is set
 	 */
@@ -87,12 +115,13 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param diffuse new diffuse color
+	 * @param diffuse
+	 *            new diffuse color
 	 */
 	public void setDiffuse(Color diffuse) {
 		this.diffuse = diffuse;
 	}
-	
+
 	/**
 	 * @return true if the specular color is set
 	 */
@@ -108,12 +137,13 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param specular new specular color
+	 * @param specular
+	 *            new specular color
 	 */
 	public void setSpecular(Color specular) {
 		this.specular = specular;
 	}
-	
+
 	/**
 	 * @return true if the frame of reference is set
 	 */
@@ -129,12 +159,13 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param frame new frame of reference
+	 * @param frame
+	 *            new frame of reference
 	 */
 	public void setFrame(LightFrame frame) {
 		this.frame = frame;
 	}
-	
+
 	/**
 	 * @return true if the position is set
 	 */
@@ -150,12 +181,13 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param position new position
+	 * @param position
+	 *            new position
 	 */
 	public void setPosition(double[] position) {
 		this.position = position;
 	}
-	
+
 	/**
 	 * @return true if the direction is set
 	 */
@@ -171,7 +203,8 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param direction new direction
+	 * @param direction
+	 *            new direction
 	 */
 	public void setDirection(double[] direction) {
 		this.direction = direction;
@@ -185,7 +218,8 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @param type new light type
+	 * @param type
+	 *            new light type
 	 */
 	public void setType(LightType type) {
 		this.type = type;
