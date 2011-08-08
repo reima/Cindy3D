@@ -751,40 +751,38 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	private static LightModificationInfo getLightModificationInfoFromModifiers(LightType type,
 			Hashtable modifiers) {
-		LightModificationInfo info = new LightModificationInfo();
-
-		info.type = type;
+		LightModificationInfo info = new LightModificationInfo(type);
 
 		Object value;
 
 		value = modifiers.get("ambient");
 		if (value instanceof double[]) {
-			info.ambient = Util.toColor((double[]) value);
+			info.setAmbient(Util.toColor((double[]) value));
 		}
 
 		value = modifiers.get("diffuse");
 		if (value instanceof double[]) {
-			info.diffuse = Util.toColor((double[]) value);
+			info.setDiffuse(Util.toColor((double[]) value));
 		}
 
 		value = modifiers.get("specular");
 		if (value instanceof double[]) {
-			info.specular = Util.toColor((double[]) value);
+			info.setSpecular(Util.toColor((double[]) value));
 		}
 
 		value = modifiers.get("position");
 		if (value instanceof double[]) {
-			info.position = (double[]) value;
-			if (info.position.length != 3) {
-				info.position = null;
+			double[] position = (double[]) value;
+			if (position.length == 3) {
+				info.setPosition(position);
 			}
 		}
 
 		value = modifiers.get("direction");
 		if (value instanceof double[]) {
-			info.direction = (double[]) value;
-			if (info.direction.length != 3) {
-				info.direction = null;
+			double[] direction = (double[]) value;
+			if (direction.length == 3) {
+				info.setDirection(direction);
 			}
 		}
 
@@ -792,9 +790,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (value instanceof String) {
 			String frame = (String) value;
 			if (frame.equalsIgnoreCase("world")) {
-				info.frame = LightFrame.WORLD;
+				info.setFrame(LightFrame.WORLD);
 			} else if (frame.equalsIgnoreCase("camera")) {
-				info.frame = LightFrame.CAMERA;
+				info.setFrame(LightFrame.CAMERA);
 			}
 		}
 

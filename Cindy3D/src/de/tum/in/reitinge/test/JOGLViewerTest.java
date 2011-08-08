@@ -55,12 +55,12 @@ public class JOGLViewerTest {
 		AppearanceState appearance = new AppearanceState(Color.white, 60, 1.0, 1);
 		viewer.addSphere(0, 0, 0, 1, appearance);
 		
-		LightModificationInfo info = new LightModificationInfo();
-		
-		info.type = LightType.DIRECTIONAL_LIGHT;
-		info.direction = new double[]{0,1,0};
-		info.diffuse = new Color(1.0f,0.0f,0.0f);
-		info.frame = LightFrame.WORLD;
+		LightModificationInfo info = new LightModificationInfo(
+				LightType.DIRECTIONAL_LIGHT);
+
+		info.setDirection(new double[] { 0, 1, 0 });
+		info.setDiffuse(new Color(1.0f, 0.0f, 0.0f));
+		info.setFrame(LightFrame.WORLD);
 		viewer.setLight(0, info);
 
 		appearance.setColor(Color.green);

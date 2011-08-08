@@ -27,13 +27,13 @@ public class AppearanceState implements Cloneable {
 	 * Creates a new appearance state with the given attributes.
 	 * 
 	 * @param color
-	 *            Color
+	 *            color
 	 * @param shininess
-	 *            Shininess
+	 *            shininess
 	 * @param size
-	 *            Size
+	 *            size
 	 * @param alpha
-	 *            Alpha
+	 *            alpha
 	 */
 	public AppearanceState(Color color, int shininess, double size, double alpha) {
 		setColor(color);
@@ -56,7 +56,7 @@ public class AppearanceState implements Cloneable {
 	 * Sets the color of the appearance.
 	 * 
 	 * @param color
-	 *            New color
+	 *            new color
 	 */
 	public void setColor(Color color) {
 		this.color = color;
@@ -65,7 +65,7 @@ public class AppearanceState implements Cloneable {
 	/**
 	 * Gets the color of the appearance.
 	 * 
-	 * @return Color
+	 * @return color
 	 */
 	public Color getColor() {
 		return color;
@@ -84,7 +84,7 @@ public class AppearanceState implements Cloneable {
 	/**
 	 * Gets the shininess of the appearance.
 	 * 
-	 * @return Shininess
+	 * @return shininess
 	 */
 	public int getShininess() {
 		return shininess;
@@ -94,7 +94,7 @@ public class AppearanceState implements Cloneable {
 	 * Sets the size of the appearance.
 	 * 
 	 * @param size
-	 *            New size
+	 *            new size
 	 */
 	public void setSize(double size) {
 		this.size = size;
@@ -103,7 +103,7 @@ public class AppearanceState implements Cloneable {
 	/**
 	 * Gets the size of the appearance.
 	 * 
-	 * @return the size
+	 * @return size
 	 */
 	public double getSize() {
 		return size;
@@ -113,7 +113,7 @@ public class AppearanceState implements Cloneable {
 	 * Sets the alpha value of the appearance.
 	 * 
 	 * @param alpha
-	 *            New alpha
+	 *            new alpha
 	 */
 	public void setAlpha(double alpha) {
 		this.alpha = alpha;
@@ -122,7 +122,7 @@ public class AppearanceState implements Cloneable {
 	/**
 	 * Gets the alpha value of the appearance.
 	 * 
-	 * @return Alpha
+	 * @return alpha
 	 */
 	public double getAlpha() {
 		return alpha;
