@@ -70,7 +70,7 @@ public class CircleRenderer extends CircleRendererBase {
 		gl2.glUniform3fv(centerLoc, 1,
 				Util.vectorToFloatArray(circle.getCenter()), 0);
 		gl2.glUniform3fv(normalLoc, 1,
-				Util.vectorToFloatArray(circle.getNormal()), 1);
+				Util.vectorToFloatArray(circle.getNormal()), 0);
 		gl2.glUniform1f(radiusSqLoc, (float) Math.pow(circle.getRadius(), 2.0));
 
 		gl2.glUniformMatrix4fv(transformLoc, 1, true, buildTransform(circle), 0);
