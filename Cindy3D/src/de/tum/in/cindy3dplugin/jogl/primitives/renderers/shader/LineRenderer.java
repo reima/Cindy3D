@@ -6,7 +6,6 @@ import javax.media.opengl.GL2;
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
 
-import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
@@ -36,22 +35,10 @@ public class LineRenderer extends LineRendererBase {
 			program.destroy(gl2);
 		}
 
-		program = new ShaderProgram();
-		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
-				"cylinder.vert");
-		if (!vertexShader.compile(gl2))
+		program = Util.loadShaderProgram(gl2, "cylinder.vert", "cylinder.frag");
+		if (program == null) {
 			return false;
-		ShaderCode fragmentShader = Util.loadShader(GL2.GL_FRAGMENT_SHADER,
-				"cylinder.frag");
-		if (!fragmentShader.compile(gl2))
-			return false;
-
-		if (!program.add(vertexShader))
-			return false;
-		if (!program.add(fragmentShader))
-			return false;
-		if (!program.link(gl.getGL2(), null))
-			return false;
+		}
 
 		transformLoc = gl2.glGetUniformLocation(program.program(),
 				"cylinderTransform");

@@ -28,6 +28,7 @@ import com.jogamp.common.jvm.JNILibLoaderBase;
 import com.jogamp.common.jvm.JNILibLoaderBase.LoaderAction;
 import com.jogamp.gluegen.runtime.NativeLibLoader;
 import com.jogamp.opengl.util.glsl.ShaderCode;
+import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 public class Util {
 	private static final String SHADER_PATH = "/de/tum/in/cindy3dplugin/resources/shader/";
@@ -123,6 +124,35 @@ public class Util {
 		return shader;
 	}
 	
+	public static ShaderProgram loadShaderProgram(GL2 gl2,
+			String vertexShaderFileName, String fragmentShaderFileName) {
+		ShaderProgram program = new ShaderProgram();
+		
+		ShaderCode vertexShader = loadShader(GL2.GL_VERTEX_SHADER,
+				vertexShaderFileName);
+		if (!vertexShader.compile(gl2)) {
+			return null;
+		}
+	
+		ShaderCode fragmentShader = loadShader(GL2.GL_FRAGMENT_SHADER,
+				fragmentShaderFileName);
+		if (!fragmentShader.compile(gl2)) {
+			return null;
+		}
+	
+		if (!program.add(vertexShader)) {
+			return null;
+		}
+		if (!program.add(fragmentShader)) {
+			return null;
+		}
+		if (!program.link(gl2, null)) {
+			return null;
+		}
+	
+		return program;
+	}
+
 	public static Color toColor(double[] vec) {
 
 		if (vec.length != 3) {

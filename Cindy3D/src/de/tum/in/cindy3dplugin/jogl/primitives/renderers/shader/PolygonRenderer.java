@@ -3,7 +3,6 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
@@ -26,25 +25,11 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 		if (program != null) {
 			program.destroy(gl2);
 		}
-
-		program = new ShaderProgram();
-		ShaderCode vertexShader = Util.loadShader(GL2.GL_VERTEX_SHADER,
-				"polygon.vert");
-		if (!vertexShader.compile(gl2))
+		
+		program = Util.loadShaderProgram(gl2, "polygon.vert", "polygon.frag");
+		if (program == null) {
 			return false;
-		ShaderCode fragmentShader = Util.loadShader(GL2.GL_FRAGMENT_SHADER,
-				"polygon.frag");
-		if (!fragmentShader.compile(gl2))
-			return false;
-
-		if (!program.add(vertexShader))
-			return false;
-
-		if (!program.add(fragmentShader))
-			return false;
-
-		if (!program.link(gl.getGL2(), null))
-			return false;
+		}
 
 		return true;
 	}
