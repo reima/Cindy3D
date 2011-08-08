@@ -283,7 +283,7 @@ public interface Cindy3DViewer {
 	 * @param info
 	 *            Light parameters to set
 	 */
-	void setLight(int light, LightInfo info);
+	void setLight(int light, LightModificationInfo info);
 
 	/**
 	 * Disables a light source.

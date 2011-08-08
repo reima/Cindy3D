@@ -21,7 +21,7 @@ import org.apache.commons.math.geometry.Vector3D;
 
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
-import de.tum.in.cindy3dplugin.LightInfo;
+import de.tum.in.cindy3dplugin.LightModificationInfo;
 import de.tum.in.cindy3dplugin.jogl.RenderHints.RenderMode;
 import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
@@ -464,7 +464,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setLight(int, de.tum.in.cindy3dplugin.LightInfo)
 	 */
 	@Override
-	public void setLight(int light, LightInfo info) {
+	public void setLight(int light, LightModificationInfo info) {
 		lightManager.setLight(light, info);
 	}
 

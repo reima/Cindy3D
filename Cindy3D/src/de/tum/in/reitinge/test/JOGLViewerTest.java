@@ -5,11 +5,11 @@ import java.util.Hashtable;
 
 import de.tum.in.cindy3dplugin.AppearanceState;
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
-import de.tum.in.cindy3dplugin.LightInfo;
+import de.tum.in.cindy3dplugin.LightModificationInfo;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
-import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
-import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 
 public class JOGLViewerTest {
@@ -55,7 +55,7 @@ public class JOGLViewerTest {
 		AppearanceState appearance = new AppearanceState(Color.white, 60, 1.0, 1);
 		viewer.addSphere(0, 0, 0, 1, appearance);
 		
-		LightInfo info = new LightInfo();
+		LightModificationInfo info = new LightModificationInfo();
 		
 		info.type = LightType.DIRECTIONAL_LIGHT;
 		info.direction = new double[]{0,1,0};

@@ -4,8 +4,8 @@ import javax.media.opengl.GL2;
 
 import org.apache.commons.math.geometry.Vector3D;
 
-import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
-import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
 public class PointLight extends Light {
 	

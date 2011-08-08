@@ -10,8 +10,8 @@ import de.cinderella.api.cs.CindyScriptPlugin;
 import de.cinderella.math.Vec;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
-import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
-import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 import de.tum.in.cindy3dplugin.jogl.Util;
 
@@ -685,7 +685,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			return;
 		}
 		cindy3d.setLight(light,
-				getLightInfoFromModifiers(LightType.POINT_LIGHT, modifiers));
+				getLightModificationInfoFromModifiers(LightType.POINT_LIGHT, modifiers));
 	}
 
 	/**
@@ -701,7 +701,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		cindy3d.setLight(
 				light,
-				getLightInfoFromModifiers(LightType.DIRECTIONAL_LIGHT,
+				getLightModificationInfoFromModifiers(LightType.DIRECTIONAL_LIGHT,
 						modifiers));
 	}
 
@@ -749,9 +749,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            Modifiers
 	 * @return Generated instance of <code>LightInfo</code>
 	 */
-	private static LightInfo getLightInfoFromModifiers(LightType type,
+	private static LightModificationInfo getLightModificationInfoFromModifiers(LightType type,
 			Hashtable modifiers) {
-		LightInfo info = new LightInfo();
+		LightModificationInfo info = new LightModificationInfo();
 
 		info.type = type;
 

@@ -1,6 +1,6 @@
 package de.tum.in.cindy3dplugin.jogl.lighting;
 
-import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
 public class SpotLight extends Light {
 	

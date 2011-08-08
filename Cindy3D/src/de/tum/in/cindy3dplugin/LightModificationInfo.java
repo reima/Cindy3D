@@ -2,7 +2,10 @@ package de.tum.in.cindy3dplugin;
 
 import java.awt.Color;
 
-public class LightInfo {
+/**
+ * Stores attributes for the modification of a light source.
+ */
+public class LightModificationInfo {
 	public enum LightType {
 		POINT_LIGHT,
 		DIRECTIONAL_LIGHT,

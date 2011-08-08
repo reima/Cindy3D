@@ -4,8 +4,8 @@ import java.awt.Color;
 
 import javax.media.opengl.GL2;
 
-import de.tum.in.cindy3dplugin.LightInfo.LightFrame;
-import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
 public abstract class Light {
 	private Color ambientColor = new Color(0.0f, 0.0f, 0.0f);

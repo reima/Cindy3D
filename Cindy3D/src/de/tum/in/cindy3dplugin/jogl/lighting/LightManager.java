@@ -3,8 +3,8 @@ package de.tum.in.cindy3dplugin.jogl.lighting;
 import javax.media.opengl.GL2;
 
 import de.tum.in.cindy3dplugin.Cindy3DViewer;
-import de.tum.in.cindy3dplugin.LightInfo;
-import de.tum.in.cindy3dplugin.LightInfo.LightType;
+import de.tum.in.cindy3dplugin.LightModificationInfo;
+import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.Util;
 
 public class LightManager {	
@@ -13,13 +13,13 @@ public class LightManager {
 	Light[] lights = new Light[Cindy3DViewer.MAX_LIGHTS];
 	
 	public LightManager() {
-		LightInfo info = new LightInfo();
+		LightModificationInfo info = new LightModificationInfo();
 		info.position = new double[] {0,0,0};
 		info.type = LightType.POINT_LIGHT;
 		setLight(0, info);
 	}
 	
-	public void setLight(int light, LightInfo info) {
+	public void setLight(int light, LightModificationInfo info) {
 		if (lights[light] == null || lights[light].getType() != info.type) {
 			compileShader = true;
 			
