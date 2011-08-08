@@ -298,7 +298,7 @@ public interface Cindy3DViewer {
 	 * 
 	 * The meaning of the render hints is implementation-defined.
 	 * 
-	 * @param modifiers
+	 * @param hints
 	 *            Render hints
 	 */
 	void setRenderHints(Hashtable<String, Object> hints);
