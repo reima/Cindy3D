@@ -215,8 +215,8 @@ public class ModelViewerCamera {
 		updatePerspectiveTransform();
 
 		lodFactor = 2.0
-				* Math.tan(0.5 * this.fieldOfView / aspectRatio / 180.0
-						* Math.PI) / ((double) height);
+				* Math.tan(0.5 * Math.toRadians(this.fieldOfView) / aspectRatio)
+				/ ((double) height);
 	}
 	
 	/**
