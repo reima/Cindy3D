@@ -75,6 +75,11 @@ public class Util {
 		return new double[] { v.getX(), v.getY(), v.getZ() };
 	}
 	
+	public static float[] vectorToFloatArray(Vector3D v) {
+		return new float[] { (float) v.getX(), (float) v.getY(),
+				(float) v.getZ() };
+	}
+	
 	public static void readShaderSource(ClassLoader context, URL url,
 			StringBuffer result) {
 		try {

@@ -8,25 +8,85 @@ import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.jogl.Util;
 
+/**
+ * Grid-based mesh primitive.
+ */
 public class Mesh extends Primitive {
 	private static int meshCounter = 0;
 
-	private int rowCount, columnCount;
-	private int columnMax, rowMax;
+	/**
+	 * Number of grid rows
+	 */
+	private int rowCount;
+	/**
+	 * Number of column rows
+	 */
+	private int columnCount;
+	/**
+	 * Index of first column which should not be connected to the next. Either
+	 * {@link columnCount} or one less, depending on the {@link topology}.
+	 */
+	private int columnMax;
+	/**
+	 * Index of first row which should not be connected to the next. Either
+	 * {@link rowCount} or one less, depending on the {@link topology}.
+	 */
+	private int rowMax;
+
+	/**
+	 * Number of faces (grid cells)
+	 */
 	private int faceCount;
 
+	/**
+	 * Vertex positions
+	 */
 	private double[][] positions;
+	/**
+	 * Vertex or face normals
+	 */
 	private double[][] normals;
 
+	/**
+	 * Normal type (vertex or face normals)
+	 */
 	private NormalType normalType;
 
+	/**
+	 * Unique identifier
+	 */
 	private int identifier;
+	/**
+	 * Mesh topology
+	 */
 	private MeshTopology topology;
 
+	/**
+	 * Constructs a new grid-based mesh.
+	 * 
+	 * @param rowCount
+	 *            number of grid rows
+	 * @param columnCount
+	 *            number of grid columns
+	 * @param positions
+	 *            vertex positions
+	 * @param normals
+	 *            vertex normals
+	 * @param topology
+	 *            mesh topology
+	 * @param color
+	 *            color
+	 * @param shininess
+	 *            shininess
+	 * @param alpha
+	 *            alpha value
+	 */
 	public Mesh(int rowCount, int columnCount, double[][] positions,
-			double[][] normals, Color color, double shininess, double alpha,
-			MeshTopology topology) {
+			double[][] normals, MeshTopology topology, Color color,
+			double shininess, double alpha) {
 		super(color, shininess, alpha);
+		// TODO: Why can normals be null when we have another constructor for
+		// auto-generated normals?
 		init(rowCount, columnCount, positions, normals,
 				normals == null ? NormalType.PER_VERTEX : NormalType.PER_FACE,
 				topology);
@@ -35,14 +95,50 @@ public class Mesh extends Primitive {
 		}
 	}
 
+	/**
+	 * Constructs a new grid-based mesh with auto-generated normals.
+	 * 
+	 * @param rowCount
+	 *            number of grid rows
+	 * @param columnCount
+	 *            number of grid columns
+	 * @param positions
+	 *            vertex positions
+	 * @param normalType
+	 *            type of normals to generate
+	 * @param topology
+	 *            mesh topology
+	 * @param color
+	 *            color
+	 * @param shininess
+	 *            shininess
+	 * @param alpha
+	 *            alpha value
+	 */
 	public Mesh(int rowCount, int columnCount, double[][] positions,
-			NormalType normalType, Color color, double shininess, double alpha,
-			MeshTopology topology) {
+			NormalType normalType, MeshTopology topology, Color color,
+			double shininess, double alpha) {
 		super(color, shininess, alpha);
 		init(rowCount, columnCount, positions, null, normalType, topology);
 		computeNormals();
 	}
 
+	/**
+	 * Initializes the instance by calculating derived attributes.
+	 * 
+	 * @param rowCount
+	 *            number of grid rows
+	 * @param columnCount
+	 *            number of grid columns
+	 * @param positions
+	 *            vertex positions
+	 * @param normals
+	 *            vertex normals, maybe null
+	 * @param normalType
+	 *            type of normals to generate
+	 * @param topology
+	 *            mesh topology
+	 */
 	private void init(int rowCount, int columnCount, double[][] positions,
 			double[][] normals, NormalType normalType, MeshTopology topology) {
 		this.rowCount = rowCount;
@@ -77,46 +173,88 @@ public class Mesh extends Primitive {
 		faceCount = columnMax * rowMax * 2;
 	}
 
+	/**
+	 * @return vertex positions
+	 */
 	public double[][] getPositions() {
 		return positions;
 	}
 
+	/**
+	 * @return vertex or face normals
+	 * @see #getNormalType()
+	 */
 	public double[][] getNormals() {
 		return normals;
 	}
 
+	/**
+	 * @return type of the normals returned by {@link #getNormals()}
+	 */
 	public NormalType getNormalType() {
 		return normalType;
 	}
 
+	/**
+	 * @return unique identifier
+	 */
 	public int getIdentifier() {
 		return identifier;
 	}
 
+	/**
+	 * @return number of faces
+	 */
 	public int getFaceCount() {
 		return faceCount;
 	}
 
+	/**
+	 * @return index first column which should not be connected to the next due
+	 *         to topology
+	 */
 	public int getColumnMax() {
 		return columnMax;
 	}
 
+	/**
+	 * @return index first row which should not be connected to the next due to
+	 *         topology
+	 */
 	public int getRowMax() {
 		return rowMax;
 	}
 
+	/**
+	 * @return number of grid columns
+	 */
 	public int getColumnCount() {
 		return columnCount;
 	}
 
+	/**
+	 * @return number of grid rows
+	 */
 	public int getRowCount() {
 		return rowCount;
 	}
 
-	public int getVertexIndex(int x, int y) {
-		return y * columnCount + x;
+	/**
+	 * Gets the index of the vertex on a given grid position
+	 * 
+	 * @param row
+	 *            vertex grid row
+	 * @param column
+	 *            vertex grid row
+	 * @return index of vertex at the position
+	 */
+	public int getVertexIndex(int row, int column) {
+		return row * columnCount + column;
 	}
 
+	/**
+	 * Computes normals for the mesh.
+	 */
 	private void computeNormals() {
 		normals = null;
 
@@ -141,20 +279,15 @@ public class Mesh extends Primitive {
 		for (int row = 0; row < rowMax; ++row) {
 			for (int column = 0; column < columnMax; ++column) {
 				/*
-				 *    v1----v2
-				 *    |    / |
-				 *    |f1 /  |
-				 *    |  / f2|
-				 *    | /    |
-				 *    v3----v4
+				 * v1----v2 | / | |f1 / | | / f2| | / | v3----v4
 				 */
 				int rowPlus1 = (row + 1) % rowCount;
 				int columnPlus1 = (column + 1) % columnCount;
 
-				int v1Index = getVertexIndex(column,      row);
-				int v2Index = getVertexIndex(columnPlus1, row);
-				int v3Index = getVertexIndex(column,      rowPlus1);
-				int v4Index = getVertexIndex(columnPlus1, rowPlus1);
+				int v1Index = getVertexIndex(row, column);
+				int v2Index = getVertexIndex(row, columnPlus1);
+				int v3Index = getVertexIndex(rowPlus1, column);
+				int v4Index = getVertexIndex(rowPlus1, columnPlus1);
 
 				Vector3D v1 = positions[v1Index];
 				Vector3D v2 = positions[v2Index];

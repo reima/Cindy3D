@@ -27,7 +27,8 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 		preRender(jrs);
 		for (T primitive : c) {
 			if (primitive.isOpaque() == jrs.renderOpaque) {
-				Util.setMaterial(jrs.gl, primitive.color, primitive.shininess);
+				Util.setMaterial(jrs.gl, primitive.getColor(),
+						primitive.getShininess());
 				render(jrs, primitive);
 			}
 		}

@@ -203,12 +203,13 @@ public interface Cindy3DViewer {
 	/**
 	 * Adds a filled polygon to the scene.
 	 * 
+	 * 
 	 * @param vertices
 	 *            Array of at least 3 points (coordinate arrays)
 	 * @param normals
-	 *            Array of normals for the points. If <code>null</code>, each
-	 *            vertex assumes the normal vector of the plane formed by the
-	 *            first 3 vertices.
+	 *            Array of normals for the points. If null, the vector
+	 *            orthogonal to the plane defined by the first three vertices is
+	 *            assumed as a common normal for all vertices.
 	 * @param appearance
 	 *            Appearance of the polygon
 	 */

@@ -75,7 +75,7 @@ public class AppearanceState implements Cloneable {
 	 * Sets the shininess of the appearance.
 	 * 
 	 * @param shininess
-	 *            New shininess
+	 *            new shininess
 	 */
 	public void setShininess(double shininess) {
 		this.shininess = shininess;

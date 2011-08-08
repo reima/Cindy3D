@@ -11,18 +11,16 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 public abstract class CircleRendererBase extends PrimitiveRenderer<Circle> {
 	protected static float[] buildTransform(Circle circle) {
 		RealMatrix transform = MatrixUtils.createRealIdentityMatrix(4);
-		transform.setColumn(3, new double[] { circle.center.getX(),
-				circle.center.getY(), circle.center.getZ(), 1 });
+		transform.setColumn(3, new double[] { circle.getCenter().getX(),
+				circle.getCenter().getY(), circle.getCenter().getZ(), 1 });
 
-		Rotation rotation = new Rotation(Vector3D.PLUS_K, new Vector3D(
-				circle.normal.getX(), circle.normal.getY(),
-				circle.normal.getZ()));
+		Rotation rotation = new Rotation(Vector3D.PLUS_K, circle.getNormal());
 		RealMatrix rotationMatrix = MatrixUtils.createRealIdentityMatrix(4);
 		rotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
 
 		RealMatrix scaleMatrix = MatrixUtils
-				.createRealDiagonalMatrix(new double[] { circle.radius,
-						circle.radius, circle.radius, 1 });
+				.createRealDiagonalMatrix(new double[] { circle.getRadius(),
+						circle.getRadius(), circle.getRadius(), 1 });
 
 		transform = transform.multiply(rotationMatrix).multiply(scaleMatrix);
 

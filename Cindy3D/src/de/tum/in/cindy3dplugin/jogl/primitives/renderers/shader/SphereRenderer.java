@@ -74,9 +74,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	@Override
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUniform3f(centerLoc, (float) sphere.center.getX(),
-				(float) sphere.center.getY(), (float) sphere.center.getZ());
-		gl2.glUniform1f(radiusLoc, (float) sphere.radius);
+		gl2.glUniform3fv(centerLoc, 1,
+				Util.vectorToFloatArray(sphere.getCenter()), 0);
+		gl2.glUniform1f(radiusLoc, (float) sphere.getRadius());
 		
 		// gl2.glFlush();
 		gl2.glUniform1f(modeLoc, renderMode);

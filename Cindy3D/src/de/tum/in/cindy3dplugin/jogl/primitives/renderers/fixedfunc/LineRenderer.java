@@ -54,17 +54,17 @@ public class LineRenderer extends LineRendererBase {
 		// Get the model view matrix
 		RealMatrix modelView = jrs.camera.getTransform();
 
-		// All computations are made in camera space, so first
-		// transform the two points of the line into camera space
-		// by multiplying with the modelview matrix			
-		Vector3D p1 = Util.transformPoint(modelView, line.p1);
-		Vector3D p2 = Util.transformPoint(modelView, line.p2);
+		// All computations are made in camera space, so first transform the two
+		// points of the line into camera space by multiplying with the
+		// modelview matrix
+		Vector3D p1 = Util.transformPoint(modelView, line.getFirstPoint());
+		Vector3D p2 = Util.transformPoint(modelView, line.getSecondPoint());
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
 				line.lineType);
 
-		// After shifting the end points of the ray/line to the maximal
-		// visible positions, the size and orientation for the OBB is needed
+		// After shifting the end points of the ray/line to the maximal visible
+		// positions, the size and orientation for the OBB is needed
 		RealMatrix cylinder = buildOBBTransform(endPoints, line.radius);
 		
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);

@@ -25,7 +25,7 @@ public class CircleRenderer extends CircleRendererBase {
 	@Override
 	public boolean reloadShaders(GL gl) {
 		GL2 gl2 = gl.getGL2();
-		
+
 		if (program != null) {
 			program.destroy(gl2);
 		}
@@ -67,19 +67,19 @@ public class CircleRenderer extends CircleRendererBase {
 	@Override
 	protected void render(JOGLRenderState jrs, Circle circle) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUniform3f(centerLoc, (float) circle.center.getX(),
-				(float) circle.center.getY(), (float) circle.center.getZ());
-		gl2.glUniform3f(normalLoc, (float) circle.normal.getX(),
-				(float) circle.normal.getY(), (float) circle.normal.getZ());
-		gl2.glUniform1f(radiusSqLoc, (float) (circle.radius * circle.radius));
+		gl2.glUniform3fv(centerLoc, 1,
+				Util.vectorToFloatArray(circle.getCenter()), 0);
+		gl2.glUniform3fv(normalLoc, 1,
+				Util.vectorToFloatArray(circle.getNormal()), 1);
+		gl2.glUniform1f(radiusSqLoc, (float) Math.pow(circle.getRadius(), 2.0));
 
 		gl2.glUniformMatrix4fv(transformLoc, 1, true, buildTransform(circle), 0);
-		
+
 		gl2.glBegin(GL2.GL_QUADS);
-			gl2.glVertex2f(-1, -1);
-			gl2.glVertex2f(1, -1);
-			gl2.glVertex2f(1, 1);
-			gl2.glVertex2f(-1, 1);
+		gl2.glVertex2f(-1, -1);
+		gl2.glVertex2f(1, -1);
+		gl2.glVertex2f(1, 1);
+		gl2.glVertex2f(-1, 1);
 		gl2.glEnd();
 	}
 }

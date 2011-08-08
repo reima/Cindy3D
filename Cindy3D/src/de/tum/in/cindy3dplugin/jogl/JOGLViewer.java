@@ -331,9 +331,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
-			double[][] normals, MeshTopology topology, AppearanceState appearance) {
-		scene.addMesh(new Mesh(rows, columns, vertices, normals, appearance
-				.getColor(), appearance.getShininess(), appearance.getAlpha(), topology));
+			double[][] normals, MeshTopology topology,
+			AppearanceState appearance) {
+		scene.addMesh(new Mesh(rows, columns, vertices, normals, topology,
+				appearance.getColor(), appearance.getShininess(), appearance
+						.getAlpha()));
 	}
 	
 	/* (non-Javadoc)
@@ -341,10 +343,11 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void addMesh(int rows, int columns, double[][] vertices,
-			NormalType normalType, MeshTopology topology, AppearanceState appearance) {
-		scene.addMesh(new Mesh(rows, columns, vertices, normalType,
-				appearance.getColor(), appearance.getShininess(), appearance.getAlpha(),
-				topology));
+			NormalType normalType, MeshTopology topology,
+			AppearanceState appearance) {
+		scene.addMesh(new Mesh(rows, columns, vertices, normalType, topology,
+				appearance.getColor(), appearance.getShininess(), appearance
+						.getAlpha()));
 	}
 	
 	/* (non-Javadoc)

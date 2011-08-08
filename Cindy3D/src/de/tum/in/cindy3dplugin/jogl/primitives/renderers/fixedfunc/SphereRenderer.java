@@ -137,14 +137,15 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		GL2 gl2 = jrs.gl.getGL2();
 
 		double distance = Util.transformPoint(jrs.camera.getTransform(),
-				sphere.center).getNorm()
-				- sphere.radius;
+				sphere.getCenter()).getNorm()
+				- sphere.getRadius();
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
 				jrs.renderHints.getAllowedScreenSpaceError(), distance);
 		LODMesh mesh = meshes[LOD_COUNT - 1];
 		int lod;
 		for (lod = 0; lod < LOD_COUNT; ++lod) {
-			if (meshes[lod].isSufficient(sphere.radius, allowedWorldSpaceError)) {
+			if (meshes[lod].isSufficient(sphere.getRadius(),
+					allowedWorldSpaceError)) {
 				mesh = meshes[lod];
 				break;
 			}
@@ -152,9 +153,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glPushMatrix();
-		gl2.glTranslated(sphere.center.getX(), sphere.center.getY(),
-				sphere.center.getZ());
-		gl2.glScaled(sphere.radius, sphere.radius, sphere.radius);
+		gl2.glTranslated(sphere.getCenter().getX(), sphere.getCenter().getY(),
+				sphere.getCenter().getZ());
+		gl2.glScaled(sphere.getRadius(), sphere.getRadius(), sphere.getRadius());
 
 		mesh.render(gl2);
 

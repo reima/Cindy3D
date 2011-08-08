@@ -52,19 +52,16 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 		GL2 gl2 = jrs.gl.getGL2();
 
 		gl2.glBegin(GL2.GL_POLYGON);
-		for (int i = 0; i < polygon.positions.length; ++i) {
-			gl2.glNormal3d(polygon.normals[i].getX(),
-					polygon.normals[i].getY(), polygon.normals[i].getZ());
-			gl2.glVertex3d(polygon.positions[i].getX(), polygon.positions[i]
-					.getY(), polygon.positions[i].getZ());
+		for (int i = 0; i < polygon.getPositions().length; ++i) {
+			gl2.glNormal3dv(Util.vectorToDoubleArray(polygon.getNormals()[i]), 0);
+			gl2.glVertex3dv(Util.vectorToDoubleArray(polygon.getPositions()[i]), 0);
 		}
 		gl2.glEnd();
-		
 	}
 
 	@Override
 	public void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
-		gl2.glUseProgram(0);		
+		gl2.glUseProgram(0);
 	}
 }

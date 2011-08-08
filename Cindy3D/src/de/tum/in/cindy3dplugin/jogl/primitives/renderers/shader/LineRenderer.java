@@ -79,14 +79,14 @@ public class LineRenderer extends LineRendererBase {
 		// Get the model view matrix
 		RealMatrix modelView = jrs.camera.getTransform();
 
-		// All computations are made in camera space, so first
-		// transform the two points of the line into camera space
-		// by multiplying with the modelview matrix			
-		Vector3D p1 = Util.transformPoint(modelView, line.p1);
-		Vector3D p2 = Util.transformPoint(modelView, line.p2);
+		// All computations are made in camera space, so first transform the two
+		// points of the line into camera space by multiplying with the
+		// modelview matrix
+		Vector3D p1 = Util.transformPoint(modelView, line.getFirstPoint());
+		Vector3D p2 = Util.transformPoint(modelView, line.getSecondPoint());
 
-		// Compute orientation of the cylinder and its length, assuming
-		// a line segment is about to be drawn
+		// Compute orientation of the cylinder and its length, assuming a line
+		// segment is about to be drawn
 		Vector3D direction = p2.subtract(p1);
 
 		double cylinderLength = -1;
@@ -105,15 +105,15 @@ public class LineRenderer extends LineRendererBase {
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
 				line.lineType);
-		// After shifting the end points of the ray/line to the maximal
-		// visible positions, the size and orientation for the OBB is needed
+		// After shifting the end points of the ray/line to the maximal visible
+		// positions, the size and orientation for the OBB is needed
 		RealMatrix cylinder = buildOBBTransform(endPoints, line.radius);
 
 		gl2.glUniformMatrix4fv(transformLoc, 1, true,
 				Util.matrixToFloatArray(cylinder), 0);
 
-		// Draw [-1,1]^3 cube which is transformed into the OBB during
-		// processing the vertices on gpu
+		// Draw unit cube which is transformed into the OBB during vertex
+		// processing on the GPU
 		gl2.glUniform1f(lengthLoc, (float) cylinderLength);
 		gl2.glUniform1f(radiusLoc, (float) line.radius);
 		gl2.glUniform3f(originLoc, (float) p1.getX(), (float) p1.getY(),
@@ -121,6 +121,7 @@ public class LineRenderer extends LineRendererBase {
 		gl2.glUniform3f(directionLoc, (float) direction.getX(),
 				(float) direction.getY(), (float) direction.getZ());
 
+		// TODO: Stuff this into a vertex buffer
 		gl2.glBegin(GL2.GL_QUADS);
 			gl2.glVertex3d(-1, -1, -1);
 			gl2.glVertex3d(-1, -1, 1);
