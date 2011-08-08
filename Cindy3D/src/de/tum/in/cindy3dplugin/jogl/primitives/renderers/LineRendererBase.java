@@ -30,7 +30,7 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 		Vector3D direction = p2.subtract(p1).normalize();
 		// direction = direction.normalize();
 
-		Plane[] planes = camera.buildClippingPlanes();
+		Plane[] planes = camera.getClippingPlanes();
 
 		// In case, no line segment should be drawn, a ray or line is drawn
 		// So the intersection points with the view frustum are computed

@@ -58,7 +58,7 @@ public class ModelViewerCamera {
 	private double lodFactor;
 	
 	/**
-	 * View frustum clipping planes
+	 * View frustum clipping planes, in view space
 	 */
 	private Plane[] clippingPlanes = new Plane[6];
 	
@@ -82,7 +82,7 @@ public class ModelViewerCamera {
 	}
 	
 	/**
-	 * Calculates the perspective projection matrix from the camera parameters
+	 * Calculates the perspective projection matrix from the camera parameters.
 	 */
 	private void updatePerspectiveTransform() {
 		double f = 1.0/Math.tan(Math.toRadians(fieldOfView)*0.5);
@@ -94,12 +94,14 @@ public class ModelViewerCamera {
 		perspectiveTransform.setEntry(2, 3, 2 * zFar * zNear
 				/ nearMinusFar);
 		perspectiveTransform.setEntry(3, 2, -1);
+		
+		buildClippingPlanes();
 	}
 	
 	/**
-	 * Calculates the view transformation matrix from the camera parameters
+	 * Calculates the view transformation matrix from the camera parameters.
 	 */
-	protected void updateTransform() {
+	private void updateTransform() {
 		// Lookat
 		Vector3D forward = lookAt.subtract(position);
 		Rotation lookAtRotation = new Rotation(up, forward, Vector3D.PLUS_J,
@@ -120,9 +122,50 @@ public class ModelViewerCamera {
 	}
 	
 	/**
+	 * Calculates the frustum's clipping planes.
+	 */
+	private void buildClippingPlanes() {
+		// Get the inverse of the projection matrix
+		RealMatrix invProjection = new LUDecompositionImpl(perspectiveTransform)
+				.getSolver().getInverse();
+		
+		// Coordinates of the normalized view frustum
+		RealVector[] f = new RealVector[] {
+				MatrixUtils.createRealVector(new double[] { -1, -1,  1, 1 }),
+				MatrixUtils.createRealVector(new double[] { -1, -1, -1, 1 }),
+				MatrixUtils.createRealVector(new double[] { -1,  1, -1, 1 }),
+				MatrixUtils.createRealVector(new double[] {  1,  1, -1, 1 }),
+				MatrixUtils.createRealVector(new double[] {  1,  1,  1, 1 }),
+				MatrixUtils.createRealVector(new double[] {  1, -1,  1, 1 })
+		};
+	
+		// Transform view frustum into camera space
+		for (int i = 0; i < 6; ++i) {
+			f[i] = invProjection.operate(f[i]);
+			f[i].mapDivideToSelf(f[i].getEntry(3));
+		}
+
+		Vector3D[] frustumVertices = new Vector3D[6];
+		for (int i = 0; i < 6; ++i) {
+			frustumVertices[i] = new Vector3D(f[i].getEntry(0),
+					f[i].getEntry(1), f[i].getEntry(2));
+		}
+
+		for (int i = 0; i < 6; ++i) {
+			Vector3D v1 = frustumVertices[(i + 1) % 6]
+					.subtract(frustumVertices[i]);
+			Vector3D v2 = frustumVertices[(i + 2) % 6]
+					.subtract(frustumVertices[i]);
+
+			clippingPlanes[i] = new Plane(Vector3D.crossProduct(v1, v2)
+					.normalize(), frustumVertices[i]);
+		}
+	}
+
+	/**
 	 * Sets the camera's view parameters.
 	 * 
-	 * @param position Camera's position
+	 * @param position Camera position
 	 * @param lookAt Point the camera is looking at
 	 * @param up Up vector
 	 */
@@ -140,6 +183,13 @@ public class ModelViewerCamera {
 		return transform;
 	}
 	
+	/**
+	 * @return View frustum clipping planes, in view space
+	 */
+	public Plane[] getClippingPlanes() {
+		return clippingPlanes;
+	}
+
 	/**
 	 * Sets the camera's perspective projection parameters.
 	 * 
@@ -301,50 +351,6 @@ public class ModelViewerCamera {
 		setPosition(newPosition);
 	}
 
-	public Plane[] buildClippingPlanes() {
-		// Get the inverse of the projection matrix
-		RealMatrix invProjection = new LUDecompositionImpl(perspectiveTransform)
-				.getSolver().getInverse();
-		
-		// Coordinates of the normalized view frustum
-		RealVector[] f = new RealVector[] {
-				MatrixUtils.createRealVector(new double[] { -1, -1,  1, 1 }),
-				MatrixUtils.createRealVector(new double[] { -1, -1, -1, 1 }),
-				MatrixUtils.createRealVector(new double[] { -1,  1, -1, 1 }),
-				MatrixUtils.createRealVector(new double[] {  1,  1, -1, 1 }),
-				MatrixUtils.createRealVector(new double[] {  1,  1,  1, 1 }),
-				MatrixUtils.createRealVector(new double[] {  1, -1,  1, 1 })
-		};
-
-		// Transform view frustum into camera space
-		for (int i = 0; i < 6; ++i) {
-			f[i] = invProjection.operate(f[i]);
-			f[i].mapDivideToSelf(f[i].getEntry(3));
-		}
-
-		Vector3D[] frustumVertices = new Vector3D[6];
-		for (int i = 0; i < 6; ++i) {
-			frustumVertices[i] = new Vector3D(f[i].getEntry(0),
-					f[i].getEntry(1), f[i].getEntry(2));
-		}
-
-		for (int i = 0; i < 6; ++i) {
-			Vector3D v1 = frustumVertices[(i + 1) % 6]
-					.subtract(frustumVertices[i]);
-			Vector3D v2 = frustumVertices[(i + 2) % 6]
-					.subtract(frustumVertices[i]);
-
-			clippingPlanes[i] = new Plane(Vector3D.crossProduct(v1, v2)
-					.normalize(), frustumVertices[i]);
-		}
-		
-		return getClippingPlanes();
-	}
-	
-	public Plane[] getClippingPlanes() {
-		return clippingPlanes;
-	}
-	
 	public double getWorldSpaceError(double screenSpaceError, double distance) {
 		return lodFactor * screenSpaceError * distance;
 	}

@@ -29,11 +29,11 @@ public class JOGLViewerTest {
 //		materials(viewer);
 //		colorSpiral(viewer);
 //		circles(viewer);
-//		lines(viewer);
+		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
 //		enneper(viewer, true);
-		lights(viewer);
+//		lights(viewer);
 		viewer.end();
 	}
 	
