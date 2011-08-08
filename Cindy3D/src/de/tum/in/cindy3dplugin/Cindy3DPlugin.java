@@ -449,9 +449,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	@CindyScript("gsave3d")
 	public void gsave3d() {
-		pointAppearanceStack.push(new AppearanceState(pointAppearance));
-		lineAppearanceStack.push(new AppearanceState(lineAppearance));
-		surfaceAppearanceStack.push(new AppearanceState(surfaceAppearance));
+		pointAppearanceStack.push(pointAppearance.clone());
+		lineAppearanceStack.push(lineAppearance.clone());
+		surfaceAppearanceStack.push(surfaceAppearance.clone());
 	}
 
 	/**
@@ -717,7 +717,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 */
 	private static AppearanceState applyAppearanceModifiers(
 			AppearanceState initialState, Hashtable modifiers) {
-		AppearanceState result = new AppearanceState(initialState);
+		AppearanceState result = initialState.clone();
 		Object value = null;
 		value = modifiers.get("color");
 		if (value instanceof double[]) {

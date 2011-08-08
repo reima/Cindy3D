@@ -2,92 +2,129 @@ package de.tum.in.cindy3dplugin;
 
 import java.awt.Color;
 
-
-/** 
- * Stores one set of appearance attributes for scene objects 
+/**
+ * Stores one set of appearance attributes for scene objects.
  */
-public class AppearanceState {
-
+public class AppearanceState implements Cloneable {
+	/**
+	 * Color
+	 */
 	private Color color;
+	/**
+	 * Shininess
+	 */
 	private int shininess;
+	/**
+	 * Size
+	 */
 	private double size;
+	/**
+	 * Alpha
+	 */
 	private double alpha;
-	
+
 	/**
-	 * Create a new appearance state with a certain color and size
-	 * @param color Point color
-	 * @param size Point size
+	 * Creates a new appearance state with the given attributes.
+	 * 
+	 * @param color
+	 *            Color
+	 * @param shininess
+	 *            Shininess
+	 * @param size
+	 *            Size
+	 * @param alpha
+	 *            Alpha
 	 */
-	public AppearanceState(Color color, int shininess, double size,
-			double alpha) {
-		this.color = color;
-		this.shininess = shininess;
-		this.size = size;
-		this.alpha = alpha;
+	public AppearanceState(Color color, int shininess, double size, double alpha) {
+		setColor(color);
+		setShininess(shininess);
+		setSize(size);
+		setAlpha(alpha);
 	}
-	
-	/**
-	 * Create a new appearance state and initialize it from another state
-	 * @param state Appearance state to initialize from
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
 	 */
-	public AppearanceState(AppearanceState state) {
-	    this(state.color, state.shininess, state.size, state.alpha);
+	@Override
+	public AppearanceState clone() {
+		return new AppearanceState(color, shininess, size, alpha);
 	}
 
 	/**
-	 * @param color the color to set
+	 * Sets the color of the appearance.
+	 * 
+	 * @param color
+	 *            New color
 	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
+
 	/**
-	 * @return the color
+	 * Gets the color of the appearance.
+	 * 
+	 * @return Color
 	 */
 	public Color getColor() {
 		return color;
 	}
-	
+
 	/**
-	 * @param shininess the shininess to set
+	 * Sets the shininess of the appearance.
+	 * 
+	 * @param shininess
+	 *            New shininess
 	 */
 	public void setShininess(int shininess) {
 		this.shininess = shininess;
 	}
-	
+
 	/**
-	 * @return the shininess
+	 * Gets the shininess of the appearance.
+	 * 
+	 * @return Shininess
 	 */
 	public int getShininess() {
 		return shininess;
 	}
-	
+
 	/**
-	 * @param size the size to set
+	 * Sets the size of the appearance.
+	 * 
+	 * @param size
+	 *            New size
 	 */
 	public void setSize(double size) {
 		this.size = size;
 	}
-	
+
 	/**
+	 * Gets the size of the appearance.
+	 * 
 	 * @return the size
 	 */
 	public double getSize() {
 		return size;
 	}
-	
+
 	/**
-	 * @param alpha Alpha to set
+	 * Sets the alpha value of the appearance.
+	 * 
+	 * @param alpha
+	 *            New alpha
 	 */
 	public void setAlpha(double alpha) {
 		this.alpha = alpha;
 	}
-	
+
 	/**
-	 * @return The alpha
+	 * Gets the alpha value of the appearance.
+	 * 
+	 * @return Alpha
 	 */
 	public double getAlpha() {
 		return alpha;
 	}
-			
 }
