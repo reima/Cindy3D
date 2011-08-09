@@ -497,6 +497,12 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		requestedRenderHints = renderHints.clone();
 
 		Object value;
+		
+		value = hints.get("screenerror");
+		if (value instanceof Double) {
+			requestedRenderHints.setAllowedScreenSpaceError((Double)value);
+		}
+
 		value = hints.get("quality");
 		if (value instanceof Double) {
 			int quality = ((Double) value).intValue();
@@ -504,7 +510,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			requestedRenderHints = qualityHints[quality];
 		}
 
-		value = hints.get("renderMode");
+		value = hints.get("rendermode");
 		if (value instanceof String) {
 			String renderMode = (String) value;
 			if (renderMode.equalsIgnoreCase("fixedfunction")) {
@@ -518,7 +524,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			}
 		}
 
-		value = hints.get("samplingRate");
+		value = hints.get("samplingrate");
 		if (value instanceof Double) {
 			requestedRenderHints.setSamplingRate(((Double) value).intValue());
 		}
