@@ -30,7 +30,7 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		return superSampleFactor;
 	}
 	
-	private void createFramebuffer(GLAutoDrawable drawable, int width, int height) {
+	private boolean createFramebuffer(GLAutoDrawable drawable, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 
 	    int[] textures = new int[1];
@@ -57,9 +57,12 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		int status = gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER);
 		if (status != GL2.GL_FRAMEBUFFER_COMPLETE) {
 			System.err.println("Framebuffer creation failed");
+			destroyFramebuffer(drawable);
+			return false;
 		}
 		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);		
 		framebuffer = framebuffers[0];
+		return true;
 	}
 	
 	private void destroyFramebuffer(GLAutoDrawable drawable) {
@@ -141,9 +144,14 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		this.width = width;
 		this.height = height;
 		
+		int superSampling = superSampleFactor;
 		if (framebuffer != 0) {
 			destroyFramebuffer(drawable);
-			createFramebuffer(drawable, width*superSampleFactor, height*superSampleFactor);
+			while (!createFramebuffer(drawable, width * superSampling, height
+					* superSampling)
+					& superSampling > 1) {
+				--superSampling;
+			}
 		}
 	}
 }
