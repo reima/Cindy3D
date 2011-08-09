@@ -2,10 +2,12 @@ package de.tum.in.cindy3dplugin.jogl;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -133,15 +135,22 @@ public class Util {
 			String vertexShaderFileName, String fragmentShaderFileName) {
 		ShaderProgram program = new ShaderProgram();
 		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		
 		ShaderCode vertexShader = loadShader(GL2.GL_VERTEX_SHADER,
 				vertexShaderFileName);
-		if (!vertexShader.compile(gl2)) {
+		if (!vertexShader.compile(gl2, ps)) {
+			Util.logger.info("Compile log for '" + vertexShaderFileName + "': "
+					+ baos.toString());
 			return null;
 		}
 	
 		ShaderCode fragmentShader = loadShader(GL2.GL_FRAGMENT_SHADER,
 				fragmentShaderFileName);
-		if (!fragmentShader.compile(gl2)) {
+		if (!fragmentShader.compile(gl2, ps)) {
+			Util.logger.info("Compile log for '" + fragmentShaderFileName
+					+ "': " + baos.toString());
 			return null;
 		}
 	
@@ -151,7 +160,8 @@ public class Util {
 		if (!program.add(fragmentShader)) {
 			return null;
 		}
-		if (!program.link(gl2, null)) {
+		if (!program.link(gl2, ps)) {
+			Util.logger.info("Link log: " + baos.toString());
 			return null;
 		}
 	
