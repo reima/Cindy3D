@@ -149,7 +149,7 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 			destroyFramebuffer(drawable);
 			while (!createFramebuffer(drawable, width * superSampling, height
 					* superSampling)
-					& superSampling > 1) {
+					&& superSampling > 1) {
 				--superSampling;
 			}
 		}
