@@ -157,8 +157,12 @@ public class ModelViewerCamera {
 			Vector3D v2 = frustumVertices[(i + 2) % 6]
 					.subtract(frustumVertices[i]);
 
-			clippingPlanes[i] = new Plane(Vector3D.crossProduct(v1, v2)
-					.normalize(), frustumVertices[i]);
+			Vector3D normal = Vector3D.crossProduct(v1, v2);
+			if (i%2 == 1) {
+				normal = normal.scalarMultiply(-1.0);
+			}
+			
+			clippingPlanes[i] = new Plane(normal.normalize(), frustumVertices[i]);
 		}
 	}
 
