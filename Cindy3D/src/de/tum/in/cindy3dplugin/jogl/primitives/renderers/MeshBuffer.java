@@ -64,10 +64,10 @@ public class MeshBuffer {
 				int rowPlus1 = (row + 1) % m.getRowCount();
 				int columnPlus1 = (column + 1) % m.getColumnCount();
 
-				int v1Index = m.getVertexIndex(column,      row);
-				int v2Index = m.getVertexIndex(columnPlus1, row);
-				int v3Index = m.getVertexIndex(column,      rowPlus1);
-				int v4Index = m.getVertexIndex(columnPlus1, rowPlus1);
+				int v1Index = m.getVertexIndex(row, column);
+				int v2Index = m.getVertexIndex(row, columnPlus1);
+				int v3Index = m.getVertexIndex(rowPlus1, column);
+				int v4Index = m.getVertexIndex(rowPlus1, columnPlus1);
 
 				if (m.getNormalType() == NormalType.PER_VERTEX) {
 					// f1

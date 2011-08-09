@@ -29,11 +29,11 @@ public class JOGLViewerTest {
 //		materials(viewer);
 //		colorSpiral(viewer);
 //		circles(viewer);
-		lines(viewer);
-//		spheres(viewer);
+//		lines(viewer);
+		spheres(viewer);
 //		icosahedron(viewer);
-//		enneper(viewer, true);
-//		lights(viewer);
+		enneper(viewer, true);
+		lights(viewer);
 		
 		viewer.end();
 	}
@@ -106,7 +106,7 @@ public class JOGLViewerTest {
 	}
 	
 	public static void colorSpiral(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 255, 1.0, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
 		
 		double height = 2;
 		double radius = 1;
