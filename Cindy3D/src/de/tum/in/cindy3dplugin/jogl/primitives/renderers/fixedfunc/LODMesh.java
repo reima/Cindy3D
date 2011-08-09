@@ -13,20 +13,40 @@ public class LODMesh {
 	private int faceCount;
 	private int vertexSize;
 	private double maxEdgeLength;
+	private boolean hasNormals;
 	
 	private DoubleBuffer vertices;
 	private IntBuffer indices;
 	
-	public LODMesh(int vertexSize, int vertexCount, int faceCount) {
+	public LODMesh(int vertexSize, int vertexCount, int faceCount,
+			boolean hasNormals) {
 		this.vertexSize = vertexSize;
 		this.faceCount = faceCount;
-		this.vertices = DoubleBuffer.allocate(vertexCount * vertexSize);
+		this.hasNormals = hasNormals;
+		if (hasNormals) {
+			this.vertices = DoubleBuffer.allocate(vertexCount * (vertexSize + 3));
+		}
+		else {
+			this.vertices = DoubleBuffer.allocate(vertexCount * vertexSize);
+		}
 		this.indices = IntBuffer.allocate(faceCount * 3);
 		this.maxEdgeLength = 0;
+
 	}
 	
-	public void putVertex(double[] vertex) {
-		vertices.put(vertex);
+	public void putVertex(double[] position) {
+		if (hasNormals) {
+			throw new UnsupportedOperationException("Vertex normal expected.");
+		}
+		vertices.put(position);
+	}
+	
+	public void putVertex(double[] position, double[] normal) {
+		if (!hasNormals) {
+			throw new UnsupportedOperationException("Unexpected vertex normal.");
+		}
+		vertices.put(position);
+		vertices.put(normal);
 	}
 	
 	public void putFace(int i0, int i1, int i2) {
@@ -61,16 +81,22 @@ public class LODMesh {
 
 	private void calculateMaxEdgeLength() {
 		maxEdgeLength = 0;
+		
+		int stride = vertexSize;
+		if (hasNormals) {
+			stride += 3;
+		}
+		
 		for (int i = 0; i < indices.limit(); i += 3) {
 			int i0 = indices.get(i);
 			int i1 = indices.get(i + 1);
 			int i2 = indices.get(i + 2);
 			double[][] v = new double[3][vertexSize];
-			vertices.position(i0 * vertexSize);
+			vertices.position(i0 * stride);
 			vertices.get(v[0], 0, vertexSize);
-			vertices.position(i1 * vertexSize);
+			vertices.position(i1 * stride);
 			vertices.get(v[1], 0, vertexSize);
-			vertices.position(i2 * vertexSize);
+			vertices.position(i2 * stride);
 			vertices.get(v[2], 0, vertexSize);
 
 			for (int j = 0; j < 3; ++j) {
@@ -94,16 +120,34 @@ public class LODMesh {
 		double worldSpaceError = scale * maxEdgeLength;
 		return worldSpaceError <= allowedWorldSpaceError;
 	}
+	
+	public double getMaxEdgeLength() {
+		return maxEdgeLength;
+	}
 
 	public void render(GL2 gl2) {
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
-		gl2.glVertexPointer(vertexSize, GL2.GL_DOUBLE, vertexSize
-				* Util.SIZEOF_DOUBLE, 0);
+		
+//		gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+		
+		int stride;
+		if (hasNormals) {
+			stride = Util.SIZEOF_DOUBLE * (vertexSize + 3);
+		}
+		else {
+			stride = Util.SIZEOF_DOUBLE * vertexSize;
+		}
+		
+		gl2.glVertexPointer(vertexSize, GL2.GL_DOUBLE, stride, 0);
+		
 		// TODO: This assumes that the vertex positions can be reused as
 		// normals. It works for the unit sphere but probably not for anything
 		// else.
-		gl2.glNormalPointer(GL2.GL_DOUBLE, vertexSize * Util.SIZEOF_DOUBLE,
-				0);
+		
+		if (hasNormals) {
+			gl2.glNormalPointer(GL2.GL_DOUBLE, stride,
+					vertexSize * Util.SIZEOF_DOUBLE);
+		}
 		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl2.glDrawElements(GL2.GL_TRIANGLES, faceCount * 3,
 				GL2.GL_UNSIGNED_INT, 0);

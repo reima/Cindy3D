@@ -22,7 +22,7 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 				(stacks - 2) * slices * 2; // inner stacks loops, quads (2
 										   // triangles)
 		
-		LODMesh mesh = new LODMesh(3, vertexCount, faceCount);
+		LODMesh mesh = new LODMesh(3, vertexCount, faceCount, true);
 		
 		/*
 		 * Generate vertices
@@ -31,7 +31,7 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		
 		vertex[0] = vertex[1] = 0;
 		vertex[2] = -1;
-		mesh.putVertex(vertex);
+		mesh.putVertex(vertex, vertex);
 		
 		for (int stack = 1; stack < stacks; ++stack) {
 			double latitude = (((double) stack) / stacks - 0.5) * Math.PI;
@@ -40,13 +40,14 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 				vertex[0] = Math.cos(longitude)*Math.cos(latitude);
 				vertex[1] = Math.sin(longitude)*Math.cos(latitude);
 				vertex[2] = Math.sin(latitude);
-				mesh.putVertex(vertex);
+				mesh.putVertex(vertex, vertex);
+				//mesh.putVertex(vertex);
 			}
 		}
 		
 		vertex[0] = vertex[1] = 0;
 		vertex[2] = 1;
-		mesh.putVertex(vertex);
+		mesh.putVertex(vertex, vertex);
 	
 		/*
 		 * Generate indices
