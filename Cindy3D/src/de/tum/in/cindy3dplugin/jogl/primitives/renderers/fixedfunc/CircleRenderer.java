@@ -117,8 +117,8 @@ public class CircleRenderer extends CircleRendererBase {
 		
 		GL2 gl2 = jrs.gl.getGL2();
 		
-		double distance = Util.transformPoint(jrs.camera.getTransform(),
-				circle.getCenter()).getNorm()
+		double distance = -Util.transformPoint(jrs.camera.getTransform(),
+				circle.getCenter()).getZ()
 				- circle.getRadius();
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
 				jrs.renderHints.getAllowedScreenSpaceError(), distance);

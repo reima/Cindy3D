@@ -137,8 +137,8 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();
 
-		double distance = Util.transformPoint(jrs.camera.getTransform(),
-				sphere.getCenter()).getNorm()
+		double distance = -Util.transformPoint(jrs.camera.getTransform(),
+				sphere.getCenter()).getZ()
 				- sphere.getRadius();
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
 				jrs.renderHints.getAllowedScreenSpaceError(), distance);
