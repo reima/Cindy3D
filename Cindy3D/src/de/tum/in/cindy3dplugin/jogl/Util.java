@@ -2,10 +2,12 @@ package de.tum.in.cindy3dplugin.jogl;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -24,9 +26,11 @@ import javax.swing.JFileChooser;
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
 
+import com.jogamp.common.GlueGenVersion;
 import com.jogamp.common.jvm.JNILibLoaderBase;
 import com.jogamp.common.jvm.JNILibLoaderBase.LoaderAction;
 import com.jogamp.gluegen.runtime.NativeLibLoader;
+import com.jogamp.opengl.JoglVersion;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
@@ -133,15 +137,22 @@ public class Util {
 			String vertexShaderFileName, String fragmentShaderFileName) {
 		ShaderProgram program = new ShaderProgram();
 		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		
 		ShaderCode vertexShader = loadShader(GL2.GL_VERTEX_SHADER,
 				vertexShaderFileName);
-		if (!vertexShader.compile(gl2)) {
+		if (!vertexShader.compile(gl2, ps)) {
+			Util.logger.info("Compile log for '" + vertexShaderFileName + "': "
+					+ baos.toString());
 			return null;
 		}
 	
 		ShaderCode fragmentShader = loadShader(GL2.GL_FRAGMENT_SHADER,
 				fragmentShaderFileName);
-		if (!fragmentShader.compile(gl2)) {
+		if (!fragmentShader.compile(gl2, ps)) {
+			Util.logger.info("Compile log for '" + fragmentShaderFileName
+					+ "': " + baos.toString());
 			return null;
 		}
 	
@@ -151,7 +162,8 @@ public class Util {
 		if (!program.add(fragmentShader)) {
 			return null;
 		}
-		if (!program.link(gl2, null)) {
+		if (!program.link(gl2, ps)) {
+			Util.logger.info("Link log: " + baos.toString());
 			return null;
 		}
 	
@@ -300,15 +312,22 @@ public class Util {
 			}
 			//log.setLevel(Level.ALL);
 			logger.info("Log started");
+			
+			final String nl = System.getProperty("line.separator");
+			
+			logger.info("GlueGen version "
+					+ GlueGenVersion.getInstance().getImplementationVersion());
+			logger.info("JOGL version "
+					+ JoglVersion.getInstance().getImplementationVersion());
+			
 			Properties p = System.getProperties();
 			String props = "";
 			for (Object key : p.keySet()) {
 				props += key + ": ";
 				props += p.get(key);
-				props += System.getProperty("line.separator");
+				props += nl;
 			}
-			logger.info("System properties:"
-					+ System.getProperty("line.separator") + props);
+			logger.info("System properties:" + nl + props);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
