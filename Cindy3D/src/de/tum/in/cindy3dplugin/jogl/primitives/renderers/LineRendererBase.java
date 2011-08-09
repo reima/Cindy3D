@@ -39,9 +39,26 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 			double max = Double.MIN_VALUE;
 			for (int i = 0; i < 6; ++i) {
 				double lambda = planes[i].intersectRay(p1, direction);
-				if (lambda == Double.MAX_VALUE)
+				if (lambda == Double.MAX_VALUE) {
 					continue;
-				else {
+				}
+				
+				Vector3D p = p1.add(lambda, direction);
+				
+				boolean inFrustum = true;
+				for (int j=0; j<6; ++j) {
+					if (j == i) {
+						continue;
+					}
+					
+					if (planes[j].distance(p) > 0) {
+						inFrustum = false;
+						break;
+					}
+					
+				}
+				
+				if (inFrustum) {
 					min = Math.min(min, lambda);
 					max = Math.max(max, lambda);
 				}
@@ -66,7 +83,7 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 	protected static RealMatrix buildOBBTransform(Endpoints endPoints,
 			double radius) {
 		// Length of the OBB
-		double dist = Vector3D.distance(endPoints.p1, endPoints.p2) / 2.0;
+		double dist = Vector3D.distance(endPoints.p1, endPoints.p2);
 		Vector3D direction = endPoints.p2.subtract(endPoints.p1).normalize();
 
 		// Midpoint of OBB
