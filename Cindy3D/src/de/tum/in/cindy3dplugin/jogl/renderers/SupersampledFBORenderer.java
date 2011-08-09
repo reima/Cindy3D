@@ -5,6 +5,7 @@ import javax.media.opengl.GLAutoDrawable;
 
 import de.tum.in.cindy3dplugin.jogl.ModelViewerCamera;
 import de.tum.in.cindy3dplugin.jogl.RenderHints;
+import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory;
@@ -12,7 +13,8 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactor
 public class SupersampledFBORenderer extends DefaultRenderer {
 	private int width;
 	private int height;
-	private int superSampleFactor = 2;
+	private int requestedSuperSampleFactor = 2;
+	private int superSampleFactor;
 	
 	private int colorTexture = 0;
 	private int depthBuffer = 0;
@@ -22,7 +24,7 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 			ModelViewerCamera camera, LightManager lightManager,
 			int superSampleFactor, PrimitiveRendererFactory prf) {
 		super(renderHints, scene, camera, lightManager, prf);
-		this.superSampleFactor = superSampleFactor;
+		this.requestedSuperSampleFactor = superSampleFactor;
 		width = height = 1;
 	}
 
@@ -37,7 +39,7 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		gl.glGenTextures(1, textures, 0);
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textures[0]);
 		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_GENERATE_MIPMAP, GL2.GL_TRUE);
-		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
 		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
 		gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, width, height, 0, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, null);
 		colorTexture = textures[0];
@@ -56,7 +58,7 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		gl.glFramebufferRenderbuffer(GL2.GL_FRAMEBUFFER, GL2.GL_DEPTH_ATTACHMENT, GL2.GL_RENDERBUFFER, depthBuffer);
 		int status = gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER);
 		if (status != GL2.GL_FRAMEBUFFER_COMPLETE) {
-			System.err.println("Framebuffer creation failed");
+			Util.logger.info("Framebuffer creation failed.");
 			destroyFramebuffer(drawable);
 			return false;
 		}
@@ -139,19 +141,18 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
-		super.reshape(drawable, x, y, width, height);
-		
 		this.width = width;
 		this.height = height;
 		
-		int superSampling = superSampleFactor;
+		superSampleFactor = requestedSuperSampleFactor;
 		if (framebuffer != 0) {
 			destroyFramebuffer(drawable);
-			while (!createFramebuffer(drawable, width * superSampling, height
-					* superSampling)
-					&& superSampling > 1) {
-				--superSampling;
-			}
 		}
+		while (!createFramebuffer(drawable, width * superSampleFactor, height
+				* superSampleFactor)
+				&& superSampleFactor > 1) {
+			--superSampleFactor;
+		}
+		super.reshape(drawable, x, y, width, height);
 	}
 }
