@@ -21,7 +21,7 @@ public class Plane {
 	 * @param normal
 	 * 			Plane normal
 	 * @param position
-	 * 			Coordinates of a point on plain
+	 * 			Coordinates of a point on plane
 	 */
 	public Plane(Vector3D normal, Vector3D position) {
 		this(normal, -Vector3D.dotProduct(normal, position));
