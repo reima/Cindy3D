@@ -85,14 +85,8 @@ public class Mesh extends Primitive {
 			double[][] normals, MeshTopology topology, Color color,
 			double shininess, double alpha) {
 		super(color, shininess, alpha);
-		// TODO: Why can normals be null when we have another constructor for
-		// auto-generated normals?
-		init(rowCount, columnCount, positions, normals,
-				normals == null ? NormalType.PER_VERTEX : NormalType.PER_FACE,
+		init(rowCount, columnCount, positions, normals, NormalType.PER_VERTEX,
 				topology);
-		if (normals == null) {
-			computeNormals();
-		}
 	}
 
 	/**
