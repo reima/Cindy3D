@@ -18,12 +18,12 @@ public class JOGLViewerTest {
 		
 		Hashtable<String, Object> hintsMap = new Hashtable<String,Object>();
 		
-		hintsMap.put("quality", 5.0);
+		hintsMap.put("quality", 0.0);
 
 		viewer.setRenderHints(hintsMap);
 		
 		//viewer.setBackgroundColor(Color.white);
-		viewer.setBackgroundColor(Color.black);
+		//viewer.setBackgroundColor(Color.black);
 		
 		viewer.begin();
 //		materials(viewer);
@@ -34,6 +34,7 @@ public class JOGLViewerTest {
 //		icosahedron(viewer);
 //		enneper(viewer, true);
 //		lights(viewer);
+		
 		viewer.end();
 	}
 	
@@ -127,6 +128,17 @@ public class JOGLViewerTest {
 	public static void circles(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
 		
+		LightModificationInfo info = new LightModificationInfo(LightType.DIRECTIONAL_LIGHT);
+		
+		info.setDirection(new double[]{1,0,0});
+		viewer.setLight(0, info);
+		
+		info.setDirection(new double[]{0,1,0});
+		viewer.setLight(1, info);
+		
+		info.setDirection(new double[]{0,0,1});
+		viewer.setLight(2, info);
+		
 		appearance.setAlpha(0.5);
 		
 		for (int i = -5; i <= 5; ++i) {
@@ -192,10 +204,11 @@ public class JOGLViewerTest {
 	public static void lines(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
 		
-		viewer.addSegment(-10, 0, 0, 8, 0, -0.5, appearance);
-		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
-
-		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
+		//viewer.addSphere(0, 0, 0, 2, appearance);
+		viewer.addSegment(-2, 0, 0, 2, 0, 0, appearance);
+//		viewer.addLine(0, 2, 0, 5, 4, 0, appearance);
+//
+//		viewer.addRay(0, 4, 0, 5, -2, 2, appearance);
 
 //		double r = 1;
 //		int n = 750;
