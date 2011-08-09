@@ -26,9 +26,11 @@ import javax.swing.JFileChooser;
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.RealMatrix;
 
+import com.jogamp.common.GlueGenVersion;
 import com.jogamp.common.jvm.JNILibLoaderBase;
 import com.jogamp.common.jvm.JNILibLoaderBase.LoaderAction;
 import com.jogamp.gluegen.runtime.NativeLibLoader;
+import com.jogamp.opengl.JoglVersion;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
@@ -310,15 +312,22 @@ public class Util {
 			}
 			//log.setLevel(Level.ALL);
 			logger.info("Log started");
+			
+			final String nl = System.getProperty("line.separator");
+			
+			logger.info("GlueGen version "
+					+ GlueGenVersion.getInstance().getImplementationVersion());
+			logger.info("JOGL version "
+					+ JoglVersion.getInstance().getImplementationVersion());
+			
 			Properties p = System.getProperties();
 			String props = "";
 			for (Object key : p.keySet()) {
 				props += key + ": ";
 				props += p.get(key);
-				props += System.getProperty("line.separator");
+				props += nl;
 			}
-			logger.info("System properties:"
-					+ System.getProperty("line.separator") + props);
+			logger.info("System properties:" + nl + props);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
