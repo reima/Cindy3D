@@ -497,17 +497,17 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		requestedRenderHints = renderHints.clone();
 
 		Object value;
-		
-		value = hints.get("screenerror");
-		if (value instanceof Double) {
-			requestedRenderHints.setAllowedScreenSpaceError((Double)value);
-		}
 
 		value = hints.get("quality");
 		if (value instanceof Double) {
 			int quality = ((Double) value).intValue();
 			quality = Math.max(0, Math.min(quality, qualityHints.length - 1));
 			requestedRenderHints = qualityHints[quality];
+		}
+		
+		value = hints.get("screenerror");
+		if (value instanceof Double) {
+			requestedRenderHints.setAllowedScreenSpaceError((Double)value);
 		}
 
 		value = hints.get("rendermode");
