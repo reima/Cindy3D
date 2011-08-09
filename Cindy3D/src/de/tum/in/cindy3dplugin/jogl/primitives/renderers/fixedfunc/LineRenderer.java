@@ -79,8 +79,8 @@ public class LineRenderer extends LineRendererBase {
 	@Override
 	public boolean init(GL gl) {
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {
-			int slices = 2 * lod + 3;
-			int loops = 1;
+			int slices = 4 * lod + 4;
+			int loops = 4;
 			meshes[lod] = createMesh(gl, loops, slices);
 		}
 
@@ -140,20 +140,14 @@ public class LineRenderer extends LineRendererBase {
 				.scalarMultiply(boxLength);
 		endPoints.p2 = endPoints.p1.add(direction);
 		RealMatrix cylinder = buildOBBTransform(endPoints, line.radius);
-
+		
+		Vector3D boxMid = new Vector3D(0.5, endPoints.p1, 0.5, endPoints.p2);
+		
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glPushMatrix();
-		gl2.glLoadIdentity();
 
 		for (int box = 0; box < boxes; ++box) {
-
-			double distance = Math
-					.min(Util.transformPoint(jrs.camera.getTransform(),
-							endPoints.p1).getNorm()
-							- line.radius,
-							Util.transformPoint(jrs.camera.getTransform(),
-									endPoints.p2).getNorm()
-									- line.radius);
+			double distance = -boxMid.getZ();
 
 			double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
 					jrs.renderHints.getAllowedScreenSpaceError(), distance);
@@ -167,19 +161,21 @@ public class LineRenderer extends LineRendererBase {
 					break;
 				}
 			}
-
-			gl2.glPushMatrix();
+			
+			gl2.glLoadIdentity();
+			gl2.glTranslated(box * direction.getX(), box * direction.getY(),
+					box * direction.getZ());
 			gl2.glMultMatrixf(Util.matrixToFloatArrayTransposed(cylinder), 0);
 			// Rotate cylinder's main axis to x-axis
 			gl2.glRotated(90.0, 0.0, 1.0, 0.0);
+			// Scale to unit length
+			gl2.glScaled(1.0, 1.0, 1.0 / LINE_LENGTH);
 
 			mesh.render(gl2);
-			gl2.glPopMatrix();
-			gl2.glTranslated(direction.getX(), direction.getY(),
-					direction.getZ());
-			endPoints.p1 = endPoints.p2;
-			endPoints.p2 = endPoints.p1.add(direction);
+			
+			boxMid = boxMid.add(direction);
 		}
+		
 		gl2.glPopMatrix();
 	}
 }
