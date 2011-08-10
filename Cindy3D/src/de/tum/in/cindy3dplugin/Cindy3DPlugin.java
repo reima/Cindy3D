@@ -171,30 +171,41 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	/**
 	 * Draws a point.
 	 * 
-	 * @param vec
+	 * @param point
 	 *            coordinates of the point
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>point</code> is not 3 
 	 */
 	@CindyScript("draw3d")
-	public void draw3d(ArrayList<Double> vec) {
-		if (vec.size() != 3)
-			return;
-
-		cindy3d.addPoint(vec.get(0), vec.get(1), vec.get(2),
+	public void draw3d(ArrayList<Double> point) {
+		if (point.size() != 3) {
+			throw new IllegalArgumentException("point size not 3");
+		}
+		
+		cindy3d.addPoint(point.get(0), point.get(1), point.get(2),
 				applyAppearanceModifiers(pointAppearance, getModifiers()));
 	}
 
 	/**
 	 * Draws a line.
 	 * 
-	 * @param vec1
+	 * @param firstPoint
 	 *            coordinates of the first end point
-	 * @param vec2
+	 * @param secondPoint
 	 *            coordinates of the second end point
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>firstPoint</code> or
+	 *             <code>secondPoint</code> is not 3
 	 */
 	@CindyScript("draw3d")
-	public void draw3d(ArrayList<Double> vec1, ArrayList<Double> vec2) {
-		if (vec1.size() != 3 || vec2.size() != 3)
-			return;
+	public void draw3d(ArrayList<Double> firstPoint,
+			ArrayList<Double> secondPoint) {
+		if (firstPoint.size() != 3) {
+			throw new IllegalArgumentException("first point sizo not 3");
+		}
+		if (secondPoint.size() != 3) {
+			throw new IllegalArgumentException("second point size not 3");
+		}
 
 		// Fill in default modifiers
 		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
@@ -209,14 +220,17 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 				getModifiers());
 
 		if (type.equalsIgnoreCase("segment")) {
-			cindy3d.addSegment(vec1.get(0), vec1.get(1), vec1.get(2),
-					vec2.get(0), vec2.get(1), vec2.get(2), appearance);
+			cindy3d.addSegment(firstPoint.get(0), firstPoint.get(1),
+					firstPoint.get(2), secondPoint.get(0), secondPoint.get(1),
+					secondPoint.get(2), appearance);
 		} else if (type.equalsIgnoreCase("line")) {
-			cindy3d.addLine(vec1.get(0), vec1.get(1), vec1.get(2), vec2.get(0),
-					vec2.get(1), vec2.get(2), appearance);
+			cindy3d.addLine(firstPoint.get(0), firstPoint.get(1),
+					firstPoint.get(2), secondPoint.get(0), secondPoint.get(1),
+					secondPoint.get(2), appearance);
 		} else if (type.equalsIgnoreCase("ray")) {
-			cindy3d.addRay(vec1.get(0), vec1.get(1), vec1.get(2), vec2.get(0),
-					vec2.get(1), vec2.get(2), appearance);
+			cindy3d.addRay(firstPoint.get(0), firstPoint.get(1),
+					firstPoint.get(2), secondPoint.get(0), secondPoint.get(1),
+					secondPoint.get(2), appearance);
 		}
 	}
 
@@ -225,9 +239,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * 
 	 * @param points
 	 *            list of points to connect
+	 * @throws IllegalArgumentException
+	 *             if <code>points</code> is empty
 	 */
 	@CindyScript("connect3d")
 	public void connect3d(ArrayList<Vec> points) {
+		if (points.isEmpty()) {
+			throw new IllegalArgumentException("no points");
+		}
+		
 		double vertices[][] = new double[points.size()][3];
 
 		for (int i = 0; i < points.size(); ++i) {
@@ -245,9 +265,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * 
 	 * @param points
 	 *            vertices of the polygon
+	 * @throws IllegalArgumentException
+	 *             if <code>points</code> is empty
 	 */
 	@CindyScript("drawpoly3d")
 	public void drawpoly3d(ArrayList<Vec> points) {
+		if (points.isEmpty()) {
+			throw new IllegalArgumentException("no vertices");
+		}
+		
 		double vertices[][] = new double[points.size()][3];
 
 		for (int i = 0; i < points.size(); ++i) {
@@ -265,10 +291,25 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * 
 	 * @param points
 	 *            vertices of the polygon
+	 * @throws IllegalArgumentException
+	 *             if <code>points</code> is empty
 	 */
 	@CindyScript("fillpoly3d")
 	public void fillpoly3d(ArrayList<Vec> points) {
-		fillpoly3d(points, null);
+		if (points.size() == 0) {
+			throw new IllegalArgumentException("no points");
+		}
+
+		double pointsArray[][] = new double[points.size()][3];
+
+		for (int i = 0; i < points.size(); ++i) {
+			pointsArray[i][0] = points.get(i).getXR();
+			pointsArray[i][1] = points.get(i).getYR();
+			pointsArray[i][2] = points.get(i).getZR();
+		}
+
+		cindy3d.addPolygon(pointsArray, null,
+				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 
 	/**
@@ -278,28 +319,40 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            vertices of the polygon
 	 * @param normals
 	 *            normals for each vertex
+	 * @throws IllegalArgumentException
+	 *             if <code>points</code> or <code>normals</code> is empty
+	 * @throws IllegalArgumentException
+	 *             if <code>points</code> and <code>normals</code> have
+	 *             different sizes
 	 */
 	@CindyScript("fillpoly3d")
 	public void fillpoly3d(ArrayList<Vec> points, ArrayList<Vec> normals) {
-		if (points.size() == 0
-				|| (normals != null && points.size() != normals.size()))
-			return;
+		if (points.size() == 0) {
+			throw new IllegalArgumentException("no points");
+		}
+		if (normals.size() == 0) {
+			throw new IllegalArgumentException("no normals");
+		}
+		if (points.size() != normals.size()) {
+			throw new IllegalArgumentException(
+					"points and normals have different sizes");
+		}
 
-		double vertices[][] = new double[points.size()][3];
-		double normal[][] = (normals == null) ? null : new double[normals
-				.size()][3];
+		double pointsArray[][] = new double[points.size()][3];
+		double normalsArray[][] = new double[normals.size()][3];
 
 		for (int i = 0; i < points.size(); ++i) {
-			vertices[i][0] = points.get(i).getXR();
-			vertices[i][1] = points.get(i).getYR();
-			vertices[i][2] = points.get(i).getZR();
+			pointsArray[i][0] = points.get(i).getXR();
+			pointsArray[i][1] = points.get(i).getYR();
+			pointsArray[i][2] = points.get(i).getZR();
 			if (normals != null) {
-				normal[i][0] = normals.get(i).getXR();
-				normal[i][1] = normals.get(i).getYR();
-				normal[i][2] = normals.get(i).getZR();
+				normalsArray[i][0] = normals.get(i).getXR();
+				normalsArray[i][1] = normals.get(i).getYR();
+				normalsArray[i][2] = normals.get(i).getZR();
 			}
 		}
-		cindy3d.addPolygon(vertices, normal,
+
+		cindy3d.addPolygon(pointsArray, normalsArray,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 
@@ -312,12 +365,24 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            normal vector (orthogonal to the circle)
 	 * @param radius
 	 *            radius of the circle
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>center</code> or <code>normal</code> is
+	 *             not 3
+	 * @throws IllegalArgumentException
+	 *             if <code>radius</code> is less than or equal to 0
 	 */
 	@CindyScript("fillcircle3d")
 	public void fillcircle3d(ArrayList<Double> center,
 			ArrayList<Double> normal, double radius) {
-		if (center.size() != 3 || normal.size() != 3)
-			return;
+		if (center.size() != 3) {
+			throw new IllegalArgumentException("center size not 3");
+		}
+		if (normal.size() != 3) {
+			throw new IllegalArgumentException("normal size not 3");
+		}
+		if (radius <= 0) {
+			throw new IllegalArgumentException("radius not positive");
+		}
 		cindy3d.addCircle(center.get(0), center.get(1), center.get(2),
 				normal.get(0), normal.get(1), normal.get(2), radius,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
@@ -337,11 +402,24 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            number of columns of vertices
 	 * @param points
 	 *            vertex positions, in row-major order
+	 * @throws IllegalArgumentException
+	 *             if <code>rows</code> or <code>columns</code> is less than or
+	 *             equal to 0
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>points</code> is not
+	 *             <code>rows * columns</code>
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points) {
-		if (rows < 0 || columns < 0 || rows * columns != points.size())
-			return;
+		if (rows <= 0) {
+			throw new IllegalArgumentException("row count not positive");
+		}
+		if (columns <= 0) {
+			throw new IllegalArgumentException("row count not positive");
+		}
+		if (rows * columns != points.size()) {
+			throw new IllegalArgumentException("wrong point count");
+		}
 
 		// Fill in default modifiers
 		Hashtable<String, Object> modifiers = new Hashtable<String, Object>();
@@ -393,25 +471,40 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            vertex positions, in row-major order
 	 * @param normals
 	 *            vertex normals, in row-major order
+	 * @throws IllegalArgumentException
+	 *             if <code>rows</code> or <code>columns</code> is less than or
+	 *             equal to 0
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>points</code> or <code>normals</code> is
+	 *             not <code>rows * columns</code>
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points,
 			ArrayList<Vec> normals) {
-		if (rows < 0 || columns < 0 || rows * columns != points.size()
-				|| rows * columns != normals.size())
-			return;
+		if (rows <= 0) {
+			throw new IllegalArgumentException("row count not positive");
+		}
+		if (columns <= 0) {
+			throw new IllegalArgumentException("row count not positive");
+		}
+		if (rows * columns != points.size()) {
+			throw new IllegalArgumentException("wrong point count");
+		}
+		if (rows * columns != normals.size()) {
+			throw new IllegalArgumentException("wrong normal count");
+		}
 
-		double[][] vertices = new double[points.size()][3];
-		double[][] perVertex = new double[normals.size()][3];
+		double[][] pointsArray = new double[points.size()][3];
+		double[][] normalsArray = new double[normals.size()][3];
 		for (int i = 0; i < points.size(); ++i) {
 			Vec v = points.get(i);
-			vertices[i][0] = v.getXR();
-			vertices[i][1] = v.getYR();
-			vertices[i][2] = v.getZR();
+			pointsArray[i][0] = v.getXR();
+			pointsArray[i][1] = v.getYR();
+			pointsArray[i][2] = v.getZR();
 			v = normals.get(i);
-			perVertex[i][0] = v.getXR();
-			perVertex[i][1] = v.getYR();
-			perVertex[i][2] = v.getZR();
+			normalsArray[i][0] = v.getXR();
+			normalsArray[i][1] = v.getYR();
+			normalsArray[i][2] = v.getZR();
 		}
 
 		// Fill in default modifiers
@@ -425,15 +518,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		MeshTopology topology = MeshTopology.OPEN;
 		if (topologyStr.equalsIgnoreCase("open")) {
 			topology = MeshTopology.OPEN;
-		} else if (topologyStr.equalsIgnoreCase("closex")) {
+		} else if (topologyStr.equalsIgnoreCase("closerows")) {
 			topology = MeshTopology.CLOSE_ROWS;
-		} else if (topologyStr.equalsIgnoreCase("closey")) {
+		} else if (topologyStr.equalsIgnoreCase("closecolumns")) {
 			topology = MeshTopology.CLOSE_COLUMNS;
-		} else if (topologyStr.equalsIgnoreCase("closexy")) {
+		} else if (topologyStr.equalsIgnoreCase("closeboth")) {
 			topology = MeshTopology.CLOSE_BOTH;
 		}
 
-		cindy3d.addMesh(rows, columns, vertices, perVertex, topology,
+		cindy3d.addMesh(rows, columns, pointsArray, normalsArray, topology,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
 
@@ -444,11 +537,20 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            center of the sphere
 	 * @param radius
 	 *            radius of the sphere
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>center</code> is not 3
+	 * @throws IllegalArgumentException
+	 *             if <code>radius</code> is less than or equal to 0
 	 */
 	@CindyScript("drawsphere3d")
 	public void sphere3d(ArrayList<Double> center, double radius) {
-		if (center.size() != 3)
-			return;
+		if (center.size() != 3) {
+			throw new IllegalArgumentException("center size not 3");
+		}
+		if (radius <= 0) {
+			throw new IllegalArgumentException("radius not positive");
+		}
+			
 		cindy3d.addSphere(center.get(0), center.get(1), center.get(2), radius,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
@@ -466,13 +568,19 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Removes the top element of the appearance stack and replaces the current
-	 * appearance with it.
+	 * Restores the top element of the appearance stack and removes it.
 	 * 
+	 * @throws IllegalStateException
+	 *             if the appearance stack is empty
 	 * @see Cindy3DPlugin#gsave3d()
 	 */
 	@CindyScript("grestore3d")
 	public void grestore3d() {
+		if (pointAppearanceStack.isEmpty() || lineAppearanceStack.isEmpty()
+				|| surfaceAppearanceStack.isEmpty()) {
+			throw new IllegalStateException("appearance stack empty");
+		}
+		
 		if (!pointAppearanceStack.isEmpty())
 			pointAppearance = pointAppearanceStack.pop();
 		if (!lineAppearanceStack.isEmpty())
@@ -484,47 +592,71 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	/**
 	 * Sets the color of all appearances.
 	 * 
-	 * @param vec
+	 * @param color
 	 *            color vector
+	 * @throws IllegalArgumentException
+	 *             if the length of <code>color</code> is not 3
 	 */
 	@CindyScript("color3d")
-	public void color3d(ArrayList<Double> vec) {
-		setColorState(pointAppearance, vec);
-		setColorState(lineAppearance, vec);
-		setColorState(surfaceAppearance, vec);
+	public void color3d(ArrayList<Double> color) {
+		if (color.size() != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+		
+		pointAppearance.setColor(Util.toColor(color));
+		lineAppearance.setColor(Util.toColor(color));
+		surfaceAppearance.setColor(Util.toColor(color));
 	}
 
 	/**
 	 * Sets the color of the point appearance.
 	 * 
-	 * @param vec
+	 * @param color
 	 *            color vector
+	 * @throws IllegalArgumentException
+	 *             if the length of <code>color</code> is not 3
 	 */
 	@CindyScript("pointcolor3d")
-	public void pointcolor3d(ArrayList<Double> vec) {
-		setColorState(pointAppearance, vec);
+	public void pointcolor3d(ArrayList<Double> color) {
+		if (color.size() != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+		
+		pointAppearance.setColor(Util.toColor(color));
 	}
 
 	/**
 	 * Sets the color of the line appearance.
 	 * 
-	 * @param vec
+	 * @param color
 	 *            color vector
+	 * @throws IllegalArgumentException
+	 *             if the length of <code>color</code> is not 3
 	 */
 	@CindyScript("linecolor3d")
-	public void linecolor3d(ArrayList<Double> vec) {
-		setColorState(lineAppearance, vec);
+	public void linecolor3d(ArrayList<Double> color) {
+		if (color.size() != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+		
+		lineAppearance.setColor(Util.toColor(color));
 	}
 
 	/**
 	 * Sets the color of the surface appearance.
 	 * 
-	 * @param vec
+	 * @param color
 	 *            color vector
+	 * @throws IllegalArgumentException
+	 *             if the length of <code>color</code> is not 3
 	 */
 	@CindyScript("surfacecolor3d")
-	public void surfacecolor3d(ArrayList<Double> vec) {
-		setColorState(surfaceAppearance, vec);
+	public void surfacecolor3d(ArrayList<Double> color) {
+		if (color.size() != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+		
+		surfaceAppearance.setColor(Util.toColor(color));
 	}
 
 	/**
@@ -554,7 +686,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the shininess of all appearances.
 	 * 
 	 * @param shininess
-	 *            shininess between 0 and 128
+	 *            shininess, between 0 and 128
 	 */
 	@CindyScript("shininess3d")
 	public void shininess3d(double shininess) {
@@ -602,11 +734,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * 
 	 * @param size
 	 *            size
+	 * @throws IllegalArgumentException
+	 *             if <code>size</code> is lower than or equal to 0
 	 */
 	@CindyScript("size3d")
 	public void size3d(double size) {
-		if (size <= 0)
-			return;
+		if (size <= 0) {
+			throw new IllegalArgumentException("size not positive");
+		}
+		
 		pointAppearance.setSize(size);
 		lineAppearance.setSize(size);
 		surfaceAppearance.setSize(size);
@@ -617,10 +753,16 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * 
 	 * @param size
 	 *            point size
+	 * @throws IllegalArgumentException
+	 *             if <code>size</code> is lower than or equal to 0
 	 */
 	@CindyScript("pointsize3d")
 	public void pointsize3d(double size) {
-		pointAppearance.setSize(Math.max(0, size));
+		if (size <= 0) {
+			throw new IllegalArgumentException("size not positive");
+		}
+		
+		pointAppearance.setSize(size);
 	}
 
 	/**
@@ -628,23 +770,33 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * 
 	 * @param size
 	 *            line size
+	 * @throws IllegalArgumentException
+	 *             if <code>size</code> is lower than or equal to 0
 	 */
 	@CindyScript("linesize3d")
 	public void linesize3d(double size) {
-		lineAppearance.setSize(Math.max(0, size));
+		if (size <= 0) {
+			throw new IllegalArgumentException("size not positive");
+		}
+		
+		lineAppearance.setSize(size);
 	}
 
 	/**
 	 * Sets the background color.
 	 * 
-	 * @param vec
+	 * @param color
 	 *            background color vector
+	 * @throws IllegalArgumentException
+	 *             if the length of <code>color</code> is not 3
 	 */
 	@CindyScript("background3d")
-	public void background3d(ArrayList<Double> vec) {
-		if (vec.size() != 3)
-			return;
-		cindy3d.setBackgroundColor(Util.toColor(vec));
+	public void background3d(ArrayList<Double> color) {
+		if (color.size() != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+
+		cindy3d.setBackgroundColor(Util.toColor(color));
 	}
 
 	/**
@@ -657,9 +809,25 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            near distance
 	 * @param far
 	 *            far distance
+	 * @throws IllegalArgumentException
+	 *             if <code>near</code> or <code>far</code> is less than or
+	 *             equal to 0
+	 * @throws IllegalArgumentException
+	 *             if <code>near</code> is not less than <code>far</code>
 	 */
 	@CindyScript("depthrange3d")
 	public void depthrange3d(double near, double far) {
+		if (near <= 0) {
+			throw new IllegalArgumentException("near distance not positive");
+		}
+		if (far <= 0) {
+			throw new IllegalArgumentException("far distance not positive");
+		}
+		if (near >= far) {
+			throw new IllegalArgumentException(
+					"near distance not smaller than far distance");
+		}
+		
 		cindy3d.setDepthRange(near, far);
 	}
 
@@ -678,11 +846,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            light index, between 0 (inclusive) and
 	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
 	 *            (exclusive)
+	 * @throws IndexOutOfBoundsException
+	 *             if light index is not between 0 (inclusive) and
+	 *             {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *             (exclusive)
 	 */
 	@CindyScript("disablelight3d")
 	public void disablelight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			return;
+			throw new IndexOutOfBoundsException("light index out of bounds");
 		}
 
 		cindy3d.disableLight(light);
@@ -695,11 +867,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            light index, between 0 (inclusive) and
 	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
 	 *            (exclusive)
+	 * @throws IndexOutOfBoundsException
+	 *             if light index is not between 0 (inclusive) and
+	 *             {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *             (exclusive)
 	 */
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			return;
+			throw new IndexOutOfBoundsException("light index out of bounds");
 		}
 		cindy3d.setLight(
 				light,
@@ -714,11 +890,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 *            light index, between 0 (inclusive) and
 	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
 	 *            (exclusive)
+	 * @throws IndexOutOfBoundsException
+	 *             if light index is not between 0 (inclusive) and
+	 *             {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *             (exclusive)
 	 */
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			return;
+			throw new IndexOutOfBoundsException("light index out of bounds");
 		}
 		cindy3d.setLight(
 				light,
@@ -742,7 +922,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		Object value = null;
 		value = modifiers.get("color");
 		if (value instanceof double[]) {
-			setColorState(result, (double[]) value);
+			result.setColor(Util.toColor((double[]) value));
 		}
 		value = modifiers.get("size");
 		if (value instanceof Double) {
@@ -818,34 +998,5 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 
 		return info;
-	}
-
-	/**
-	 * Sets the color state of an appearance.
-	 * 
-	 * @param appearance
-	 *            appearance
-	 * @param vec
-	 *            color vector
-	 */
-	private static void setColorState(AppearanceState appearance,
-			ArrayList<Double> vec) {
-		if (vec.size() != 3)
-			return;
-		appearance.setColor(Util.toColor(vec));
-	}
-
-	/**
-	 * Sets the color state of an appearance.
-	 * 
-	 * @param appearance
-	 *            appearance
-	 * @param vec
-	 *            color vector
-	 */
-	private static void setColorState(AppearanceState appearance, double[] vec) {
-		if (vec.length != 3)
-			return;
-		appearance.setColor(Util.toColor(vec));
 	}
 }
