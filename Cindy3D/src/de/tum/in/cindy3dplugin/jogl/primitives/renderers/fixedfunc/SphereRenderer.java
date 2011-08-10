@@ -9,11 +9,33 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
+/**
+ * Sphere renderer using fixed function for rendering.
+ */
 public class SphereRenderer extends PrimitiveRenderer<Sphere> {
+	/**
+	 * Number of level of detail meshes used for rendering
+	 */
 	private static final int LOD_COUNT = 8;
-	
+	/**
+	 * Meshes, each with a different level of detail
+	 */
 	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
 
+	/**
+	 * Creates a mesh representing a sphere. The sphere's origin is (0, 0, 0)
+	 * and its radius 1.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 * @param stacks
+	 *            number of subdivisions along the z-axis (similar to lines of
+	 *            latitude)
+	 * @param slices
+	 *            number of subdivisions around the z-axis (similar to lines of
+	 *            longitude)
+	 * @return created mesh
+	 */
 	private LODMesh createMesh(GL gl, int stacks, int slices) {
 		GL2 gl2 = gl.getGL2();
 		
@@ -90,6 +112,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		return mesh;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean init(GL gl) {
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {
@@ -102,6 +127,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#dispose(javax.media.opengl.GL)
+	 */
 	@Override
 	public void dispose(GL gl) {
 		GL2 gl2 = gl.getGL2();
@@ -110,6 +138,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#preRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
@@ -125,6 +156,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#postRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
@@ -133,6 +167,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#render(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState, de.tum.in.cindy3dplugin.jogl.primitives.Primitive)
+	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();

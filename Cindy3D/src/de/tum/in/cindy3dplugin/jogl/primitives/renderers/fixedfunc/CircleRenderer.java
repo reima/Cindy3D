@@ -8,11 +8,32 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Circle;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.CircleRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
+/**
+ * Circle renderer using fixed function for rendering.
+ */
 public class CircleRenderer extends CircleRendererBase {
+	/**
+	 * Number of level of detail meshes used for rendering
+	 */
 	private static final int LOD_COUNT = 8;
-	
+	/**
+	 * Meshes, each with a different level of detail
+	 */
 	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
 	
+	/**
+	 * Creates a mesh representing a circle. The created circle has its origin
+	 * at (0, 0, 0), radius 1 and lies in the xy-plane.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 * @param loops
+	 *            number of concentric rings about the origin into which the
+	 *            circle is subdivided
+	 * @param slices
+	 *            number of subdivisions around the z axis
+	 * @return created mesh
+	 */
 	private LODMesh createMesh(GL gl, int loops, int slices) {
 		GL2 gl2 = gl.getGL2();
 		
@@ -78,6 +99,9 @@ public class CircleRenderer extends CircleRendererBase {
 		return mesh;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean init(GL gl) {
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {
@@ -89,6 +113,9 @@ public class CircleRenderer extends CircleRendererBase {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#dispose(javax.media.opengl.GL)
+	 */
 	@Override
 	public void dispose(GL gl) {
 		GL2 gl2 = gl.getGL2();
@@ -97,21 +124,28 @@ public class CircleRenderer extends CircleRendererBase {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#preRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisable(GL2.GL_CULL_FACE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		//gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#postRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-		//gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#render(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState, de.tum.in.cindy3dplugin.jogl.primitives.Primitive)
+	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Circle circle) {
 		

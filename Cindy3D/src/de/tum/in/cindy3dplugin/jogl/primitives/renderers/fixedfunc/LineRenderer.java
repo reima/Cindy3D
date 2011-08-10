@@ -11,18 +11,42 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.LineRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
+/**
+ * Line renderer using fixed function for rendering.
+ */
 public class LineRenderer extends LineRendererBase {
+	/**
+	 * Number of level of detail meshes used for rendering
+	 */
 	private static final int LOD_COUNT = 8;
+	/**
+	 * Length of the standard tube
+	 */
 	private static final double LINE_LENGTH = 1;
-	
+	/**
+	 * Meshes, each with a different level of detail
+	 */
 	private LODMesh[] meshes = new LODMesh[LOD_COUNT];
 	
-	private LODMesh createMesh(GL gl, int loops, int slices) {
+	/**
+	 * Creates a mesh representing a tube. The tube's midpoint is the origin (0,
+	 * 0, 0) and its main axis is the z-axis. The height of the tube is 2 times
+	 * {@value #LINE_LENGTH}.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 * @param stacks
+	 *            number of subdivisions along the z-axis
+	 * @param slices
+	 *            number of subdivisions around the z-axis
+	 * @return created mesh
+	 */
+	private LODMesh createMesh(GL gl, int stacks, int slices) {
 		GL2 gl2 = gl.getGL2();
 		
 		
-		int vertexCount = (loops+1) * slices;
-		int faceCount = 2 * loops * slices;
+		int vertexCount = (stacks+1) * slices;
+		int faceCount = 2 * stacks * slices;
 		
 		LODMesh mesh = new LODMesh(3, vertexCount, faceCount, true);
 		
@@ -32,8 +56,8 @@ public class LineRenderer extends LineRendererBase {
 		double[] vertex = new double[3];
 		double[] normal;
 		
-		for (int loop = 0; loop < loops+1; ++loop) {
-			double zValue = 2.0 * LINE_LENGTH * (((double) loop) / loops - 0.5);
+		for (int loop = 0; loop < stacks+1; ++loop) {
+			double zValue = 2.0 * LINE_LENGTH * (((double) loop) / stacks - 0.5);
 			for (int slice = 0; slice < slices; ++slice) {
 				double angle = ((double) slice) / slices * Math.PI * 2;
 				vertex[0] = Math.cos(angle);
@@ -54,7 +78,7 @@ public class LineRenderer extends LineRendererBase {
 		int loopOffset = 0;
 		int nextLoopOffset = slices;
 		
-		for (int loop = 0;  loop < loops; ++loop) {
+		for (int loop = 0;  loop < stacks; ++loop) {
 			for (int slice = 0; slice < slices; ++slice) {
 				mesh.putFace(loopOffset + slice, 
 							 loopOffset + (slice + 1) % slices,
@@ -76,6 +100,9 @@ public class LineRenderer extends LineRendererBase {
 		return mesh;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean init(GL gl) {
 		for (int lod = 0; lod < LOD_COUNT; ++lod) {
@@ -87,6 +114,9 @@ public class LineRenderer extends LineRendererBase {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#dispose(javax.media.opengl.GL)
+	 */
 	@Override
 	public void dispose(GL gl) {
 		GL2 gl2 = gl.getGL2();
@@ -95,6 +125,9 @@ public class LineRenderer extends LineRendererBase {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#preRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
@@ -104,6 +137,9 @@ public class LineRenderer extends LineRendererBase {
 		gl2.glDisable(GL2.GL_CULL_FACE);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#postRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
@@ -112,6 +148,9 @@ public class LineRenderer extends LineRendererBase {
 		gl2.glDisable(GL2.GL_NORMALIZE);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#render(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState, de.tum.in.cindy3dplugin.jogl.primitives.Primitive)
+	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Line line) {
 		GL2 gl2 = jrs.gl.getGL2();
