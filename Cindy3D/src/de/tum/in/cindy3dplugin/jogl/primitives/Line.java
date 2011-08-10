@@ -1,8 +1,8 @@
 package de.tum.in.cindy3dplugin.jogl.primitives;
 
-import java.awt.Color;
-
 import org.apache.commons.math.geometry.Vector3D;
+
+import de.tum.in.cindy3dplugin.jogl.Material;
 
 /**
  * Line primitive.
@@ -60,17 +60,14 @@ public class Line extends Primitive {
 	 *            z component of second point on line
 	 * @param radius
 	 *            radius of tube representing the line
-	 * @param color
-	 *            color
-	 * @param shininess
-	 *            shininess
 	 * @param lineType
 	 *            line type
+	 * @param material
+	 *            material
 	 */
 	public Line(double x1, double y1, double z1, double x2, double y2,
-			double z2, double radius, Color color, double shininess,
-			LineType lineType) {
-		super(color, shininess, 1);
+			double z2, double radius, LineType lineType, Material material) {
+		super(new Material(material.getColor(), material.getShininess(), 1));
 		p1 = new Vector3D(x1, y1, z1);
 		p2 = new Vector3D(x2, y2, z2);
 		this.radius = radius;

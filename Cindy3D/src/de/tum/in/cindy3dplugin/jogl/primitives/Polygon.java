@@ -1,8 +1,8 @@
 package de.tum.in.cindy3dplugin.jogl.primitives;
 
-import java.awt.Color;
-
 import org.apache.commons.math.geometry.Vector3D;
+
+import de.tum.in.cindy3dplugin.jogl.Material;
 
 /**
  * Polygon primitive.
@@ -28,16 +28,11 @@ public class Polygon extends Primitive {
 	 *            vertex positions
 	 * @param normals
 	 *            normal positions
-	 * @param color
-	 *            color
-	 * @param shininess
-	 *            shininess
-	 * @param alpha
-	 *            alpha value
+	 * @param material
+	 *            material
 	 */
-	public Polygon(double[][] positions, double[][] normals, Color color,
-			double shininess, double alpha) {
-		super(color, shininess, alpha);
+	public Polygon(double[][] positions, double[][] normals, Material material) {
+		super(material);
 		this.positions = new Vector3D[positions.length];
 		this.normals = new Vector3D[positions.length];
 

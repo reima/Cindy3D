@@ -1,53 +1,37 @@
 package de.tum.in.cindy3dplugin.jogl.primitives;
 
-import java.awt.Color;
+import de.tum.in.cindy3dplugin.jogl.Material;
 
 /**
  * Abstract base class for all primitive classes.
  */
 public abstract class Primitive {
 	/**
-	 * Color of the primitive
+	 * Material used for rendering the primitive
 	 */
-	private Color color;
+	private Material material;
 	
-	/**
-	 * Shininess of the primitive
-	 */
-	private double shininess;
-
 	/**
 	 * Constructs a new primitive.
 	 * 
-	 * @param color color of the primitive
-	 * @param shininess shininess of the primitive
-	 * @param alpha alpha value of the primitive
+	 * @param material
+	 *            material of the primitive
 	 */
-	public Primitive(Color color, double shininess, double alpha) {
-		this.color = new Color(color.getRed(), color.getGreen(), color
-				.getBlue(), (int) (alpha * 255));
-		this.shininess = shininess;
+	public Primitive(Material material) {
+		this.material = material;
 	}
 	
 	/**
-	 * @return color of the primitive
+	 * @return primitive material
 	 */
-	public Color getColor() {
-		return color;
+	public Material getMaterial() {
+		return material;
 	}
 	
 	/**
-	 * @return shininess of the primitive
-	 */
-	public double getShininess() {
-		return shininess;
-	}
-
-	/**
-	 * @return true if the primitive is totally opaque, i.e. has an alpha value
-	 *         of 1
+	 * @return <code>true</code> iff the primitive is opaque
 	 */
 	public boolean isOpaque() {
-		return (color.getAlpha() == 255);
+		return (material.getColor().getAlpha() == 255);
 	}
 }

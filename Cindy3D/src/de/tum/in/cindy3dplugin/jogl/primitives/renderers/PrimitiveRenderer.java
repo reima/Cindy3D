@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.media.opengl.GL;
 
-import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Primitive;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
@@ -12,7 +11,7 @@ import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
  * Generic base renderer for a specific time of primitives.
  * 
  * @param <T>
- *            primtive type to be rendered by the renderer
+ *            primitive type to be rendered by the renderer
  */
 public abstract class PrimitiveRenderer<T extends Primitive> {
 	/**
@@ -38,7 +37,7 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 	}
 
 	/**
-	 * Disposes all class memebers which need to be disposes explicitly.
+	 * Disposes all class members which need to be disposes explicitly.
 	 * 
 	 * @param gl GL handle
 	 */
@@ -69,18 +68,18 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 	 * @param jrs
 	 *            current render state
 	 * @param primitive
-	 *            primtive to be rendered
+	 *            primitive to be rendered
 	 */
 	protected abstract void render(JOGLRenderState jrs, T primitive);
 
 	/**
-	 * Renders a whole set of prmitives of the same type. This method renders
-	 * all primtives after setting all needed render states and parameters.
+	 * Renders a whole set of primitives of the same type. This method renders
+	 * all primitives after setting all needed render states and parameters.
 	 * 
 	 * @param jrs
 	 *            current render state
 	 * @param c
-	 *            collection of primtives to be rendered
+	 *            collection of primitives to be rendered
 	 */
 	public void render(JOGLRenderState jrs, Collection<T> c) {
 		if (c.isEmpty()) {
@@ -90,8 +89,7 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 		preRender(jrs);
 		for (T primitive : c) {
 			if (primitive.isOpaque() == jrs.renderOpaque) {
-				Util.setMaterial(jrs.gl, primitive.getColor(),
-						primitive.getShininess());
+				primitive.getMaterial().setGLState(jrs.gl);
 				render(jrs, primitive);
 			}
 		}

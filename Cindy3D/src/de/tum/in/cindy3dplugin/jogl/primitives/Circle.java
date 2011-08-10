@@ -1,8 +1,8 @@
 package de.tum.in.cindy3dplugin.jogl.primitives;
 
-import java.awt.Color;
-
 import org.apache.commons.math.geometry.Vector3D;
+
+import de.tum.in.cindy3dplugin.jogl.Material;
 
 /**
  * Circle primitive.
@@ -38,17 +38,13 @@ public class Circle extends Primitive {
 	 *            z component of normal vector
 	 * @param radius
 	 *            radius
-	 * @param color
-	 *            color
-	 * @param shininess
-	 *            shininess
-	 * @param alpha
-	 *            alpha value
+	 * @param material
+	 *            material
 	 */
 	public Circle(double centerX, double centerY, double centerZ,
 			double normalX, double normalY, double normalZ, double radius,
-			Color color, double shininess, double alpha) {
-		super(color, shininess, alpha);
+			Material material) {
+		super(material);
 
 		center = new Vector3D(centerX, centerY, centerZ);
 		normal = new Vector3D(normalX, normalY, normalZ);

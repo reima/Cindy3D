@@ -1,6 +1,5 @@
 package de.tum.in.cindy3dplugin.jogl;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.swing.JFileChooser;
 
@@ -441,23 +439,6 @@ public class Util {
 	 */
 	public static Logger getLogger() {
 		return logger;
-	}
-
-	/**
-	 * Sets the GL state for the given material properties.
-	 * 
-	 * @param gl
-	 *            GL handle
-	 * @param color
-	 *            material color
-	 * @param shininess
-	 *            material shininess
-	 */
-	public static void setMaterial(GL gl, Color color, double shininess) {
-		gl.getGL2().glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE,
-				color.getComponents(null), 0);
-		gl.getGL2().glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS,
-				(float) shininess);
 	}
 
 	/**

@@ -1,8 +1,8 @@
 package de.tum.in.cindy3dplugin.jogl.primitives;
 
-import java.awt.Color;
-
 import org.apache.commons.math.geometry.Vector3D;
+
+import de.tum.in.cindy3dplugin.jogl.Material;
 
 /**
  * Sphere primitive.
@@ -28,16 +28,11 @@ public class Sphere extends Primitive {
 	 *            z coordinate of center
 	 * @param radius
 	 *            radius
-	 * @param color
-	 *            color
-	 * @param shininess
-	 *            shininess
-	 * @param alpha
-	 *            alpha value
+	 * @param material
+	 *            material
 	 */
-	public Sphere(double x, double y, double z, double radius, Color color,
-			double shininess, double alpha) {
-		super(color, shininess, alpha);
+	public Sphere(double x, double y, double z, double radius, Material material) {
+		super(material);
 		this.center = new Vector3D(x, y, z);
 		this.radius = radius;
 	}

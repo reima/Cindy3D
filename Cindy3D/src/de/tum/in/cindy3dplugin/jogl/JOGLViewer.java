@@ -224,7 +224,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			AppearanceState appearance) {
 //		Util.getLogger().info("addPoint(" + x + "," + y + "," + z + ")");
 		scene.addSphere(new Sphere(x, y, z, appearance.getSize() * POINT_SCALE,
-				appearance.getColor(), appearance.getShininess(), 1));
+				new Material(appearance.getColor(), appearance.getShininess(),
+						1)));
 	}
 
 	/* (non-Javadoc)
@@ -235,8 +236,9 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			double ny, double nz, double radius, AppearanceState appearance) {
 //		Util.getLogger().info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 //				+ "," + nz + "," + radius + ")");
-		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
-				.getColor(), appearance.getShininess(), appearance.getAlpha()));
+		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius,
+				new Material(appearance.getColor(), appearance.getShininess(),
+						appearance.getAlpha())));
 	}
 
 	/* (non-Javadoc)
@@ -252,8 +254,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 		addPoint(x2, y2, z2, appearance);
 		
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
-				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
-				LineType.SEGMENT));
+				* POINT_SCALE, LineType.SEGMENT, new Material(appearance
+				.getColor(), appearance.getShininess(), 1)));
 	}
 
 	/* (non-Javadoc)
@@ -265,8 +267,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 //		Util.getLogger().info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 //				+ "," + z2 + ")");
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
-				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
-				LineType.LINE));
+				* POINT_SCALE, LineType.LINE, new Material(appearance
+				.getColor(), appearance.getShininess(), 1)));
 	}
 
 	/* (non-Javadoc)
@@ -281,8 +283,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 		addPoint(x1, y1, z1, appearance);
 		
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
-				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
-				LineType.RAY));
+				* POINT_SCALE, LineType.RAY, new Material(
+				appearance.getColor(), appearance.getShininess(), 1)));
 	}
 
 	/* (non-Javadoc)
@@ -291,8 +293,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 	@Override
 	public void addPolygon(double[][] vertices, double[][] normals,
 			AppearanceState appearance) {
-		scene.addPolygon(new Polygon(vertices, normals, appearance.getColor(),
-				appearance.getShininess(), appearance.getAlpha()));
+		scene.addPolygon(new Polygon(vertices, normals, new Material(appearance
+				.getColor(), appearance.getShininess(), appearance.getAlpha())));
 	}
 
 	/* (non-Javadoc)
@@ -305,22 +307,25 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			scene.addLine(new Line(vertices[i - 1][0], vertices[i - 1][1],
 					vertices[i - 1][2], vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * POINT_SCALE,
-					appearance.getColor(), appearance.getShininess(),
-					LineType.SEGMENT));
+					LineType.SEGMENT, new Material(appearance.getColor(),
+							appearance.getShininess(), 1)));
 			scene.addSphere(new Sphere(vertices[i][0], vertices[i][1],
 					vertices[i][2], appearance.getSize() * POINT_SCALE,
-					appearance.getColor(), appearance.getShininess() , 1.0));
+					new Material(appearance.getColor(), appearance
+							.getShininess(), 1)));
 		}
 		scene.addSphere(new Sphere(vertices[0][0], vertices[0][1],
-				vertices[0][2], appearance.getSize() * POINT_SCALE, appearance
-						.getColor(), appearance.getShininess(), 1.0));
+				vertices[0][2], appearance.getSize() * POINT_SCALE,
+				new Material(appearance.getColor(), appearance.getShininess(),
+						1)));
 		if (closed) {
 			scene.addLine(new Line(vertices[vertices.length - 1][0],
 					vertices[vertices.length - 1][1],
 					vertices[vertices.length - 1][2], vertices[0][0],
 					vertices[0][1], vertices[0][2], appearance.getSize()
-							* POINT_SCALE, appearance.getColor(),
-					appearance.getShininess(), LineType.SEGMENT));
+							* POINT_SCALE, LineType.SEGMENT,
+					new Material(appearance.getColor(), appearance
+							.getShininess(), 1)));
 		}
 	}
 
@@ -332,8 +337,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			double[][] normals, MeshTopology topology,
 			AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, normals, topology,
-				appearance.getColor(), appearance.getShininess(), appearance
-						.getAlpha()));
+				new Material(appearance.getColor(), appearance.getShininess(),
+						appearance.getAlpha())));
 	}
 	
 	/* (non-Javadoc)
@@ -344,8 +349,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			NormalType normalType, MeshTopology topology,
 			AppearanceState appearance) {
 		scene.addMesh(new Mesh(rows, columns, vertices, normalType, topology,
-				appearance.getColor(), appearance.getShininess(), appearance
-						.getAlpha()));
+				new Material(appearance.getColor(), appearance.getShininess(),
+						appearance.getAlpha())));
 	}
 	
 	/* (non-Javadoc)
@@ -354,8 +359,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 	@Override
 	public void addSphere(double cx, double cy, double cz, double radius,
 			AppearanceState appearance)	{
-		scene.addSphere(new Sphere(cx, cy, cz, radius, appearance
-				.getColor(), appearance.getShininess(), appearance.getAlpha()));
+		scene.addSphere(new Sphere(cx, cy, cz, radius, new Material(appearance
+				.getColor(), appearance.getShininess(), appearance.getAlpha())));
 	}
 
 	/* (non-Javadoc)

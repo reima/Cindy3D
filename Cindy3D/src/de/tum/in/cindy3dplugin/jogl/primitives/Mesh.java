@@ -1,11 +1,10 @@
 package de.tum.in.cindy3dplugin.jogl.primitives;
 
-import java.awt.Color;
-
 import org.apache.commons.math.geometry.Vector3D;
 
 import de.tum.in.cindy3dplugin.Cindy3DViewer.MeshTopology;
 import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
+import de.tum.in.cindy3dplugin.jogl.Material;
 import de.tum.in.cindy3dplugin.jogl.Util;
 
 /**
@@ -76,17 +75,12 @@ public class Mesh extends Primitive {
 	 *            vertex normals
 	 * @param topology
 	 *            mesh topology
-	 * @param color
-	 *            color
-	 * @param shininess
-	 *            shininess
-	 * @param alpha
-	 *            alpha value
+	 * @param material
+	 *            material
 	 */
 	public Mesh(int rowCount, int columnCount, double[][] positions,
-			double[][] normals, MeshTopology topology, Color color,
-			double shininess, double alpha) {
-		super(color, shininess, alpha);
+			double[][] normals, MeshTopology topology, Material material) {
+		super(material);
 		init(rowCount, columnCount, positions, normals, NormalType.PER_VERTEX,
 				topology);
 	}
@@ -104,17 +98,12 @@ public class Mesh extends Primitive {
 	 *            type of normals to generate
 	 * @param topology
 	 *            mesh topology
-	 * @param color
-	 *            color
-	 * @param shininess
-	 *            shininess
-	 * @param alpha
-	 *            alpha value
+	 * @param material
+	 *            material
 	 */
 	public Mesh(int rowCount, int columnCount, double[][] positions,
-			NormalType normalType, MeshTopology topology, Color color,
-			double shininess, double alpha) {
-		super(color, shininess, alpha);
+			NormalType normalType, MeshTopology topology, Material material) {
+		super(material);
 		init(rowCount, columnCount, positions, null, normalType, topology);
 		computeNormals();
 	}
