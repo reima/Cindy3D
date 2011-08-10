@@ -143,14 +143,14 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glEnable(GL2.GL_NORMALIZE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
-		if (jrs.cullMode == CullMode.CULL_FRONT) {
+		if (jrs.getCullMode() == CullMode.CULL_FRONT) {
 			gl2.glEnable(GL2.GL_CULL_FACE);
 			gl2.glCullFace(GL2.GL_FRONT);
-		} else if (jrs.cullMode == CullMode.CULL_BACK) {
+		} else if (jrs.getCullMode() == CullMode.CULL_BACK) {
 			gl2.glEnable(GL2.GL_CULL_FACE);
 			gl2.glCullFace(GL2.GL_BACK);
 		}
@@ -161,7 +161,7 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glDisable(GL2.GL_NORMALIZE);
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
@@ -172,13 +172,13 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 
-		double cameraSpaceZ = Util.transformPoint(jrs.camera.getTransform(),
+		double cameraSpaceZ = Util.transformPoint(jrs.getCamera().getTransform(),
 				sphere.getCenter()).getZ()
 				+ sphere.getRadius();
-		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
-				jrs.renderHints.getAllowedScreenSpaceError(), cameraSpaceZ);
+		double allowedWorldSpaceError = jrs.getCamera().getWorldSpaceError(
+				jrs.getRenderHints().getAllowedScreenSpaceError(), cameraSpaceZ);
 		LODMesh mesh = meshes[LOD_COUNT - 1];
 		int lod;
 		for (lod = 0; lod < LOD_COUNT; ++lod) {

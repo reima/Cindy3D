@@ -63,7 +63,7 @@ public class MeshRenderer extends MeshRendererBase {
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
 		super.preRender(jrs);
-		jrs.gl.getGL2().glUseProgram(program.program());
+		jrs.getGLHandle().getGL2().glUseProgram(program.program());
 	}
 
 	/* (non-Javadoc)
@@ -72,6 +72,6 @@ public class MeshRenderer extends MeshRendererBase {
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
 		super.postRender(jrs);
-		jrs.gl.getGL2().glUseProgram(0);
+		jrs.getGLHandle().getGL2().glUseProgram(0);
 	}
 }

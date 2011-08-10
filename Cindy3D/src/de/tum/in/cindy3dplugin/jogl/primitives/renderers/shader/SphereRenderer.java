@@ -72,7 +72,7 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glUseProgram(0);
 	}
 
@@ -81,14 +81,14 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glUseProgram(program.program());
 		
-		if (jrs.cullMode == CullMode.CULL_FRONT) {
+		if (jrs.getCullMode() == CullMode.CULL_FRONT) {
 			renderMode = 0;
-		} else if (jrs.cullMode == CullMode.CULL_BACK) {
+		} else if (jrs.getCullMode() == CullMode.CULL_BACK) {
 			renderMode = 1;
-		} else if (jrs.cullMode == CullMode.CULL_NONE) {
+		} else if (jrs.getCullMode() == CullMode.CULL_NONE) {
 			renderMode = 2;
 		}
 	}
@@ -98,10 +98,10 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		
 		Vector3D viewSpaceCenter = Util.transformPoint(
-				jrs.camera.getTransform(), sphere.getCenter());
+				jrs.getCamera().getTransform(), sphere.getCenter());
 		
 		gl2.glUniform3fv(centerLoc, 1,
 				Util.vectorToFloatArray(viewSpaceCenter), 0);

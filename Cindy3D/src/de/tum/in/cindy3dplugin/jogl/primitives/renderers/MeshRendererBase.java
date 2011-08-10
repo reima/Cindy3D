@@ -48,7 +48,7 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glDisable(GL2.GL_CULL_FACE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
@@ -59,7 +59,7 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
@@ -90,6 +90,6 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Mesh m) {
-		getMeshBuffer(jrs.gl, m).render(jrs.gl);
+		getMeshBuffer(jrs.getGLHandle(), m).render(jrs.getGLHandle());
 	}
 }

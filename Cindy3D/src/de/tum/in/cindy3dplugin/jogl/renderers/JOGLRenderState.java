@@ -40,23 +40,23 @@ public class JOGLRenderState {
 	/**
 	 * GL handle.
 	 */
-	public GL gl;
+	private GL gl;
 	/**
 	 * Camera for this state.
 	 */
-	public ModelViewerCamera camera;
+	private ModelViewerCamera camera;
 	/**
 	 * Indicates if transparent or opaque primitives should get rendered.
 	 */
-	public boolean renderOpaque;
+	private boolean renderOpaque;
 	/**
 	 * Cull mode of the render state.
 	 */
-	public CullMode cullMode;
+	private CullMode cullMode;
 	/**
 	 * Render hints that should be fulfilled in the current render mode.
 	 */
-	public RenderHints renderHints;
+	private RenderHints renderHints;
 
 	/**
 	 * Creates new render state with the given parameters.
@@ -80,5 +80,33 @@ public class JOGLRenderState {
 		this.renderOpaque = renderOpaque;
 		this.cullMode = cullMode;
 		this.renderHints = renderHints;
+	}
+	
+	public void setCullMode(CullMode mode) {
+		cullMode = mode;
+	}
+	
+	public CullMode getCullMode() {
+		return cullMode;
+	}
+	
+	public boolean renderOpaque() {
+		return renderOpaque;
+	}
+	
+	public void setRenderOpaque(boolean renderOpaque) {
+		this.renderOpaque = renderOpaque;
+	}
+	
+	public GL getGLHandle() {
+		return gl;
+	}
+	
+	public ModelViewerCamera getCamera() {
+		return camera;
+	}
+	
+	public RenderHints getRenderHints() {
+		return renderHints;
 	}
 }

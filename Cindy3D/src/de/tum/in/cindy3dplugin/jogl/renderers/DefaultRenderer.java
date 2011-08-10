@@ -118,7 +118,6 @@ public class DefaultRenderer extends JOGLRenderer {
 			if (!meshRenderer.init(gl))
 				Util.getLogger().severe("Mesh renderer initialization failed");
 		} catch (GLException e) {
-			// TODO Auto-generated catch block
 			Util.getLogger().log(Level.SEVERE, e.toString(), e);
 		}
 	}
@@ -148,10 +147,10 @@ public class DefaultRenderer extends JOGLRenderer {
 	 *            current render state
 	 */
 	private void renderPrimitives(JOGLRenderState jrs) {
-		if (!jrs.renderOpaque) {
-			jrs.cullMode = CullMode.CULL_FRONT;
+		if (!jrs.renderOpaque()) {
+			jrs.setCullMode(CullMode.CULL_FRONT);
 			sphereRenderer.render(jrs, scene.getSpheres());
-			jrs.cullMode = CullMode.CULL_NONE;
+			jrs.setCullMode(CullMode.CULL_NONE);
 		}
 		
 		circleRenderer.render(jrs, scene.getCircles());
@@ -159,9 +158,9 @@ public class DefaultRenderer extends JOGLRenderer {
 		polygonRenderer.render(jrs, scene.getPolygons());
 		meshRenderer.render(jrs, scene.getMeshes());
 
-		jrs.cullMode = CullMode.CULL_BACK;
+		jrs.setCullMode(CullMode.CULL_BACK);
 		sphereRenderer.render(jrs, scene.getSpheres());
-		jrs.cullMode = CullMode.CULL_NONE;
+		jrs.setCullMode(CullMode.CULL_NONE);
 	}
 
 	/* (non-Javadoc)
@@ -206,17 +205,17 @@ public class DefaultRenderer extends JOGLRenderer {
 		
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glDepthMask(false);
-		jrs.renderOpaque = false;
+		jrs.setRenderOpaque(false);
 		renderPrimitives(jrs);
 		renderPrimitives(jrs);
 		gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 		
-		jrs.renderOpaque = true;
+		jrs.setRenderOpaque(true);
 		renderPrimitives(jrs);
 		
 		gl.glEnable(GL2.GL_BLEND);
-		jrs.renderOpaque = false;
+		jrs.setRenderOpaque(false);
 		renderPrimitives(jrs);
 		gl.glDisable(GL2.GL_BLEND);
 	}

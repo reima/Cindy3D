@@ -130,7 +130,7 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 		gl2.glEnable(GL2.GL_NORMALIZE);
@@ -142,7 +142,7 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 		gl2.glDisable(GL2.GL_NORMALIZE);
@@ -153,9 +153,9 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Line line) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		// Get the model view matrix
-		RealMatrix modelView = jrs.camera.getTransform();
+		RealMatrix modelView = jrs.getCamera().getTransform();
 
 		// gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
 
@@ -165,7 +165,7 @@ public class LineRenderer extends LineRendererBase {
 		Vector3D p1 = Util.transformPoint(modelView, line.getFirstPoint());
 		Vector3D p2 = Util.transformPoint(modelView, line.getSecondPoint());
 
-		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
+		Endpoints endPoints = clipLineAtFrustum(jrs.getCamera(), p1, p2,
 				line.getLineType());
 
 		double totalLength = Vector3D.distance(endPoints.p1, endPoints.p2);
@@ -186,8 +186,8 @@ public class LineRenderer extends LineRendererBase {
 		gl2.glPushMatrix();
 
 		for (int box = 0; box < boxes; ++box) {
-			double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
-					jrs.renderHints.getAllowedScreenSpaceError(), boxMid.getZ());
+			double allowedWorldSpaceError = jrs.getCamera().getWorldSpaceError(
+					jrs.getRenderHints().getAllowedScreenSpaceError(), boxMid.getZ());
 
 			LODMesh mesh = meshes[LOD_COUNT - 1];
 			int lod;

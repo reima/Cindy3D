@@ -94,7 +94,7 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glUseProgram(0);
 	}
 
@@ -103,7 +103,7 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glUseProgram(program.program());
 	}
 
@@ -113,9 +113,9 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Line line) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		// Get the model view matrix
-		RealMatrix modelView = jrs.camera.getTransform();
+		RealMatrix modelView = jrs.getCamera().getTransform();
 
 		// All computations are made in camera space, so first transform the two
 		// points of the line into camera space by multiplying with the
@@ -141,7 +141,7 @@ public class LineRenderer extends LineRendererBase {
 		}
 		direction = direction.normalize();
 
-		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
+		Endpoints endPoints = clipLineAtFrustum(jrs.getCamera(), p1, p2,
 				line.getLineType());
 		// After shifting the end points of the ray/line to the maximal visible
 		// positions, the size and orientation for the OBB is needed

@@ -127,7 +127,7 @@ public class CircleRenderer extends CircleRendererBase {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glDisable(GL2.GL_CULL_FACE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glNormal3d(0, 0, 1);
@@ -138,7 +138,7 @@ public class CircleRenderer extends CircleRendererBase {
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 	}
 
@@ -148,13 +148,13 @@ public class CircleRenderer extends CircleRendererBase {
 	@Override
 	protected void render(JOGLRenderState jrs, Circle circle) {
 		
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 		
-		double cameraSpaceZ = Util.transformPoint(jrs.camera.getTransform(),
+		double cameraSpaceZ = Util.transformPoint(jrs.getCamera().getTransform(),
 				circle.getCenter()).getZ()
 				+ circle.getRadius();
-		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
-				jrs.renderHints.getAllowedScreenSpaceError(), cameraSpaceZ);
+		double allowedWorldSpaceError = jrs.getCamera().getWorldSpaceError(
+				jrs.getRenderHints().getAllowedScreenSpaceError(), cameraSpaceZ);
 		LODMesh mesh = meshes[LOD_COUNT - 1];
 		int lod;
 		for (lod = 0; lod < LOD_COUNT; ++lod) {

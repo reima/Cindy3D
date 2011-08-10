@@ -33,7 +33,7 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
-		GL2 gl = jrs.gl.getGL2();
+		GL2 gl = jrs.getGLHandle().getGL2();
 		gl.glDisable(GL2.GL_CULL_FACE);
 	}
 
@@ -49,7 +49,7 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Polygon polygon) {
-		GL2 gl2 = jrs.gl.getGL2();
+		GL2 gl2 = jrs.getGLHandle().getGL2();
 
 		gl2.glBegin(GL2.GL_POLYGON);
 		for (int i = 0; i < polygon.getPositions().length; ++i) {
