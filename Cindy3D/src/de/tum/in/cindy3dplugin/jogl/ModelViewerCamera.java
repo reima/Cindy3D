@@ -203,7 +203,7 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * Returns the view transform matrix.
+	 * Returns the homogeneous 4x4 view transform matrix.
 	 * 
 	 * This matrix transforms coordinates in global world space to camera space,
 	 * where the camera is in the origin, looking along the negative z axis and
@@ -252,6 +252,8 @@ public class ModelViewerCamera {
 	}
 	
 	/**
+	 * Returns the homogeneous 4x4 perspective projection matrix.
+	 * 
 	 * @return perspective projection matrix
 	 */
 	public RealMatrix getPerspectiveTransform() {
