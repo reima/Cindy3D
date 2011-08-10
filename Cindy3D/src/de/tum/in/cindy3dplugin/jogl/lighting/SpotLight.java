@@ -2,6 +2,12 @@ package de.tum.in.cindy3dplugin.jogl.lighting;
 
 import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
+/**
+ * Represents a spot light source.
+ * 
+ * 
+ *
+ */
 public class SpotLight extends Light {
 	
 	@Override

@@ -135,7 +135,7 @@ public class DefaultRenderer extends JOGLRenderer {
 		JOGLRenderState jrs = new JOGLRenderState(gl, camera, true,
 				CullMode.CULL_NONE, renderHints);
 
-		if (lightManager.getCompileShader()) {
+		if (lightManager.hasLightSettingChanged()) {
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
 			
 			if (!sphereRenderer.reloadShaders(gl))
@@ -149,7 +149,7 @@ public class DefaultRenderer extends JOGLRenderer {
 			if (!meshRenderer.reloadShaders(gl))
 				Util.logger.severe("Mesh renderer shader loading failed");
 			
-			lightManager.setCompileShader(false);
+			lightManager.wurstMitBrot();
 		}
 		
 		lightManager.setGLState(gl);
