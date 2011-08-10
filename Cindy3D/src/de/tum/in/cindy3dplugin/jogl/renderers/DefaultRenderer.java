@@ -20,13 +20,48 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
+/**
+ * Organizes primitive renderers and global rendering states. The default
+ * renderer does not support any kind of multi- or supersampling.
+ */
 public class DefaultRenderer extends JOGLRenderer {
+	/**
+	 * Sphere rendeer
+	 */
 	private PrimitiveRenderer<Sphere> sphereRenderer;
+	/**
+	 * Circle renderer
+	 */
 	private PrimitiveRenderer<Circle> circleRenderer;
+	/**
+	 * Line renderer
+	 */
 	private PrimitiveRenderer<Line> lineRenderer;
+	/**
+	 * Polygon renderer
+	 */
 	private PrimitiveRenderer<Polygon> polygonRenderer;
+	/**
+	 * mesh Renderer
+	 */
 	private PrimitiveRenderer<Mesh> meshRenderer;
-	
+
+	/**
+	 * Creates a new renderer with the given parameters.
+	 * 
+	 * @param renderHints
+	 *            render hints that should be fulfilled. Only the screen space
+	 *            error component is used as sampling is disabled in the default
+	 *            renderer.
+	 * @param scene
+	 *            scene to be rendered
+	 * @param camera
+	 *            camera object
+	 * @param lightManager
+	 *            light manager for scene lighting
+	 * @param prf
+	 *            factory that is used to create primitive renderers
+	 */
 	public DefaultRenderer(RenderHints renderHints, Scene scene,
 			ModelViewerCamera camera, LightManager lightManager,
 			PrimitiveRendererFactory prf) {
@@ -38,6 +73,9 @@ public class DefaultRenderer extends JOGLRenderer {
 		meshRenderer = prf.createMeshRenderer();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+	 */
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		Util.getLogger().info("init()");
@@ -85,6 +123,9 @@ public class DefaultRenderer extends JOGLRenderer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+	 */
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
@@ -100,6 +141,12 @@ public class DefaultRenderer extends JOGLRenderer {
 		display(drawable);
 	}
 	
+	/**
+	 * Renders all primtives that the scene contains
+	 * 
+	 * @param jrs
+	 *            current render state
+	 */
 	private void renderPrimitives(JOGLRenderState jrs) {
 		if (!jrs.renderOpaque) {
 			jrs.cullMode = CullMode.CULL_FRONT;
@@ -117,6 +164,9 @@ public class DefaultRenderer extends JOGLRenderer {
 		jrs.cullMode = CullMode.CULL_NONE;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+	 */
 	@Override
 	public void display(GLAutoDrawable drawable) {
 //		Util.getLogger().info("display()");
@@ -171,6 +221,9 @@ public class DefaultRenderer extends JOGLRenderer {
 		gl.glDisable(GL2.GL_BLEND);
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
+	 */
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		sphereRenderer.dispose(drawable.getGL());
