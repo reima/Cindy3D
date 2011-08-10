@@ -13,7 +13,6 @@ import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
-import de.tum.in.cindy3dplugin.jogl.Util;
 
 /**
  * Implementation of the plugin interface.
@@ -603,9 +602,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			throw new IllegalArgumentException("color size not 3");
 		}
 		
-		pointAppearance.setColor(Util.toColor(color));
-		lineAppearance.setColor(Util.toColor(color));
-		surfaceAppearance.setColor(Util.toColor(color));
+		pointAppearance.setColor(convertToColor(color));
+		lineAppearance.setColor(convertToColor(color));
+		surfaceAppearance.setColor(convertToColor(color));
 	}
 
 	/**
@@ -622,7 +621,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			throw new IllegalArgumentException("color size not 3");
 		}
 		
-		pointAppearance.setColor(Util.toColor(color));
+		pointAppearance.setColor(convertToColor(color));
 	}
 
 	/**
@@ -639,7 +638,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			throw new IllegalArgumentException("color size not 3");
 		}
 		
-		lineAppearance.setColor(Util.toColor(color));
+		lineAppearance.setColor(convertToColor(color));
 	}
 
 	/**
@@ -656,7 +655,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			throw new IllegalArgumentException("color size not 3");
 		}
 		
-		surfaceAppearance.setColor(Util.toColor(color));
+		surfaceAppearance.setColor(convertToColor(color));
 	}
 
 	/**
@@ -796,7 +795,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			throw new IllegalArgumentException("color size not 3");
 		}
 
-		cindy3d.setBackgroundColor(Util.toColor(color));
+		cindy3d.setBackgroundColor(convertToColor(color));
 	}
 
 	/**
@@ -907,6 +906,48 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
+	 * Creates a Color object from an array of RGB components.
+	 * 
+	 * Components outside the range [0, 1] are clamped.
+	 * 
+	 * @param color
+	 *            RGB components
+	 * @return Color object
+	 * @throws IllegalArgumentException
+	 *             if the length of <code>color</code> is not 3
+	 */
+	private static Color convertToColor(double[] color) {
+		if (color.length != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+		return new Color(
+				(float) Math.max(0, Math.min(1, color[0])),
+				(float) Math.max(0, Math.min(1, color[1])),
+				(float) Math.max(0,	Math.min(1, color[2])));
+	}
+
+	/**
+	 * Creates a Color object from an ArrayList of RGB components.
+	 * 
+	 * Components outside the range [0, 1] are clamped.
+	 * 
+	 * @param color
+	 *            RGB components
+	 * @return Color object
+	 * @throws IllegalArgumentException
+	 *             if the size of <code>color</code> is not 3
+	 */
+	private static Color convertToColor(ArrayList<Double> color) {
+		if (color.size() != 3) {
+			throw new IllegalArgumentException("color size not 3");
+		}
+		return new Color(
+				(float) Math.max(0, Math.min(1, color.get(0))),
+				(float) Math.max(0, Math.min(1, color.get(1))),
+				(float) Math.max(0, Math.min(1, color.get(2))));
+	}
+
+	/**
 	 * Apply modifiers to a appearance state.
 	 * 
 	 * @param initialState
@@ -922,7 +963,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		Object value = null;
 		value = modifiers.get("color");
 		if (value instanceof double[]) {
-			result.setColor(Util.toColor((double[]) value));
+			result.setColor(convertToColor((double[]) value));
 		}
 		value = modifiers.get("size");
 		if (value instanceof Double) {
@@ -958,17 +999,17 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 		value = modifiers.get("ambient");
 		if (value instanceof double[]) {
-			info.setAmbient(Util.toColor((double[]) value));
+			info.setAmbient(convertToColor((double[]) value));
 		}
 
 		value = modifiers.get("diffuse");
 		if (value instanceof double[]) {
-			info.setDiffuse(Util.toColor((double[]) value));
+			info.setDiffuse(convertToColor((double[]) value));
 		}
 
 		value = modifiers.get("specular");
 		if (value instanceof double[]) {
-			info.setSpecular(Util.toColor((double[]) value));
+			info.setSpecular(convertToColor((double[]) value));
 		}
 
 		value = modifiers.get("position");

@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -170,17 +169,6 @@ public class Util {
 		return program;
 	}
 
-	public static Color toColor(double[] vec) {
-
-		if (vec.length != 3) {
-			return null;
-		}
-		return new Color(
-				(float)Math.max(0, Math.min(1, vec[0])),
-				(float)Math.max(0, Math.min(1, vec[1])),
-				(float)Math.max(0, Math.min(1, vec[2])));
-	}
-	
 	public static Vector3D toVector(double[] vec) {
 		if (vec.length != 3) {
 			return null;
@@ -188,16 +176,6 @@ public class Util {
 		return new Vector3D(vec[0], vec[1], vec[2]);
 	}
 	
-	public static Color toColor(ArrayList<Double> vec) {
-		if (vec.size() != 3) {
-			return null;
-		}
-		return new Color(
-				(float)Math.max(0, Math.min(1, vec.get(0))),
-				(float)Math.max(0, Math.min(1, vec.get(1))),
-				(float)Math.max(0, Math.min(1, vec.get(2))));
-	}
-
 	public static void setShaderLightFillIn(String shaderLightFillIn) {
 		Util.shaderLightFillIn = shaderLightFillIn;
 	}
