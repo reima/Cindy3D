@@ -192,7 +192,7 @@ public class LightModificationInfo {
 	 * @return true if the direction is set
 	 */
 	public boolean hasDirection() {
-		return diffuse != null;
+		return direction != null;
 	}
 
 	/**
