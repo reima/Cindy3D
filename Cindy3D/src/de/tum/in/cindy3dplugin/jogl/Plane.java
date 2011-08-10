@@ -3,7 +3,7 @@ package de.tum.in.cindy3dplugin.jogl;
 import org.apache.commons.math.geometry.Vector3D;
 
 /**
- * Plane
+ * Plane in three-dimensional space.
  */
 public class Plane {
 	/**
