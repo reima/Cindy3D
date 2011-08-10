@@ -10,28 +10,89 @@ import de.tum.in.cindy3dplugin.jogl.lighting.LightManager;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory;
 
+/**
+ * Organizes primitive renderers and global rendering states. Additionally, the
+ * supersampled renderer supports supersampling.
+ */
 public class SupersampledRenderer extends DefaultRenderer {
+	/**
+	 * Current width of regular, not supersampled, framebuffer / screen
+	 */
 	private int width;
+	/**
+	 * Current height of regular, not supersampled, framebuffer / screen
+	 */
 	private int height;
+	/**
+	 * Supersample factor that is requested. As this is only a request, it might
+	 * not be fulfilled if this supersample factor is not supported / too high.
+	 */
 	private int requestedSuperSampleFactor = 2;
+	/**
+	 * Actual current supersample factor used for rendering. Might differ from
+	 * {@link #requestedSuperSampleFactor} if the
+	 * {@link #requestedSuperSampleFactor} is not supported.
+	 */
 	private int superSampleFactor;
-	
+	/**
+	 * Color texture id. The color texture is part of the supersampled
+	 * framebuffer.
+	 */
 	private int colorTexture = 0;
+	/**
+	 * Depth texture id. The depth texture is part of the supersampled
+	 * framebuffer.
+	 */
 	private int depthBuffer = 0;
+	/**
+	 * Supersampled framebuffer id.
+	 */
 	private int framebuffer = 0;
 
+	/**
+	 * Creates a new supersampling renderer with the given parameters.
+	 * 
+	 * @param renderHints
+	 *            render hints that should be fulfilled. Especially the
+	 *            supersampling rate is used to define the
+	 *            {@link #requestedSuperSampleFactor}.
+	 * @param scene
+	 *            scene to be rendered
+	 * @param camera
+	 *            camera object
+	 * @param lightManager
+	 *            light manager for scene lighting
+	 * @param prf
+	 *            factory that is used to create primitive renderers
+	 */
 	public SupersampledRenderer(RenderHints renderHints, Scene scene,
 			ModelViewerCamera camera, LightManager lightManager,
-			int superSampleFactor, PrimitiveRendererFactory prf) {
+			PrimitiveRendererFactory prf) {
 		super(renderHints, scene, camera, lightManager, prf);
-		this.requestedSuperSampleFactor = superSampleFactor;
+		this.requestedSuperSampleFactor = renderHints.getSamplingRate();
 		width = height = 1;
 	}
 
+	/**
+	 * @return currently used supersample factor
+	 */
 	public int getSuperSampleFactor() {
 		return superSampleFactor;
 	}
 	
+	/**
+	 * Creates a new frame buffer and replaces the old. The new frame buffer
+	 * size is specified by the given parameters.
+	 * 
+	 * @param drawable
+	 *            GL drawable providing the GL handle
+	 * @param width
+	 *            width of the new framebuffer
+	 * @param height
+	 *            height of the new framebuffer
+	 * @return <code>true</code> if the requested framebuffer was created
+	 *         successfully, otherwise <code>false</code>
+	 */
 	private boolean createFramebuffer(GLAutoDrawable drawable, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
 
@@ -67,6 +128,12 @@ public class SupersampledRenderer extends DefaultRenderer {
 		return true;
 	}
 	
+	/**
+	 * Destroys the current framebuffer.
+	 * 
+	 * @param drawable
+	 *            GL drawable providing the GL handle
+	 */
 	private void destroyFramebuffer(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		
@@ -83,12 +150,18 @@ public class SupersampledRenderer extends DefaultRenderer {
 		framebuffer = 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer#dispose(javax.media.opengl.GLAutoDrawable)
+	 */
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		destroyFramebuffer(drawable);
 		super.dispose(drawable);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer#display(javax.media.opengl.GLAutoDrawable)
+	 */
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
@@ -138,6 +211,9 @@ public class SupersampledRenderer extends DefaultRenderer {
 		gl.glPopMatrix();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+	 */
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {

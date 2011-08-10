@@ -131,9 +131,8 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 					renderer = new DefaultRenderer(hints, scene, camera,
 							lightManager, new ShaderPrimitiveRendererFactory());
 				} else {
-					renderer = new SupersampledRenderer(hints, scene,
-							camera, lightManager, hints.getSamplingRate(),
-							new ShaderPrimitiveRendererFactory());
+					renderer = new SupersampledRenderer(hints, scene, camera,
+							lightManager, new ShaderPrimitiveRendererFactory());
 				}
 			}
 			
