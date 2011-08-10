@@ -156,13 +156,13 @@ public class LODMesh {
 		vertices.flip();
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
 		gl.glBufferData(GL2.GL_ARRAY_BUFFER, vertices.capacity()
-				* Util.SIZEOF_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
+				* Util.BYTES_PER_DOUBLE, vertices, GL2.GL_STATIC_DRAW);
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
 
 		indices.flip();
 		gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
-				* Util.SIZEOF_INT, indices, GL2.GL_STATIC_DRAW);
+				* Util.BYTES_PER_INT, indices, GL2.GL_STATIC_DRAW);
 		gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		calculateMaxEdgeLength();
@@ -247,16 +247,16 @@ public class LODMesh {
 
 		int stride;
 		if (hasNormals) {
-			stride = Util.SIZEOF_DOUBLE * (vertexPositionDimension + 3);
+			stride = Util.BYTES_PER_DOUBLE * (vertexPositionDimension + 3);
 		} else {
-			stride = Util.SIZEOF_DOUBLE * vertexPositionDimension;
+			stride = Util.BYTES_PER_DOUBLE * vertexPositionDimension;
 		}
 
 		gl2.glVertexPointer(vertexPositionDimension, GL2.GL_DOUBLE, stride, 0);
 		
 		if (hasNormals) {
-			gl2.glNormalPointer(GL2.GL_DOUBLE, stride,
-					vertexPositionDimension * Util.SIZEOF_DOUBLE);
+			gl2.glNormalPointer(GL2.GL_DOUBLE, stride, vertexPositionDimension
+					* Util.BYTES_PER_DOUBLE);
 		}
 		gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl2.glDrawElements(GL2.GL_TRIANGLES, faceCount * 3,

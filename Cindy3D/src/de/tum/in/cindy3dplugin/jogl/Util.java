@@ -48,11 +48,11 @@ public class Util {
 	/**
 	 * Size of <code>double</code> in bytes
 	 */
-	public static final int SIZEOF_DOUBLE = Double.SIZE / 8;
+	public static final int BYTES_PER_DOUBLE = Double.SIZE / 8;
 	/**
 	 * Size of <code>int</code> in bytes
 	 */
-	public static final int SIZEOF_INT = Integer.SIZE / 8;
+	public static final int BYTES_PER_INT = Integer.SIZE / 8;
 
 	/**
 	 * Current shader light fill-in

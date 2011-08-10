@@ -139,7 +139,7 @@ public class MeshBuffer {
 		vertexBuffer = tmp[0];
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vertexBuffer);
 		gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.capacity()
-				* Util.SIZEOF_DOUBLE, vertices, GL.GL_STATIC_DRAW);
+				* Util.BYTES_PER_DOUBLE, vertices, GL.GL_STATIC_DRAW);
 		gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
 		if (hasIndexBuffer) {
@@ -148,7 +148,7 @@ public class MeshBuffer {
 			indexBuffer = tmp[0];
 			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()
-					* Util.SIZEOF_INT, indices, GL.GL_STATIC_DRAW);
+					* Util.BYTES_PER_INT, indices, GL.GL_STATIC_DRAW);
 			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
 		} else {
 			indexBuffer = 0;
@@ -165,9 +165,9 @@ public class MeshBuffer {
 		GL2 gl2 = gl.getGL2();
 
 		gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vertexBuffer);
-		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * Util.SIZEOF_DOUBLE, 0);
-		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * Util.SIZEOF_DOUBLE,
-				3 * Util.SIZEOF_DOUBLE);
+		gl2.glVertexPointer(3, GL2.GL_DOUBLE, 6 * Util.BYTES_PER_DOUBLE, 0);
+		gl2.glNormalPointer(GL2.GL_DOUBLE, 6 * Util.BYTES_PER_DOUBLE,
+				3 * Util.BYTES_PER_DOUBLE);
 
 		if (hasIndexBuffer) {
 			gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
