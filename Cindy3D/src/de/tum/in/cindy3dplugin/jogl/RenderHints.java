@@ -6,7 +6,7 @@ package de.tum.in.cindy3dplugin.jogl;
  * <ol>
  * <li>Render mode, which specifies how primitives
  * are rendered
- * <li>Sampling rate, which speficies the rate of multi- or
+ * <li>Sampling rate, which specifies the rate of multi- or
  * supersampling
  * <li>Screen space error, which defines the maximal error in
  * screen that is acceptable for level of detail rendering
@@ -29,7 +29,7 @@ public class RenderHints {
 	}
 
 	/**
-	 * Rate for either multi or supersampling.
+	 * Rate for either multi- or supersampling.
 	 */
 	private int samplingRate = 1;
 	/**
