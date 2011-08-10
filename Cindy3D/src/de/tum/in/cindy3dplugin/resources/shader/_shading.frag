@@ -19,7 +19,7 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 
    // Compute vector from surface to light position
    VP = vec3(gl_LightSource[i].position) - ecPosition3;
-
+   
    // Compute distance between surface and light position
    d = length(VP);
 
@@ -50,14 +50,26 @@ void pointLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
    Specular += gl_LightSource[i].specular * pf * attenuation;
 }
 
-void directionalLight(in int i, in vec3 normal)
+void directionalLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 {
    float nDotVP;         // normal . light direction
    float nDotHV;         // normal . light half vector
    float pf;             // power factor
+   vec3  VP;           // direction from surface to light position
+   vec3  halfVector;   // direction of maximum highlights
+   
+   if (dot(normal, eye) < 0.0)
+   {
+       normal *= -1.0;
+   }
+   
+   // Compute vector from surface to light position
+   VP = normalize(vec3 (gl_LightSource[i].position));
+   
+   halfVector = normalize(VP + eye);
 
-   nDotVP = max(0.0, dot(normal, normalize(vec3 (gl_LightSource[i].position))));
-   nDotHV = max(0.0, dot(normal, vec3 (gl_LightSource[i].halfVector)));
+   nDotVP = max(0.0, dot(normal, VP));
+   nDotHV = max(0.0, dot(normal, halfVector));
 
    if (nDotVP == 0.0)
    {
@@ -66,7 +78,6 @@ void directionalLight(in int i, in vec3 normal)
    else
    {
        pf = pow(nDotHV, gl_FrontMaterial.shininess);
-
    }
    Ambient  += gl_LightSource[i].ambient;
    Diffuse  += gl_LightSource[i].diffuse * nDotVP;

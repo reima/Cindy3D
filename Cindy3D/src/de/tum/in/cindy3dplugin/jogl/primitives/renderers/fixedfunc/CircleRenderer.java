@@ -42,17 +42,15 @@ public class CircleRenderer extends CircleRendererBase {
 				(loops - 1) * slices * 2; // outer loops, quads (2
 										  // triangles)
 		
-		LODMesh mesh = new LODMesh(2, vertexCount, faceCount, true);
+		LODMesh mesh = new LODMesh(2, vertexCount, faceCount, false);
 		
 		/*
 		 * Generate vertices
 		 */
 		double[] vertex = new double[2];
 		
-		double[] normal = new double[]{0,0,1};
-		
 		vertex[0] = vertex[1] = 0;
-		mesh.putVertex(vertex, normal);
+		mesh.putVertex(vertex);
 		
 		for (int loop = 0; loop < loops; ++loop) {
 			double radius = ((double) (loop + 1)) / loops;
@@ -60,7 +58,7 @@ public class CircleRenderer extends CircleRendererBase {
 				double angle = ((double) slice) / slices * Math.PI * 2;
 				vertex[0] = Math.cos(angle) * radius;
 				vertex[1] = Math.sin(angle) * radius;
-				mesh.putVertex(vertex, normal);
+				mesh.putVertex(vertex);
 			}
 		}
 		
@@ -132,6 +130,7 @@ public class CircleRenderer extends CircleRendererBase {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisable(GL2.GL_CULL_FACE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl2.glNormal3d(0, 0, 1);
 	}
 
 	/* (non-Javadoc)

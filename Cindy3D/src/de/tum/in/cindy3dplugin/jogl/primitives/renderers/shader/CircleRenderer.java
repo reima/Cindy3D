@@ -3,6 +3,8 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.apache.commons.math.geometry.Vector3D;
+
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
@@ -34,10 +36,6 @@ public class CircleRenderer extends CircleRendererBase {
 	 * Shader variable id for the circle orientation / normal
 	 */
 	private int normalLoc;
-	/**
-	 * Shader variable id for the circle transformation matrix
-	 */
-	private int transformLoc;
 
 	/* (non-Javadoc)
 	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
@@ -62,9 +60,7 @@ public class CircleRenderer extends CircleRendererBase {
 		if (program == null) {
 			return false;
 		}
-
-		transformLoc = gl2.glGetUniformLocation(program.program(),
-				"circleTransform");
+		
 		centerLoc = gl2.glGetUniformLocation(program.program(), "circleCenter");
 		radiusSqLoc = gl2.glGetUniformLocation(program.program(),
 				"circleRadiusSq");
@@ -99,6 +95,7 @@ public class CircleRenderer extends CircleRendererBase {
 	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(program.program());
+		gl2.glNormal3d(0, 0, 1);
 	}
 
 	/* (non-Javadoc)
@@ -107,13 +104,18 @@ public class CircleRenderer extends CircleRendererBase {
 	@Override
 	protected void render(JOGLRenderState jrs, Circle circle) {
 		GL2 gl2 = jrs.gl.getGL2();
+		
+		Vector3D viewSpaceCenter = Util.transformPoint(jrs.camera.getTransform(), circle.getCenter());
 		gl2.glUniform3fv(centerLoc, 1,
-				Util.vectorToFloatArray(circle.getCenter()), 0);
+				Util.vectorToFloatArray(viewSpaceCenter), 0);
 		gl2.glUniform3fv(normalLoc, 1,
 				Util.vectorToFloatArray(circle.getNormal()), 0);
 		gl2.glUniform1f(radiusSqLoc, (float) Math.pow(circle.getRadius(), 2.0));
 
-		gl2.glUniformMatrix4fv(transformLoc, 1, true, buildTransform(circle), 0);
+		gl2.glMatrixMode(GL2.GL_MODELVIEW);
+		gl2.glPushMatrix();
+
+		gl2.glMultTransposeMatrixf(buildTransform(circle), 0);
 
 		gl2.glBegin(GL2.GL_QUADS);
 		gl2.glVertex2f(-1, -1);
@@ -121,5 +123,7 @@ public class CircleRenderer extends CircleRendererBase {
 		gl2.glVertex2f(1, 1);
 		gl2.glVertex2f(-1, 1);
 		gl2.glEnd();
+		
+		gl2.glPopMatrix();
 	}
 }

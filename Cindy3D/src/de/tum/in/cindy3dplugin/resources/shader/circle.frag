@@ -3,15 +3,19 @@ uniform float circleRadiusSq;
 uniform vec3 circleNormal;
 
 varying vec3 pos;
+varying vec3 normal;
 
 #pragma include _shading.frag
 
 void main() {
+
+	gl_FragColor = vec4(pos,1);
+	//return;
+	
   vec3 diff = pos - circleCenter;
   if (dot(diff, diff) > circleRadiusSq) {
     discard;
   } else {
-    shade(gl_NormalMatrix * circleNormal,
-          vec3(gl_ModelViewMatrix * vec4(pos, 1)));
+    shade(normalize(normal),pos);
   }
 }

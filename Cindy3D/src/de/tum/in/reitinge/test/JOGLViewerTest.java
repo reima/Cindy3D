@@ -18,7 +18,7 @@ public class JOGLViewerTest {
 		
 		Hashtable<String, Object> hintsMap = new Hashtable<String,Object>();
 		
-		hintsMap.put("quality", 0.0);
+		hintsMap.put("quality", 5.0);
 
 		viewer.setRenderHints(hintsMap);
 		
@@ -28,8 +28,8 @@ public class JOGLViewerTest {
 		viewer.begin();
 //		materials(viewer);
 //		colorSpiral(viewer);
-//		circles(viewer);
-		lines(viewer);
+		circles(viewer);
+//		lines(viewer);
 //		spheres(viewer);
 //		icosahedron(viewer);
 //		enneper(viewer, true);
@@ -126,20 +126,26 @@ public class JOGLViewerTest {
 	}
 	
 	public static void circles(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1.0);
+		AppearanceState appearance = new AppearanceState(Color.red, 50, 1.0, 1.0);
 		
 		LightModificationInfo info = new LightModificationInfo(LightType.DIRECTIONAL_LIGHT);
+		//LightModificationInfo info = new LightModificationInfo(LightType.POINT_LIGHT);
+
+		//info.setSpecular(Color.black);
 		
+		info.setPosition(new double[]{10,0,0});		
 		info.setDirection(new double[]{1,0,0});
 		viewer.setLight(0, info);
 		
+		info.setPosition(new double[]{0,10,0});
 		info.setDirection(new double[]{0,1,0});
 		viewer.setLight(1, info);
 		
+		info.setPosition(new double[]{0,0,10});
 		info.setDirection(new double[]{0,0,1});
 		viewer.setLight(2, info);
 		
-		appearance.setAlpha(0.5);
+		//appearance.setAlpha(0.5);
 		
 		for (int i = -5; i <= 5; ++i) {
 			for (int j = -5; j <= 5; ++j) {

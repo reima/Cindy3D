@@ -60,11 +60,11 @@ public class DefaultRenderer extends JOGLRenderer {
 			gl.glDepthFunc(GL2.GL_LEQUAL);
 			gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 			
-			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, new float[] { 0.5f,
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, new float[] { 0.5f,
 					0.5f, 0.5f, 0.5f }, 0);
-			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float[] { 0.2f,
+			gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, new float[] { 0.2f,
 					0.2f, 0.2f, 0.2f }, 0);
-			gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 60.0f);
+			gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 60.0f);
 	
 			gl.glLightModeli(GL2.GL_LIGHT_MODEL_TWO_SIDE, GL2.GL_TRUE);
 			gl.glEnable(GL2.GL_LIGHTING);
