@@ -46,7 +46,7 @@ public class LODMesh {
 
 	/**
 	 * Creates a new empty mesh with fixed vertex and face count. Mesh
-	 * information can be filled by calling {@link #putVertex(double[]) and
+	 * information can be filled by calling {@link #putVertex(double[])} and
 	 * 
 	 * @link #putFace(int, int, int)}.
 	 * 
