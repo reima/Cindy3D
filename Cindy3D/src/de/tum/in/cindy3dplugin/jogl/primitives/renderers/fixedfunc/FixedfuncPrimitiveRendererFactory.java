@@ -8,32 +8,72 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory;
 
+/**
+ * Primitive renderer factory for fixed function pipeline renderers.
+ * 
+ * This specialization of the PrimtiveRendererFactory factory generates
+ * primitive renderers that only uses fixed function pipeline functionality
+ * working with OpenGL 2.0.
+ */
 public class FixedfuncPrimitiveRendererFactory implements
 		PrimitiveRendererFactory {
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory
+	 * #createCircleRenderer()
+	 */
 	@Override
 	public PrimitiveRenderer<Circle> createCircleRenderer() {
 		return new CircleRenderer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory
+	 * #createLineRenderer()
+	 */
 	@Override
 	public PrimitiveRenderer<Line> createLineRenderer() {
 		return new LineRenderer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory
+	 * #createMeshRenderer()
+	 */
 	@Override
 	public PrimitiveRenderer<Mesh> createMeshRenderer() {
 		return new MeshRenderer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory
+	 * #createSphereRenderer()
+	 */
 	@Override
 	public PrimitiveRenderer<Sphere> createSphereRenderer() {
 		return new SphereRenderer();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory
+	 * #createPolyonRenderer()
+	 */
 	@Override
 	public PrimitiveRenderer<Polygon> createPolygonRenderer() {
 		return new PolygonRenderer();
 	}
-
 }
