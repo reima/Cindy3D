@@ -166,7 +166,7 @@ public class LineRenderer extends LineRendererBase {
 		Vector3D p2 = Util.transformPoint(modelView, line.getSecondPoint());
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
-				line.lineType);
+				line.getLineType());
 
 		double totalLength = Vector3D.distance(endPoints.p1, endPoints.p2);
 		int boxes = (int) (Math.ceil(totalLength / LINE_LENGTH));
@@ -178,7 +178,7 @@ public class LineRenderer extends LineRendererBase {
 		Vector3D direction = endPoints.p2.subtract(endPoints.p1).normalize()
 				.scalarMultiply(boxLength);
 		endPoints.p2 = endPoints.p1.add(direction);
-		RealMatrix cylinder = buildOBBTransform(endPoints, line.radius);
+		RealMatrix cylinder = buildOBBTransform(endPoints, line.getRadius());
 		
 		Vector3D boxMid = new Vector3D(0.5, endPoints.p1, 0.5, endPoints.p2);
 		
@@ -192,7 +192,7 @@ public class LineRenderer extends LineRendererBase {
 			LODMesh mesh = meshes[LOD_COUNT - 1];
 			int lod;
 			for (lod = 0; lod < LOD_COUNT; ++lod) {
-				if (meshes[lod].isSufficient(line.radius,
+				if (meshes[lod].isSufficient(line.getRadius(),
 						allowedWorldSpaceError)) {
 					mesh = meshes[lod];
 					break;

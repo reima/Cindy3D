@@ -37,11 +37,11 @@ public class Line extends Primitive {
 	/**
 	 * Radius of tube representing the line
 	 */
-	public double radius;
+	private double radius;
 	/**
 	 * Line type
 	 */
-	public LineType lineType;
+	private LineType lineType;
 
 	/**
 	 * Constructs a new line.
@@ -94,5 +94,19 @@ public class Line extends Primitive {
 	 */
 	public Vector3D getSecondPoint() {
 		return p2;
+	}
+	
+	/**
+	 * @return line radius
+	 */
+	public double getRadius() {
+		return radius;
+	}
+	
+	/**
+	 * @return line type
+	 */
+	public LineType getLineType() {
+		return lineType;
 	}
 }

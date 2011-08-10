@@ -128,7 +128,7 @@ public class LineRenderer extends LineRendererBase {
 		Vector3D direction = p2.subtract(p1);
 
 		double cylinderLength = -1;
-		switch (line.lineType) {
+		switch (line.getLineType()) {
 		case SEGMENT:
 			cylinderLength = direction.getNorm();
 			break;
@@ -142,15 +142,15 @@ public class LineRenderer extends LineRendererBase {
 		direction = direction.normalize();
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.camera, p1, p2,
-				line.lineType);
+				line.getLineType());
 		// After shifting the end points of the ray/line to the maximal visible
 		// positions, the size and orientation for the OBB is needed
-		RealMatrix cylinder = buildOBBTransform(endPoints, line.radius);
+		RealMatrix cylinder = buildOBBTransform(endPoints, line.getRadius());
 
 		// Draw unit cube which is transformed into the OBB during vertex
 		// processing on the GPU
 		gl2.glUniform1f(lengthLoc, (float) cylinderLength);
-		gl2.glUniform1f(radiusLoc, (float) line.radius);
+		gl2.glUniform1f(radiusLoc, (float) line.getRadius());
 		gl2.glUniform3f(originLoc, (float) p1.getX(), (float) p1.getY(),
 				(float) p1.getZ());
 		gl2.glUniform3f(directionLoc, (float) direction.getX(),
