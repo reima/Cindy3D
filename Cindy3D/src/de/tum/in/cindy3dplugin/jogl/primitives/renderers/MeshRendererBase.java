@@ -21,10 +21,8 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 	 */
 	protected HashMap<Integer, MeshBuffer> meshBuffers = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see PrimtiveRenderer#init()
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
 	 */
 	@Override
 	public boolean init(GL gl) {
@@ -32,14 +30,11 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 		return true;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see PrimtiveRenderer#dispose()
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#dispose(javax.media.opengl.GL)
 	 */
 	@Override
-	public void dispose(GL gl) {
-		Iterator<MeshBuffer> it = meshBuffers.values().iterator();
+	public void dispose(GL gl) { Iterator<MeshBuffer> it = meshBuffers.values().iterator();
 
 		MeshBuffer mb;
 		while (it.hasNext()) {
@@ -48,11 +43,8 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 		}
 	}
 	
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see PrimtiveRenderer#preRender()
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#preRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
 	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
@@ -62,10 +54,8 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see PrimtiveRenderer#postRender()
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#postRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
 	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
@@ -95,10 +85,8 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 		return mb;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see PrimtiveRenderer#render()
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#render(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState, de.tum.in.cindy3dplugin.jogl.primitives.Primitive)
 	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Mesh m) {

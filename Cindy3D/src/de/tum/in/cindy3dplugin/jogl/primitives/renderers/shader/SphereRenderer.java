@@ -11,6 +11,11 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState.CullMode;
 
+/**
+ * Sphere renderer using shaders for rendering spheres. Using shaders results in per fragment shading and lighting. Spheres have a
+ * perfectly smooth form as a quad as proxy bounding geometry is rendered
+ * followed by per fragment raycasting.
+ */
 public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	private ShaderProgram program = null;
 	private int centerLoc;
@@ -19,11 +24,17 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	
 	private float renderMode;
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean init(GL gl) {
 		return reloadShaders(gl);
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#reloadShaders(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean reloadShaders(GL gl) {
 		GL2 gl2 = gl.getGL2();
@@ -44,6 +55,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#dispose(javax.media.opengl.GL)
+	 */
 	@Override
 	public void dispose(GL gl) {
 		if (program != null) {
@@ -51,12 +65,18 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#postRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#preRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
@@ -71,6 +91,9 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#render(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState, de.tum.in.cindy3dplugin.jogl.primitives.Primitive)
+	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();

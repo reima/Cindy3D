@@ -13,20 +13,51 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.renderers.LineRendererBase;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
+/**
+ * Line, ray and line segment renderer using shaders for rendering lines, rays
+ * and line segments. Using shaders results in per fragment shading and
+ * lighting. Each line is rendered as a tube with a defined radius. Each tube
+ * has a perfectly smooth form as a oriented bounding box as proxy bounding
+ * geometry is rendered followed by per fragment raycasting.
+ */
 public class LineRenderer extends LineRendererBase {
+	/**
+	 * Shader program for the line shaders
+	 */
 	private ShaderProgram program = null;
-
+	/**
+	 * Shader variable id for the oriented bounding box transformation matrix 
+	 */
 	private int transformLoc;
+	/**
+	 * Shader variable id for one end point of the line, ray or line segment
+	 */
 	private int originLoc;
+	/**
+	 * Shader variable id for the direction of the line, ray or line segment
+	 */
 	private int directionLoc;
+	/**
+	 * Shader variable id for the tube radius, representing the line, ray or
+	 * line segment
+	 */
 	private int radiusLoc;
+	/**
+	 * Shader variable id for the line, ray or line segment length indicator
+	 */
 	private int lengthLoc;
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#init(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean init(GL gl) {
 		return reloadShaders(gl);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#reloadShaders(javax.media.opengl.GL)
+	 */
 	@Override
 	public boolean reloadShaders(GL gl) {
 		GL2 gl2 = gl.getGL2();
@@ -54,6 +85,9 @@ public class LineRenderer extends LineRendererBase {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#dispose(javax.media.opengl.GL)
+	 */
 	@Override
 	public void dispose(GL gl) {
 		if (program != null) {
@@ -61,18 +95,28 @@ public class LineRenderer extends LineRendererBase {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#postRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#preRender(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState)
+	 */
 	@Override
 	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(program.program());
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRenderer#render(de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState, de.tum.in.cindy3dplugin.jogl.primitives.Primitive)
+	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Line line) {
 		GL2 gl2 = jrs.gl.getGL2();
