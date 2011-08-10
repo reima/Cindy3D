@@ -205,7 +205,7 @@ public class ModelViewerCamera {
 	/**
 	 * Returns the homogeneous 4x4 view transform matrix.
 	 * 
-	 * This matrix transforms coordinates in global world space to camera space,
+	 * This matrix transforms coordinates in global world space to view space,
 	 * where the camera is in the origin, looking along the negative z axis and
 	 * having the positive y axis as up vector.
 	 * 

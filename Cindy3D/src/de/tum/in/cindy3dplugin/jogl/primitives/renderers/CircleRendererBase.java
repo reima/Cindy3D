@@ -26,7 +26,7 @@ public abstract class CircleRendererBase extends PrimitiveRenderer<Circle> {
 	 * 
 	 * @param circle
 	 *            destination circle
-	 * @return Row-major transformation matrix
+	 * @return row-major transformation matrix
 	 */
 	protected static float[] buildTransform(Circle circle) {
 		RealMatrix transform = MatrixUtils.createRealIdentityMatrix(4);

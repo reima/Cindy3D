@@ -10,13 +10,13 @@ import de.tum.in.cindy3dplugin.jogl.RenderHints;
  * Properties and information that is needed for rendering or should be applied.
  * The following parameters are part of a render state.
  * 
- * <lo>
- * <il> cull mode, which indicates how to cull primitive faces.
- * <il> camera, which defines the current part of the scene to be rendered.
- * <il> render either opaque or transparent primitives.
- * <il> render hints, concerning the quality of the rendering output, that
+ * <ol>
+ * <li> cull mode, which indicates how to cull primitive faces.
+ * <li> camera, which defines the current part of the scene to be rendered.
+ * <li> render either opaque or transparent primitives.
+ * <li> render hints, concerning the quality of the rendering output, that
  * 		should be fulfilled during rendering.
- * </lo>
+ * </ol>
  */
 public class JOGLRenderState {
 	/**
