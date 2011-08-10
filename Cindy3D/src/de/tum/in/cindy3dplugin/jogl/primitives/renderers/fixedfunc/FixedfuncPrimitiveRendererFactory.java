@@ -11,9 +11,8 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactor
 /**
  * Primitive renderer factory for fixed function pipeline renderers.
  * 
- * This specialization of the PrimtiveRendererFactory factory generates
- * primitive renderers that only uses fixed function pipeline functionality
- * working with OpenGL 2.0.
+ * This factory generates primitive renderers that only use the fixed
+ * function pipeline of OpenGL 2.0 class hardware.
  */
 public class FixedfuncPrimitiveRendererFactory implements
 		PrimitiveRendererFactory {

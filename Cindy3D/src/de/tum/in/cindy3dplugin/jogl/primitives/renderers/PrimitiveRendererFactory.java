@@ -3,32 +3,30 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers;
 import de.tum.in.cindy3dplugin.jogl.primitives.*;
 
 /**
- * Primitive renderer factory interface.
+ * Primitive renderer factory.
  * 
- * Interface for different kinds of factories producing renderers for different
- * kinds of primitives.
- * 
+ * Creates instances of renderers for different primitives.
  */
 public interface PrimitiveRendererFactory {
 	/**
-	 * @return circle renderer
+	 * @return new circle renderer instance
 	 */
 	public PrimitiveRenderer<Circle> createCircleRenderer();
 	/**
-	 * @return line, ray and line segment renderer
+	 * @return new line, ray and line segment renderer instance
 	 */
 	public PrimitiveRenderer<Line> createLineRenderer();
 	/**
-	 * @return mesh renderer
+	 * @return new mesh renderer instance
 	 */
 	public PrimitiveRenderer<Mesh> createMeshRenderer();
 	/**
-	 * @return sphere renderer
+	 * @return new sphere renderer instance
 	 */
 	public PrimitiveRenderer<Sphere> createSphereRenderer();
 	/**
 	 * 
-	 * @return polygon renderer
+	 * @return new polygon renderer instance
 	 */
 	public PrimitiveRenderer<Polygon> createPolygonRenderer();
 }

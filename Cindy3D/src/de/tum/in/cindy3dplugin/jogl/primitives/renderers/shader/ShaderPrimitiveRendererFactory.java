@@ -11,11 +11,10 @@ import de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactor
 /**
  * Primitive renderer factory for advanced shading renderers.
  * 
- * This specialization of the PrimtiveRendererFactory factory generates
- * primitive renderers that use shaders and more advanced shading techniques.
+ * This factory generates primitive renderers that use the programmable pipeline
+ * of OpenGL 2.0 class hardware.
  */
 public class ShaderPrimitiveRendererFactory implements PrimitiveRendererFactory {
-	
 	/* (non-Javadoc)
 	 * @see de.tum.in.cindy3dplugin.jogl.primitives.renderers.PrimitiveRendererFactory#createCircleRenderer()
 	 */
