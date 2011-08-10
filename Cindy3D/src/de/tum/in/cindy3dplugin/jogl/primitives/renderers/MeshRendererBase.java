@@ -9,15 +9,34 @@ import javax.media.opengl.GL2;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderState;
 
+/**
+ * Base class for different kinds of mesh renderers.
+ * 
+ * This intermediate class contains methods needed by more than one specialized
+ * mesh renderer.
+ */
 public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
+	/**
+	 * Hash map containing all rendering buffers from all meshes rendered so far.
+	 */
 	protected HashMap<Integer, MeshBuffer> meshBuffers = null;
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see PrimtiveRenderer#init()
+	 */
 	@Override
 	public boolean init(GL gl) {
 		meshBuffers = new HashMap<Integer, MeshBuffer>();
 		return true;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see PrimtiveRenderer#dispose()
+	 */
 	@Override
 	public void dispose(GL gl) {
 		Iterator<MeshBuffer> it = meshBuffers.values().iterator();
@@ -30,21 +49,42 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 	}
 	
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see PrimtiveRenderer#preRender()
+	 */
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisable(GL2.GL_CULL_FACE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see PrimtiveRenderer#postRender()
+	 */
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
+	/**
+	 * Returns all rendering buffers belonging to a mesh. The buffer objects are
+	 * cached so a new object is only created if it requested for a new mesh.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 * @param m
+	 *            mesh
+	 * @return mesh rendering buffer object holding buffers representing the
+	 *         specified mesh <code>m</code>
+	 */
 	protected MeshBuffer getMeshBuffer(GL gl, Mesh m) {
 		MeshBuffer mb;
 		mb = meshBuffers.get(m.getIdentifier());
@@ -55,6 +95,11 @@ public abstract class MeshRendererBase extends PrimitiveRenderer<Mesh> {
 		return mb;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see PrimtiveRenderer#render()
+	 */
 	@Override
 	protected void render(JOGLRenderState jrs, Mesh m) {
 		getMeshBuffer(jrs.gl, m).render(jrs.gl);

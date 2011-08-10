@@ -42,13 +42,13 @@ public class MeshRenderer extends MeshRendererBase {
 	}
 
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		super.preRender(jrs);
 		jrs.gl.getGL2().glUseProgram(program.program());
 	}
 
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 		super.postRender(jrs);
 		jrs.gl.getGL2().glUseProgram(0);
 	}

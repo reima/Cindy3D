@@ -10,18 +10,64 @@ import de.tum.in.cindy3dplugin.jogl.Plane;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line;
 import de.tum.in.cindy3dplugin.jogl.primitives.Line.LineType;
 
+/**
+ * Base class for different kinds of line, ray and line segments renderers.
+ * 
+ * This intermediate class contains methods needed by more than one specialized
+ * line renderer.
+ */
 public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
-
+	/**
+	 * Internal class representing the two end points of a line segment.
+	 */
 	protected static class Endpoints {
+		/**
+		 * First end point.
+		 */
 		public Vector3D p1;
+		/**
+		 * Second end point.
+		 */
 		public Vector3D p2;
 
+		/**
+		 * Constructs a new Endpoint class with the two given end points.
+		 * 
+		 * @param p1
+		 *            first end point
+		 * @param p2
+		 *            second end point
+		 */
 		public Endpoints(Vector3D p1, Vector3D p2) {
 			this.p1 = p1;
 			this.p2 = p2;
 		}
 	}
-
+	
+	/**
+	 * Clips a given line or ray at the camera view frustum. As a line or rays
+	 * have an infinite length, they are clipped against the camera view
+	 * frustum, which results in a finite line segment representing the visible
+	 * parts of the line or ray.
+	 * <ol>
+	 * <li>A line is represented by two points <code>p1</code> and
+	 * <code>p2</code>.
+	 * <li>A ray is represented by its starting point <code>p1</code> and
+	 * another point <code>p2</code>.
+	 * <li>Line segments are not clipped even if they are not or only partially
+	 * in the view frustum.
+	 * </ol>
+	 * 
+	 * @param camera
+	 *            current camera setting containg the view frustum
+	 * @param p1
+	 *            first point on line or ray starting point
+	 * @param p2
+	 *            second point on line or ray
+	 * @param lineType
+	 *            line type
+	 * @return end points of the line segments reprenting the clipped geometry
+	 */
 	protected static Endpoints clipLineAtFrustum(ModelViewerCamera camera,
 			Vector3D p1, Vector3D p2, LineType lineType) {
 
@@ -80,10 +126,29 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 		return new Endpoints(p1, p2);
 	}
 
+	/**
+	 * Computes a transformation matrix transforming a standard axis-aligned
+	 * bounding box (AABB) into an oriented bounding box (OBB). The standard
+	 * AABB box is defined by its minimum (-1, -1, -1) and its maximum (1, 1,
+	 * 1). The main axis of the OBB is defined by the line containing both
+	 * points of <code>endPoints</code>. The distance between these two end
+	 * points also implies the OBB size on this axis. The two other axes are not
+	 * further defined except that they are perpendicular to the main axis and
+	 * perpendicular to each other to build a regular box. As a line is
+	 * represented as a tube, the box size on these two axes is the tube radius
+	 * <code>radius</code> times 2.
+	 * 
+	 * @param endPoints
+	 *            end points of the line segment, defining the main orientation
+	 *            of the OBB
+	 * @param radius
+	 *            radius of the tube representing the line segment
+	 * @return transformation matrix
+	 */
 	protected static RealMatrix buildOBBTransform(Endpoints endPoints,
 			double radius) {
 		// Length of the OBB
-		double dist = Vector3D.distance(endPoints.p1, endPoints.p2);
+		double dist = 0.5 * Vector3D.distance(endPoints.p1, endPoints.p2);
 		Vector3D direction = endPoints.p2.subtract(endPoints.p1).normalize();
 
 		// Midpoint of OBB
@@ -105,8 +170,8 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 						1 });
 
 		// Compose the final transformation matrix for [-1,1]^3 by first
-		// scaling the OBB, then rotating it and finaling translating it
-		// into the final the line fitting position
+		// scaling the OBB, then rotating it and finally translating it
+		// into the line fitting position
 		RealMatrix cylinder = translationMatrix.multiply(rotationMatrix)
 				.multiply(scaleMatrix);
 

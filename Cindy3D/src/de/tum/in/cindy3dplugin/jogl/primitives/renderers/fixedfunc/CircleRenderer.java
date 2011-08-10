@@ -98,7 +98,7 @@ public class CircleRenderer extends CircleRendererBase {
 	}
 
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisable(GL2.GL_CULL_FACE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
@@ -106,7 +106,7 @@ public class CircleRenderer extends CircleRendererBase {
 	}
 
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		//gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);

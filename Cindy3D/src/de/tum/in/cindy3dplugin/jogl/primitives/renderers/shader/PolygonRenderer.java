@@ -42,7 +42,7 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	}
 	
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(program.program());
 	}
@@ -60,7 +60,7 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	}
 
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glUseProgram(0);
 	}

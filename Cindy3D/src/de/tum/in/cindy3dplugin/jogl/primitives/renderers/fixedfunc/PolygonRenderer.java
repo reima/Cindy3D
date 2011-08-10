@@ -20,13 +20,13 @@ public class PolygonRenderer extends PrimitiveRenderer<Polygon> {
 	}
 
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl = jrs.gl.getGL2();
 		gl.glDisable(GL2.GL_CULL_FACE);
 	}
 
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 	}
 
 	@Override

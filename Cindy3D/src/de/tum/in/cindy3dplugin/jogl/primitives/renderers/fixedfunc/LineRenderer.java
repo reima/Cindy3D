@@ -33,7 +33,7 @@ public class LineRenderer extends LineRendererBase {
 		double[] normal;
 		
 		for (int loop = 0; loop < loops+1; ++loop) {
-			double zValue = LINE_LENGTH * (((double) loop) / loops - 0.5);
+			double zValue = 2.0 * LINE_LENGTH * (((double) loop) / loops - 0.5);
 			for (int slice = 0; slice < slices; ++slice) {
 				double angle = ((double) slice) / slices * Math.PI * 2;
 				vertex[0] = Math.cos(angle);
@@ -96,7 +96,7 @@ public class LineRenderer extends LineRendererBase {
 	}
 
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glEnableClientState(GL2.GL_NORMAL_ARRAY);
@@ -105,7 +105,7 @@ public class LineRenderer extends LineRendererBase {
 	}
 
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 		gl2.glDisableClientState(GL2.GL_NORMAL_ARRAY);

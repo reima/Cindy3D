@@ -111,7 +111,7 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	}
 
 	@Override
-	public void preRender(JOGLRenderState jrs) {
+	protected void preRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glEnable(GL2.GL_NORMALIZE);
 		gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
@@ -126,7 +126,7 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	}
 
 	@Override
-	public void postRender(JOGLRenderState jrs) {
+	protected void postRender(JOGLRenderState jrs) {
 		GL2 gl2 = jrs.gl.getGL2();
 		gl2.glDisable(GL2.GL_NORMALIZE);
 		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);

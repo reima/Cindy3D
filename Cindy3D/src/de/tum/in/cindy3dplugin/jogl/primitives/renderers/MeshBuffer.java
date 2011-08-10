@@ -10,19 +10,51 @@ import de.tum.in.cindy3dplugin.Cindy3DViewer.NormalType;
 import de.tum.in.cindy3dplugin.jogl.Util;
 import de.tum.in.cindy3dplugin.jogl.primitives.Mesh;
 
+/**
+ * Holds vertex and index buffers belonging to a certain mesh object.
+ */
 public class MeshBuffer {
+	/**
+	 * Vertex buffer id of the mesh.
+	 */
 	private int vertexBuffer;
+	/**
+	 * Index buffer id of the mesh.
+	 */
 	private int indexBuffer;
-
+	/**
+	 * Indicates if mesh has an index buffer.
+	 */
 	private boolean hasIndexBuffer;
-
+	/**
+	 * Number of indices in the index buffer
+	 */
 	private int indexCount;
+	/**
+	 * Number of vertices in the vertex buffer
+	 */
 	private int vertexCount;
 
+	/**
+	 * Builds vertex buffer and index buffer for a given mesh.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 * @param m
+	 *            mesh
+	 */
 	public MeshBuffer(GL gl, Mesh m) {
 		createBuffers(gl, m);
 	}
 
+	/**
+	 * Creates vertex and index buffer for a given mesh.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 * @param m
+	 *            mesh
+	 */
 	private void createBuffers(GL gl, Mesh m) {
 		double[][] positions = m.getPositions();
 		double[][] normals = m.getNormals();
@@ -123,6 +155,12 @@ public class MeshBuffer {
 		}
 	}
 	
+	/**
+	 * Renders the mesh represented by the vertex and index buffer.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 */
 	public void render(GL gl) {
 		GL2 gl2 = gl.getGL2();
 
@@ -140,7 +178,13 @@ public class MeshBuffer {
 		}
 	}
 
-	public void dispose(GL2 gl2) {
-		gl2.glDeleteBuffers(2, new int[] { vertexBuffer, indexBuffer }, 0);
+	/**
+	 * Explicitely releases the buffers on the GPU.
+	 * 
+	 * @param gl
+	 *            GL handle
+	 */
+	public void dispose(GL2 gl) {
+		gl.glDeleteBuffers(2, new int[] { vertexBuffer, indexBuffer }, 0);
 	}
 }
