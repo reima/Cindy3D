@@ -83,7 +83,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		
 		if (container == null) {
 			standalone = true;
-			Util.logger.info("Creating standalone frame");
+			Util.getLogger().info("Creating standalone frame");
 			JFrame frame = new JFrame("Cindy3D (JOGL)");
 			frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			frame.setLayout(new BorderLayout());
@@ -97,18 +97,18 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 		camera.lookAt(new Vector3D(0, 0, 5), Vector3D.ZERO, Vector3D.PLUS_J);
 
 		try {
-			Util.logger.info("Trying to call GLProfile.initSingleton");
+			Util.getLogger().info("Trying to call GLProfile.initSingleton");
 			GLProfile.initSingleton(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			Util.logger.log(Level.SEVERE, e.toString(), e);
+			Util.getLogger().log(Level.SEVERE, e.toString(), e);
 		}
 		
 		applyHints(qualityHints[0]);
 	}
 
 	private void applyHints(RenderHints hints) {
-		Util.logger.info("Creating renderer");
+		Util.getLogger().info("Creating renderer");
 		
 		if (renderHints != null && renderHints.equals(hints)) {
 			return;
@@ -138,17 +138,17 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 				}
 			}
 			
-			Util.logger.info("GLProfile: " + profile);
-			Util.logger.info("GLCapabilities: " + caps);
+			Util.getLogger().info("GLProfile: " + profile);
+			Util.getLogger().info("GLCapabilities: " + caps);
 			
 			if (canvas != null) {
 				canvas.destroy();
 				this.container.remove(canvas);
 			}
 			
-			Util.logger.info("Renderer: " + renderer);
+			Util.getLogger().info("Renderer: " + renderer);
 			
-			Util.logger.info("Creating canvas");
+			Util.getLogger().info("Creating canvas");
 			
 			canvas = new GLCanvas(caps);
 			canvas.addGLEventListener(renderer);
@@ -157,12 +157,12 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 			canvas.addMouseWheelListener(this);
 			canvas.setSize(this.container.getSize());
 			
-			Util.logger.info("Canvas: " + canvas.getClass().getCanonicalName());
+			Util.getLogger().info("Canvas: " + canvas.getClass().getCanonicalName());
 			
 			this.container.add(canvas, BorderLayout.CENTER);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			Util.logger.log(Level.SEVERE, e.toString(), e);
+			Util.getLogger().log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void begin() {
-		Util.logger.info("begin()");
+		Util.getLogger().info("begin()");
 		
 		if (requestedRenderHints != null) {
 			applyHints(requestedRenderHints);
@@ -184,17 +184,17 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void end() {
-		Util.logger.info("end()");
+		Util.getLogger().info("end()");
 
 		try {
-			Util.logger.info("Setting container visible");
+			Util.getLogger().info("Setting container visible");
 			if (!container.isVisible()) {
 				container.setVisible(true);
 			}
-			Util.logger.info("Calling canvas.display()");
+			Util.getLogger().info("Calling canvas.display()");
 			canvas.display();
 		} catch (Exception e) {
-			Util.logger.log(Level.SEVERE, e.toString(), e);
+			Util.getLogger().log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void shutdown() {
-		Util.logger.info("shutdown()");
+		Util.getLogger().info("shutdown()");
 		if (standalone && container instanceof JFrame) {
 			((JFrame)container).dispose();
 		}
@@ -224,7 +224,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addPoint(double x, double y, double z,
 			AppearanceState appearance) {
-//		Util.logger.info("addPoint(" + x + "," + y + "," + z + ")");
+//		Util.getLogger().info("addPoint(" + x + "," + y + "," + z + ")");
 		scene.addSphere(new Sphere(x, y, z, appearance.getSize() * POINT_SCALE,
 				appearance.getColor(), appearance.getShininess(), 1));
 	}
@@ -235,7 +235,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addCircle(double cx, double cy, double cz, double nx,
 			double ny, double nz, double radius, AppearanceState appearance) {
-//		Util.logger.info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
+//		Util.getLogger().info("addCircle(" + cx + "," + cy + "," + cz + "," + nx + "," + ny
 //				+ "," + nz + "," + radius + ")");
 		scene.addCircle(new Circle(cx, cy, cz, nx, ny, nz, radius, appearance
 				.getColor(), appearance.getShininess(), appearance.getAlpha()));
@@ -247,7 +247,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addSegment(double x1, double y1, double z1, double x2,
 			double y2, double z2, AppearanceState appearance) {
-//		Util.logger.info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+//		Util.getLogger().info("addSegment(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 //				+ "," + z2 + ")");
 		
 		addPoint(x1, y1, z1, appearance);
@@ -264,7 +264,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addLine(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-//		Util.logger.info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+//		Util.getLogger().info("addLine(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 //				+ "," + z2 + ")");
 		scene.addLine(new Line(x1, y1, z1, x2, y2, z2, appearance.getSize()
 				* POINT_SCALE, appearance.getColor(), appearance.getShininess(),
@@ -277,7 +277,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	@Override
 	public void addRay(double x1, double y1, double z1, double x2, double y2,
 			double z2, AppearanceState appearance) {
-//		Util.logger.info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
+//		Util.getLogger().info("addRay(" + x1 + "," + y1 + "," + z1 + "," + x2 + "," + y2
 //				+ "," + z2 + ")");
 		
 		addPoint(x1, y1, z1, appearance);

@@ -40,7 +40,7 @@ public class Util {
 	public static final int SIZEOF_INT = 4;
 
 	private static String shaderLightFillIn = "";
-	public static Logger logger;
+	private static Logger logger;
 
 	public static float[] matrixToFloatArray(RealMatrix m) {
 		int rows = m.getRowDimension();
@@ -148,7 +148,7 @@ public class Util {
 		ShaderCode vertexShader = loadShader(GL2.GL_VERTEX_SHADER,
 				vertexShaderFileName);
 		if (!vertexShader.compile(gl2, ps)) {
-			Util.logger.info("Compile log for '" + vertexShaderFileName + "': "
+			Util.getLogger().info("Compile log for '" + vertexShaderFileName + "': "
 					+ baos.toString());
 			return null;
 		}
@@ -156,7 +156,7 @@ public class Util {
 		ShaderCode fragmentShader = loadShader(GL2.GL_FRAGMENT_SHADER,
 				fragmentShaderFileName);
 		if (!fragmentShader.compile(gl2, ps)) {
-			Util.logger.info("Compile log for '" + fragmentShaderFileName
+			Util.getLogger().info("Compile log for '" + fragmentShaderFileName
 					+ "': " + baos.toString());
 			return null;
 		}
@@ -168,7 +168,7 @@ public class Util {
 			return null;
 		}
 		if (!program.link(gl2, ps)) {
-			Util.logger.info("Link log: " + baos.toString());
+			Util.getLogger().info("Link log: " + baos.toString());
 			return null;
 		}
 	
@@ -205,18 +205,18 @@ public class Util {
 			// Can't get protection domain. This is the case if Cindy3D is
 			// running inside an applet. But that's ok, as JNLP handles the
 			// class and native libraries loading for us.
-			Util.logger.log(Level.INFO, e.toString(), e);
+			Util.getLogger().log(Level.INFO, e.toString(), e);
 			return;
 		}
 		
 		File jarFile = new File(jarPath);
 		if (!jarFile.isFile()) {
 			// Not loaded from JAR file, do nothing
-			Util.logger.info("Not loaded from jar");
+			Util.getLogger().info("Not loaded from jar");
 			return;
 		}
 		final String basePath = jarFile.getParent();
-		Util.logger.info("Base path: " + basePath);
+		Util.getLogger().info("Base path: " + basePath);
 
 		// Prevent gluegen from trying to load native library via
 		// System.loadLibrary("gluegen-rt").
@@ -227,7 +227,7 @@ public class Util {
 				+ System.mapLibraryName("gluegen-rt");
 		System.load(path);
 		
-		Util.logger.info("Loaded " + path);
+		Util.getLogger().info("Loaded " + path);
 
 		// Next, override the gluegen JNI library loader action
 		JNILibLoaderBase.setLoadingAction(new LoaderAction() {
@@ -245,22 +245,23 @@ public class Util {
 			@Override
 			public boolean loadLibrary(String libname, boolean ignoreError) {
 				boolean result = true;
-				Util.logger.info("Requested library " + libname);
+				Util.getLogger().info("Requested library " + libname);
 				try {
 					// Load JNI library from JAR directory
 					String path = basePath + File.separator
 							+ System.mapLibraryName(libname);
 					System.load(path);
-					Util.logger.info("Loaded " + path);
+					Util.getLogger().info("Loaded " + path);
 				} catch (UnsatisfiedLinkError e) {
-//					Util.logger.log(Level.INFO, e.toString(), e);
-					Util.logger.info("Library load failed, trying fallback to System.loadLibrary");
+//					Util.getLogger().log(Level.INFO, e.toString(), e);
+					Util.getLogger()
+							.info("Library load failed, trying fallback to System.loadLibrary");
 					try {
 						System.loadLibrary(libname);
-						Util.logger.info("Loaded system library " + libname);
+						Util.getLogger().info("Loaded system library " + libname);
 					} catch (UnsatisfiedLinkError e2) {
-						Util.logger.info("System library load failed");
-//						Util.logger.log(Level.INFO, e.toString(), e2);
+						Util.getLogger().info("System library load failed");
+//						Util.getLogger().log(Level.INFO, e.toString(), e2);
 						result = false;
 						if (!ignoreError) {
 							throw e2;
@@ -272,6 +273,9 @@ public class Util {
 		});
 	}
 	
+	/**
+	 * Initializes the global logger instance.
+	 */
 	public static void initLogger() {
 		try {
 			logger = Logger.getLogger("log");
@@ -312,6 +316,13 @@ public class Util {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @return the global logger instance
+	 */
+	public static Logger getLogger() {
+		return logger;
 	}
 
 	public static void setMaterial(GL gl, Color color, double shininess) {

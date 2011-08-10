@@ -40,16 +40,16 @@ public class DefaultRenderer extends JOGLRenderer {
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
-		Util.logger.info("init()");
+		Util.getLogger().info("init()");
 		
 		try {
 			// drawable.setGL(new DebugGL2(drawable.getGL().getGL2()));
 			GL2 gl = drawable.getGL().getGL2();
 			
-			Util.logger.info("Chosen caps: " + drawable.getChosenGLCapabilities());
-			Util.logger.info("GL_VENDOR: " + gl.glGetString(GL2.GL_VENDOR));
-			Util.logger.info("GL_RENDERER: " + gl.glGetString(GL2.GL_RENDERER));
-			Util.logger.info("GL_VERSION: " + gl.glGetString(GL2.GL_VERSION));
+			Util.getLogger().info("Chosen caps: " + drawable.getChosenGLCapabilities());
+			Util.getLogger().info("GL_VENDOR: " + gl.glGetString(GL2.GL_VENDOR));
+			Util.getLogger().info("GL_RENDERER: " + gl.glGetString(GL2.GL_RENDERER));
+			Util.getLogger().info("GL_VERSION: " + gl.glGetString(GL2.GL_VERSION));
 			
 			gl.glMatrixMode(GL2.GL_PROJECTION);
 			gl.glLoadIdentity();
@@ -70,25 +70,25 @@ public class DefaultRenderer extends JOGLRenderer {
 			gl.glEnable(GL2.GL_LIGHTING);
 			
 			if (!sphereRenderer.init(gl))
-				Util.logger.severe("Point renderer initialization failed");
+				Util.getLogger().severe("Point renderer initialization failed");
 			if (!circleRenderer.init(gl))
-				Util.logger.severe("Circle renderer initialization failed");
+				Util.getLogger().severe("Circle renderer initialization failed");
 			if (!lineRenderer.init(gl))
-				Util.logger.severe("Line renderer initialization failed");
+				Util.getLogger().severe("Line renderer initialization failed");
 			if (!polygonRenderer.init(gl))
-				Util.logger.severe("Polygon renderer initialization failed");
+				Util.getLogger().severe("Polygon renderer initialization failed");
 			if (!meshRenderer.init(gl))
-				Util.logger.severe("Mesh renderer initialization failed");
+				Util.getLogger().severe("Mesh renderer initialization failed");
 		} catch (GLException e) {
 			// TODO Auto-generated catch block
-			Util.logger.log(Level.SEVERE, e.toString(), e);
+			Util.getLogger().log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
-		Util.logger.info("reshape(" + x + "," + y + "," + width + "," + height + ")");
+		Util.getLogger().info("reshape(" + x + "," + y + "," + width + "," + height + ")");
 		GL2 gl = drawable.getGL().getGL2();
 		camera.setPerspective(camera.getFieldOfView(), width, height, camera
 				.getZNear(), camera.getZFar());
@@ -119,7 +119,7 @@ public class DefaultRenderer extends JOGLRenderer {
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
-//		Util.logger.info("display()");
+//		Util.getLogger().info("display()");
 
 		GL2 gl = drawable.getGL().getGL2();
 		float[] backgroundColor = new float[4];
@@ -139,15 +139,15 @@ public class DefaultRenderer extends JOGLRenderer {
 			Util.setShaderLightFillIn(lightManager.getShaderFillIn());
 			
 			if (!sphereRenderer.reloadShaders(gl))
-				Util.logger.severe("Point renderer shader loading failed");
+				Util.getLogger().severe("Point renderer shader loading failed");
 			if (!circleRenderer.reloadShaders(gl))
-				Util.logger.severe("Circle renderer shader loading failed");
+				Util.getLogger().severe("Circle renderer shader loading failed");
 			if (!lineRenderer.reloadShaders(gl))
-				Util.logger.severe("Line renderer shader loading failed");
+				Util.getLogger().severe("Line renderer shader loading failed");
 			if (!polygonRenderer.reloadShaders(gl))
-				Util.logger.severe("Polygon renderer shader loading failed");
+				Util.getLogger().severe("Polygon renderer shader loading failed");
 			if (!meshRenderer.reloadShaders(gl))
-				Util.logger.severe("Mesh renderer shader loading failed");
+				Util.getLogger().severe("Mesh renderer shader loading failed");
 			
 			lightManager.wurstMitBrot();
 		}

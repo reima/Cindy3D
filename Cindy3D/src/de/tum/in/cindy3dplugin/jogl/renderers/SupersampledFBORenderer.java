@@ -58,7 +58,7 @@ public class SupersampledFBORenderer extends DefaultRenderer {
 		gl.glFramebufferRenderbuffer(GL2.GL_FRAMEBUFFER, GL2.GL_DEPTH_ATTACHMENT, GL2.GL_RENDERBUFFER, depthBuffer);
 		int status = gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER);
 		if (status != GL2.GL_FRAMEBUFFER_COMPLETE) {
-			Util.logger.info("Framebuffer creation failed.");
+			Util.getLogger().info("Framebuffer creation failed.");
 			destroyFramebuffer(drawable);
 			return false;
 		}
