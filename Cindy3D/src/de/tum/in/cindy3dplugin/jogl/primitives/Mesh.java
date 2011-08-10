@@ -12,8 +12,10 @@ import de.tum.in.cindy3dplugin.jogl.Util;
  * Grid-based mesh primitive.
  */
 public class Mesh extends Primitive {
+	/**
+	 * Number of existing meshes used to generate unique identifiers.
+	 */
 	private static int meshCounter = 0;
-
 	/**
 	 * Number of grid rows
 	 */
