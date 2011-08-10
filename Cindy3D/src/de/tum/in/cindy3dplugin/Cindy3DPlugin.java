@@ -16,14 +16,25 @@ import de.tum.in.cindy3dplugin.jogl.JOGLViewer;
 import de.tum.in.cindy3dplugin.jogl.Util;
 
 /**
- * Implementation of the plugin interface
+ * Implementation of the plugin interface.
+ * 
+ * This class is responsible for
+ * <ul>
+ * <li>communicating with Cinderella by providing CindyScript methods and plugin
+ * callbacks,
+ * <li>handling the appearance states and appearance stack,
+ * <li>managing the life cycle of a single {@link Cindy3DViewer} instance, and
+ * <li>forwarding CindyScript calls to the {@link Cindy3DViewer} instance,
+ * translating between the interfaces
+ * </ul>
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Cindy3DPlugin extends CindyScriptPlugin {
 	private Cindy3DViewer cindy3d = null;
-	
+
 	/**
 	 * Stack of saved point appearances
+	 * 
 	 * @see Cindy3DPlugin#gsave3d()
 	 * @see Cindy3DPlugin#grestore3d()
 	 */
@@ -35,6 +46,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 	/**
 	 * Stack of saved line appearances
+	 * 
 	 * @see Cindy3DPlugin#gsave3d()
 	 * @see Cindy3DPlugin#grestore3d()
 	 */
@@ -44,9 +56,10 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * The current line appearance
 	 */
 	private AppearanceState lineAppearance;
-	
+
 	/**
 	 * Stack of saved surface appearances
+	 * 
 	 * @see Cindy3DPlugin#gsave3d()
 	 * @see Cindy3DPlugin#grestore3d()
 	 */
@@ -108,19 +121,15 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		return modifiers;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see de.cinderella.api.cs.CindyScriptPlugin#getAuthor()
 	 */
 	@Override
 	public String getAuthor() {
-		return "Jan Sommer und Matthias Reitinger";
+		return "Jan Sommer and Matthias Reitinger";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see de.cinderella.api.cs.CindyScriptPlugin#getName()
 	 */
 	@Override
@@ -129,10 +138,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Squares the given number
+	 * Squares the given number.
 	 * 
 	 * @param x
-	 * @return The square of x
+	 *            number to square
+	 * @return the square of x
 	 */
 	@CindyScript("square")
 	public double square(double x) {
@@ -140,8 +150,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Prepares drawing of 3D objects. Must be called before any 3D drawing
-	 * function. TODO: List these functions
+	 * Prepares drawing of 3D objects.
+	 * 
+	 * Must be called before any 3D drawing function. TODO: List these functions
 	 */
 	@CindyScript("begin3d")
 	public void begin3d() {
@@ -150,7 +161,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 
 	/**
 	 * Finalizes the drawing of 3D objects. Displays all objects drawn since the
-	 * last call to <code>begin3d</code>.
+	 * last call to {@link #begin3d}.
 	 */
 	@CindyScript("end3d")
 	public void end3d() {
@@ -161,7 +172,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Draws a point.
 	 * 
 	 * @param vec
-	 *            Coordinates of the point
+	 *            coordinates of the point
 	 */
 	@CindyScript("draw3d")
 	public void draw3d(ArrayList<Double> vec) {
@@ -176,9 +187,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Draws a line.
 	 * 
 	 * @param vec1
-	 *            Coordinates of the first end point
+	 *            coordinates of the first end point
 	 * @param vec2
-	 *            Coordinates of the second end point
+	 *            coordinates of the second end point
 	 */
 	@CindyScript("draw3d")
 	public void draw3d(ArrayList<Double> vec1, ArrayList<Double> vec2) {
@@ -208,12 +219,12 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 					vec2.get(1), vec2.get(2), appearance);
 		}
 	}
-	
+
 	/**
 	 * Connects a list of points by line segments.
 	 * 
 	 * @param points
-	 *            List of points to connect
+	 *            list of points to connect
 	 */
 	@CindyScript("connect3d")
 	public void connect3d(ArrayList<Vec> points) {
@@ -233,7 +244,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Draws the outline of a polygon.
 	 * 
 	 * @param points
-	 *            Vertices of the polygon
+	 *            vertices of the polygon
 	 */
 	@CindyScript("drawpoly3d")
 	public void drawpoly3d(ArrayList<Vec> points) {
@@ -250,23 +261,23 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Draws a polygon
+	 * Draws a polygon.
 	 * 
 	 * @param points
-	 *            Vertices of the polygon
+	 *            vertices of the polygon
 	 */
 	@CindyScript("fillpoly3d")
 	public void fillpoly3d(ArrayList<Vec> points) {
 		fillpoly3d(points, null);
 	}
-	
+
 	/**
-	 * Draws a polygon with specifying vertex normals
+	 * Draws a polygon with specifying vertex normals.
 	 * 
 	 * @param points
-	 *            Vertices of the polygon
+	 *            vertices of the polygon
 	 * @param normals
-	 *            Normals for each vertex
+	 *            normals for each vertex
 	 */
 	@CindyScript("fillpoly3d")
 	public void fillpoly3d(ArrayList<Vec> points, ArrayList<Vec> normals) {
@@ -291,16 +302,16 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.addPolygon(vertices, normal,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
-	
+
 	/**
 	 * Draws a filled circle.
 	 * 
 	 * @param center
-	 *            Center of the circle
+	 *            center of the circle
 	 * @param normal
-	 *            Normal vector (orthogonal to the circle)
+	 *            normal vector (orthogonal to the circle)
 	 * @param radius
-	 *            Radius of the circle
+	 *            radius of the circle
 	 */
 	@CindyScript("fillcircle3d")
 	public void fillcircle3d(ArrayList<Double> center,
@@ -311,7 +322,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 				normal.get(0), normal.get(1), normal.get(2), radius,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
-	
+
 	/**
 	 * Draws a grid based mesh.
 	 * 
@@ -321,11 +332,11 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * averaging the normals of the incident grid cells.
 	 * 
 	 * @param rows
-	 *            Number of rows of vertices
+	 *            number of rows of vertices
 	 * @param columns
-	 *            Number of columns of vertices
+	 *            number of columns of vertices
 	 * @param points
-	 *            Vertex positions, in row-major order
+	 *            vertex positions, in row-major order
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points) {
@@ -370,18 +381,18 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.addMesh(rows, columns, vertices, normalType, topology,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
-	
+
 	/**
 	 * Draws a grid based mesh with user-supplied normals.
 	 * 
 	 * @param rows
-	 *            Number of rows of vertices
+	 *            number of rows of vertices
 	 * @param columns
-	 *            Number of columns of vertices
+	 *            number of columns of vertices
 	 * @param points
-	 *            Vertex positions, in row-major order
+	 *            vertex positions, in row-major order
 	 * @param normals
-	 *            Vertex normals, in row-major order
+	 *            vertex normals, in row-major order
 	 */
 	@CindyScript("mesh3d")
 	public void mesh3d(int rows, int columns, ArrayList<Vec> points,
@@ -430,9 +441,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Draws a sphere.
 	 * 
 	 * @param center
-	 *            Center of the sphere
+	 *            center of the sphere
 	 * @param radius
-	 *            Radius of the sphere
+	 *            radius of the sphere
 	 */
 	@CindyScript("drawsphere3d")
 	public void sphere3d(ArrayList<Double> center, double radius) {
@@ -441,7 +452,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.addSphere(center.get(0), center.get(1), center.get(2), radius,
 				applyAppearanceModifiers(surfaceAppearance, getModifiers()));
 	}
-	
+
 	/**
 	 * Pushes the current appearance on the appearance stack.
 	 * 
@@ -469,12 +480,12 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (!surfaceAppearanceStack.isEmpty())
 			surfaceAppearance = surfaceAppearanceStack.pop();
 	}
-	
+
 	/**
 	 * Sets the color of all appearances.
 	 * 
 	 * @param vec
-	 *            Color vector
+	 *            color vector
 	 */
 	@CindyScript("color3d")
 	public void color3d(ArrayList<Double> vec) {
@@ -482,12 +493,12 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		setColorState(lineAppearance, vec);
 		setColorState(surfaceAppearance, vec);
 	}
-	
+
 	/**
 	 * Sets the color of the point appearance.
 	 * 
 	 * @param vec
-	 *            Color vector
+	 *            color vector
 	 */
 	@CindyScript("pointcolor3d")
 	public void pointcolor3d(ArrayList<Double> vec) {
@@ -498,7 +509,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the color of the line appearance.
 	 * 
 	 * @param vec
-	 *            Color vector
+	 *            color vector
 	 */
 	@CindyScript("linecolor3d")
 	public void linecolor3d(ArrayList<Double> vec) {
@@ -509,7 +520,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the color of the surface appearance.
 	 * 
 	 * @param vec
-	 *            Color vector
+	 *            color vector
 	 */
 	@CindyScript("surfacecolor3d")
 	public void surfacecolor3d(ArrayList<Double> vec) {
@@ -520,19 +531,19 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the alpha value of all appearances.
 	 * 
 	 * @param alpha
-	 *            Alpha value between 0 and 1
+	 *            alpha value, between 0 and 1
 	 */
 	@CindyScript("alpha3d")
 	public void alpha3d(double alpha) {
 		alpha = Math.max(0, Math.min(1, alpha));
 		surfaceAppearance.setAlpha(alpha);
 	}
-	
+
 	/**
 	 * Sets the alpha value of the surface appearance.
 	 * 
 	 * @param alpha
-	 *            Alpha value between 0 and 1
+	 *            alpha value, between 0 and 1
 	 */
 	@CindyScript("surfacealpha3d")
 	public void surfacealpha3d(double alpha) {
@@ -543,7 +554,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the shininess of all appearances.
 	 * 
 	 * @param shininess
-	 *            Shininess between 0 and 128
+	 *            shininess between 0 and 128
 	 */
 	@CindyScript("shininess3d")
 	public void shininess3d(double shininess) {
@@ -557,7 +568,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the shininess of the point appearance.
 	 * 
 	 * @param shininess
-	 *            Shininess between 0 and 128
+	 *            shininess, between 0 and 128
 	 */
 	@CindyScript("pointshininess3d")
 	public void pointshininess3d(double shininess) {
@@ -568,7 +579,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the shininess of the line appearance.
 	 * 
 	 * @param shininess
-	 *            Shininess between 0 and 128
+	 *            shininess, between 0 and 128
 	 */
 	@CindyScript("lineshininess3d")
 	public void lineshininess3d(double shininess) {
@@ -579,7 +590,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the shininess of the surface appearance.
 	 * 
 	 * @param shininess
-	 *            Shininess between 0 and 128
+	 *            shininess, between 0 and 128
 	 */
 	@CindyScript("surfaceshininess3d")
 	public void surfaceshininess3d(double shininess) {
@@ -590,7 +601,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the size of all appearances.
 	 * 
 	 * @param size
-	 *            Size
+	 *            size
 	 */
 	@CindyScript("size3d")
 	public void size3d(double size) {
@@ -605,7 +616,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the size of the point appearance.
 	 * 
 	 * @param size
-	 *            Point size
+	 *            point size
 	 */
 	@CindyScript("pointsize3d")
 	public void pointsize3d(double size) {
@@ -616,7 +627,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the size of the line appearance.
 	 * 
 	 * @param size
-	 *            Line size
+	 *            line size
 	 */
 	@CindyScript("linesize3d")
 	public void linesize3d(double size) {
@@ -627,7 +638,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the background color.
 	 * 
 	 * @param vec
-	 *            Background color vector
+	 *            background color vector
 	 */
 	@CindyScript("background3d")
 	public void background3d(ArrayList<Double> vec) {
@@ -635,22 +646,23 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			return;
 		cindy3d.setBackgroundColor(Util.toColor(vec));
 	}
-	
+
 	/**
 	 * Sets the camera's depth range.
 	 * 
+	 * All objects with distance below <code>near</code> or above
+	 * <code>far</code> are not displayed.
+	 * 
 	 * @param near
-	 *            Near distance. All objects with distance below
-	 *            <code>near</code> are not displayed.
+	 *            near distance
 	 * @param far
-	 *            Far distance. All objects with distance above <code>far</code>
-	 *            are not displayed.
+	 *            far distance
 	 */
 	@CindyScript("depthrange3d")
 	public void depthrange3d(double near, double far) {
 		cindy3d.setDepthRange(near, far);
 	}
-	
+
 	/**
 	 * Sets render hints.
 	 */
@@ -658,41 +670,50 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	public void renderhints3d() {
 		cindy3d.setRenderHints(modifiers);
 	}
-	
+
 	/**
 	 * Disables a single light source.
 	 * 
-	 * @param light Light index (between 0 and 7)
+	 * @param light
+	 *            light index, between 0 (inclusive) and
+	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *            (exclusive)
 	 */
 	@CindyScript("disablelight3d")
 	public void disablelight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
-		
+
 		cindy3d.disableLight(light);
 	}
-	
+
 	/**
 	 * Sets parameters for a point light.
 	 * 
 	 * @param light
-	 *            Light index (between 0 and 7)
+	 *            light index, between 0 (inclusive) and
+	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *            (exclusive)
 	 */
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
 			return;
 		}
-		cindy3d.setLight(light,
-				getLightModificationInfoFromModifiers(LightType.POINT_LIGHT, modifiers));
+		cindy3d.setLight(
+				light,
+				getLightModificationInfoFromModifiers(LightType.POINT_LIGHT,
+						modifiers));
 	}
 
 	/**
 	 * Sets parameters for a directional light.
 	 * 
 	 * @param light
-	 *            Light index (between 0 and 7)
+	 *            light index, between 0 (inclusive) and
+	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *            (exclusive)
 	 */
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
@@ -701,19 +722,19 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		}
 		cindy3d.setLight(
 				light,
-				getLightModificationInfoFromModifiers(LightType.DIRECTIONAL_LIGHT,
-						modifiers));
+				getLightModificationInfoFromModifiers(
+						LightType.DIRECTIONAL_LIGHT, modifiers));
 	}
 
 	/**
 	 * Apply modifiers to a appearance state.
 	 * 
 	 * @param initialState
-	 *            Appearance to modify
+	 *            appearance to modify
 	 * @param modifiers
-	 *            Modifiers to apply. Recognized modifiers are "color", "size",
+	 *            modifiers to apply. Recognized modifiers are "color", "size",
 	 *            "alpha", and "shininess".
-	 * @return Modified appearance
+	 * @return modified appearance
 	 */
 	private static AppearanceState applyAppearanceModifiers(
 			AppearanceState initialState, Hashtable modifiers) {
@@ -744,13 +765,13 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Translates modifiers to a <code>LightInfo</code> instance.
 	 * 
 	 * @param type
-	 *            Light type
+	 *            light type
 	 * @param modifiers
-	 *            Modifiers
-	 * @return Generated instance of <code>LightInfo</code>
+	 *            modifiers
+	 * @return generated instance of <code>LightInfo</code>
 	 */
-	private static LightModificationInfo getLightModificationInfoFromModifiers(LightType type,
-			Hashtable modifiers) {
+	private static LightModificationInfo getLightModificationInfoFromModifiers(
+			LightType type, Hashtable modifiers) {
 		LightModificationInfo info = new LightModificationInfo(type);
 
 		Object value;
@@ -803,9 +824,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the color state of an appearance.
 	 * 
 	 * @param appearance
-	 *            Appearance
+	 *            appearance
 	 * @param vec
-	 *            Color vector
+	 *            color vector
 	 */
 	private static void setColorState(AppearanceState appearance,
 			ArrayList<Double> vec) {
@@ -818,9 +839,9 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the color state of an appearance.
 	 * 
 	 * @param appearance
-	 *            Appearance
+	 *            appearance
 	 * @param vec
-	 *            Color vector
+	 *            color vector
 	 */
 	private static void setColorState(AppearanceState appearance, double[] vec) {
 		if (vec.length != 3)
