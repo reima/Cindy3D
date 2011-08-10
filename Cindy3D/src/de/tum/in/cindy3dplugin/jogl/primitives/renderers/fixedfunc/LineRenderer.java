@@ -147,10 +147,8 @@ public class LineRenderer extends LineRendererBase {
 		gl2.glPushMatrix();
 
 		for (int box = 0; box < boxes; ++box) {
-			double distance = -boxMid.getZ();
-
 			double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
-					jrs.renderHints.getAllowedScreenSpaceError(), distance);
+					jrs.renderHints.getAllowedScreenSpaceError(), boxMid.getZ());
 
 			LODMesh mesh = meshes[LOD_COUNT - 1];
 			int lod;

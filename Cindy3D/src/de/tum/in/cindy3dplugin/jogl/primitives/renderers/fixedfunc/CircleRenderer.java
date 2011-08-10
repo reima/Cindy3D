@@ -117,11 +117,11 @@ public class CircleRenderer extends CircleRendererBase {
 		
 		GL2 gl2 = jrs.gl.getGL2();
 		
-		double distance = -Util.transformPoint(jrs.camera.getTransform(),
+		double cameraSpaceZ = Util.transformPoint(jrs.camera.getTransform(),
 				circle.getCenter()).getZ()
-				- circle.getRadius();
+				+ circle.getRadius();
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
-				jrs.renderHints.getAllowedScreenSpaceError(), distance);
+				jrs.renderHints.getAllowedScreenSpaceError(), cameraSpaceZ);
 		LODMesh mesh = meshes[LOD_COUNT - 1];
 		int lod;
 		for (lod = 0; lod < LOD_COUNT; ++lod) {

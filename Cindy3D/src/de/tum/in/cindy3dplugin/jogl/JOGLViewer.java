@@ -408,10 +408,10 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	public void mouseDragged(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 			if (e.isControlDown()) {
-				camera.mouseDragged2(e.getX() - mousePosition[0],
+				camera.mousePan(e.getX() - mousePosition[0],
 						e.getY() - mousePosition[1]);
 			} else {
-				camera.mouseDragged1(e.getX() - mousePosition[0],
+				camera.mouseRotate(e.getX() - mousePosition[0],
 						e.getY() - mousePosition[1]);
 			}
 			drawLater();
@@ -437,7 +437,7 @@ public class JOGLViewer implements Cindy3DViewer, MouseListener,
 	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		camera.mouseWheelMoved(e.getWheelRotation());
+		camera.mouseWheel(e.getWheelRotation());
 		drawLater();
 	}
 	

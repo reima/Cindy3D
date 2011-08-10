@@ -8,8 +8,22 @@ import org.apache.commons.math.linear.MatrixUtils;
 import org.apache.commons.math.linear.RealMatrix;
 import org.apache.commons.math.linear.RealVector;
 
+/**
+ * Camera entity.
+ * 
+ * The <code>ModelViewerCamera</code> is a camera orbiting around a look-at
+ * point. It provides methods for placing the camera, adjusting the perspective
+ * projection properties, and the retrieval of homogeneous matrices for
+ * rendering.
+ */
 public class ModelViewerCamera {
+	/**
+	 * Rotation angle per moved pixel (in radians)
+	 */
 	private static final double ROTATE_SENSITIVITY = 0.01;
+	/**
+	 * Panning distance per moved pixel
+	 */
 	private static final double PAN_SENSITIVITY = 0.05;
 	
 	/**
@@ -55,6 +69,11 @@ public class ModelViewerCamera {
 	 */
 	private RealMatrix perspectiveTransform;
 	
+	/**
+	 * Factor for world space error computation
+	 * 
+	 * @see #getWorldSpaceError(double, double)
+	 */
 	private double lodFactor;
 	
 	/**
@@ -64,21 +83,20 @@ public class ModelViewerCamera {
 	
 	/**
 	 * Constructs a camera with default parameters.
+	 * 
+	 * The instance has the same internal state as if set by 
+	 * <pre>
+	 *   camera.lookAt(Vector3D.PLUS_K, Vector3D.ZERO, Vector3D.PLUS_J);
+	 *   camera.setPerspective(45.0, 640, 480, 0.1, 100.0);
+	 * </pre>
 	 */
 	public ModelViewerCamera() {
-		rotation = Rotation.IDENTITY;
-		position = new Vector3D(0, 0, 1);
-		lookAt = new Vector3D(0, 0, 0);
-		up = new Vector3D(0, 1, 0);
 		transform = MatrixUtils.createRealMatrix(4, 4);
-		updateTransform();
-		
-		zNear = 0.1;
-		zFar = 100.0;
-		fieldOfView = 45.0;
-		aspectRatio = 4.0/3.0;
 		perspectiveTransform = MatrixUtils.createRealMatrix(4, 4);
-		updatePerspectiveTransform();
+		rotation = Rotation.IDENTITY;
+		
+		lookAt(Vector3D.PLUS_K, Vector3D.ZERO, Vector3D.PLUS_J);
+		setPerspective(45.0, 640, 480, 0.1, 100.0);
 	}
 	
 	/**
@@ -170,9 +188,12 @@ public class ModelViewerCamera {
 	/**
 	 * Sets the camera's view parameters.
 	 * 
-	 * @param position Camera position
-	 * @param lookAt Point the camera is looking at
-	 * @param up Up vector
+	 * @param position
+	 *            camera position
+	 * @param lookAt
+	 *            point the camera is looking at
+	 * @param up
+	 *            up vector
 	 */
 	public void lookAt(Vector3D position, Vector3D lookAt, Vector3D up) {
 		this.position = position;
@@ -182,14 +203,20 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * @return View transform matrix
+	 * Returns the view transform matrix.
+	 * 
+	 * This matrix transforms coordinates in global world space to camera space,
+	 * where the camera is in the origin, looking along the negative z axis and
+	 * having the positive y axis as up vector.
+	 * 
+	 * @return view transform matrix
 	 */
 	public RealMatrix getTransform() {
 		return transform;
 	}
 	
 	/**
-	 * @return View frustum clipping planes, in view space
+	 * @return view frustum clipping planes, in view space
 	 */
 	public Plane[] getClippingPlanes() {
 		return clippingPlanes;
@@ -199,15 +226,15 @@ public class ModelViewerCamera {
 	 * Sets the camera's perspective projection parameters.
 	 * 
 	 * @param fieldOfView
-	 *            Horizontal field of view, in degrees
+	 *            horizontal field of view, in degrees
 	 * @param width
-	 *            Width of viewport
+	 *            width of viewport
 	 * @param height
-	 *            Height of viewport
+	 *            height of viewport
 	 * @param zNear
-	 *            Distance of near clipping plane
+	 *            distance of near clipping plane
 	 * @param zFar
-	 *            Distance of far clipping plane
+	 *            distance of far clipping plane
 	 */
 	public void setPerspective(double fieldOfView, int width, int height,
 			double zNear, double zFar) {
@@ -225,14 +252,14 @@ public class ModelViewerCamera {
 	}
 	
 	/**
-	 * @return Perspective projection matrix
+	 * @return perspective projection matrix
 	 */
 	public RealMatrix getPerspectiveTransform() {
 		return perspectiveTransform;
 	}
 	
 	/**
-	 * @return Camera orientation
+	 * @return camera orientation
 	 */
 	public Rotation getRotation() {
 		return rotation;
@@ -240,7 +267,7 @@ public class ModelViewerCamera {
 
 	/**
 	 * @param rotation
-	 *            New camera orientation
+	 *            new camera orientation
 	 */
 	public void setRotation(Rotation rotation) {
 		this.rotation = rotation;
@@ -248,7 +275,7 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * @return Camera position
+	 * @return camera position
 	 */
 	public Vector3D getPosition() {
 		return position;
@@ -256,7 +283,7 @@ public class ModelViewerCamera {
 
 	/**
 	 * @param position
-	 *            New camera position
+	 *            new camera position
 	 */
 	public void setPosition(Vector3D position) {
 		this.position = position;
@@ -264,7 +291,7 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * @return Look at vector
+	 * @return look at vector
 	 */
 	public Vector3D getLookAt() {
 		return lookAt;
@@ -272,7 +299,7 @@ public class ModelViewerCamera {
 
 	/**
 	 * @param lookAt
-	 *            New look at vector
+	 *            new look at vector
 	 */
 	public void setLookAt(Vector3D lookAt) {
 		this.lookAt = lookAt;
@@ -280,7 +307,7 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * @return Up vector
+	 * @return up vector
 	 */
 	public Vector3D getUp() {
 		return up;
@@ -288,7 +315,7 @@ public class ModelViewerCamera {
 
 	/**
 	 * @param up
-	 *            New up vector
+	 *            new up vector
 	 */
 	public void setUp(Vector3D up) {
 		this.up = up;
@@ -296,55 +323,76 @@ public class ModelViewerCamera {
 	}
 	
 	/**
-	 * @return Field of view in degrees
+	 * @return field of view in degrees
 	 */
 	public double getFieldOfView() {
 		return fieldOfView;
 	}
 	
 	/**
-	 * @return Aspect ratio of the viewport (width / height)
+	 * @return aspect ratio of the viewport (width / height)
 	 */
 	public double getAspectRatio() {
 		return aspectRatio;
 	}
 	
 	/**
-	 * @return Distance of near clipping plane
+	 * @return distance of near clipping plane
 	 */
 	public double getZNear() {
 		return zNear;
 	}
 	
 	/**
-	 * @return Distance of far clipping plane
+	 * @return distance of far clipping plane
 	 */
 	public double getZFar() {
 		return zFar;
 	}
 
-	public void mouseDragged1(double dx, double dy) {
+	/**
+	 * Rotates the camera around the look-at point due to mouse movement.
+	 * 
+	 * @param dx
+	 *            x component of mouse movement delta
+	 * @param dy
+	 *            y component of mouse movement delta
+	 */
+	public void mouseRotate(double dx, double dy) {
 		rotation = new Rotation(RotationOrder.XYZ, dy * ROTATE_SENSITIVITY, dx
 				* ROTATE_SENSITIVITY, 0).applyTo(rotation);
 
 		updateTransform();
 	}
 
-	public void mouseDragged2(double dx, double dy) {
+	/**
+	 * Pans the camera due to mouse movement.
+	 * 
+	 * @param dx
+	 *            x component of mouse movement delta
+	 * @param dy
+	 *            y component of mouse movement delta
+	 */
+	public void mousePan(double dx, double dy) {
 		Vector3D forward = lookAt.subtract(position).normalize();
 		Vector3D right = Vector3D.crossProduct(forward, up).normalize();
-		
-		Vector3D movement = new Vector3D(0, 0, 0)
-			.add(-dx * PAN_SENSITIVITY, right)
-			.add(dy * PAN_SENSITIVITY, up);
-		
+
+		Vector3D movement = new Vector3D(0, 0, 0).add(-dx * PAN_SENSITIVITY,
+				right).add(dy * PAN_SENSITIVITY, up);
+
 		position = position.add(movement);
 		lookAt = lookAt.add(movement);
-		
+
 		updateTransform();
 	}
 
-	public void mouseWheelMoved(int wheelRotation) {
+	/**
+	 * Moves the camera back or forth due to mouse wheel movement.
+	 * 
+	 * @param wheelRotation
+	 *            number of clicks the mouse wheel was rotated
+	 */
+	public void mouseWheel(int wheelRotation) {
 		if (wheelRotation == 0) return;
 		Vector3D lookAtToPosition = position.subtract(lookAt);
 		Vector3D newPosition;
@@ -356,7 +404,20 @@ public class ModelViewerCamera {
 		setPosition(newPosition);
 	}
 
-	public double getWorldSpaceError(double screenSpaceError, double distance) {
-		return lodFactor * screenSpaceError * distance;
+	/**
+	 * Returns the allowed world space error.
+	 * 
+	 * @param screenSpaceError
+	 *            maximum screen space error, in pixels
+	 * @param cameraSpaceZ
+	 *            z component of camera space coordinate. Note that this value
+	 *            is negative for objects in front of the camera.
+	 * @return maximum world space distance of two points at
+	 *         <code>cameraSpaceZ</code>, such that their screen space distance
+	 *         is at most <code>screenSpaceError</code>
+	 */
+	public double getWorldSpaceError(double screenSpaceError,
+			double cameraSpaceZ) {
+		return lodFactor * screenSpaceError * -cameraSpaceZ;
 	}
 }

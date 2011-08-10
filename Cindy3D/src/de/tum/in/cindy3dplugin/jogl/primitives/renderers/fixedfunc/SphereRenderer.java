@@ -137,11 +137,11 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();
 
-		double distance = -Util.transformPoint(jrs.camera.getTransform(),
+		double cameraSpaceZ = Util.transformPoint(jrs.camera.getTransform(),
 				sphere.getCenter()).getZ()
-				- sphere.getRadius();
+				+ sphere.getRadius();
 		double allowedWorldSpaceError = jrs.camera.getWorldSpaceError(
-				jrs.renderHints.getAllowedScreenSpaceError(), distance);
+				jrs.renderHints.getAllowedScreenSpaceError(), cameraSpaceZ);
 		LODMesh mesh = meshes[LOD_COUNT - 1];
 		int lod;
 		for (lod = 0; lod < LOD_COUNT; ++lod) {
