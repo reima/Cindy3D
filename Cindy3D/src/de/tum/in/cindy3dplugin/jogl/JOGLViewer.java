@@ -35,7 +35,7 @@ import de.tum.in.cindy3dplugin.jogl.primitives.Polygon;
 import de.tum.in.cindy3dplugin.jogl.primitives.Scene;
 import de.tum.in.cindy3dplugin.jogl.renderers.DefaultRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderer;
-import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledFBORenderer;
+import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledRenderer;
 
 /**
  * JOGL implementation of <code>Cindy3DViewer</code>.
@@ -131,7 +131,7 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 					renderer = new DefaultRenderer(hints, scene, camera,
 							lightManager, new ShaderPrimitiveRendererFactory());
 				} else {
-					renderer = new SupersampledFBORenderer(hints, scene,
+					renderer = new SupersampledRenderer(hints, scene,
 							camera, lightManager, hints.getSamplingRate(),
 							new ShaderPrimitiveRendererFactory());
 				}
