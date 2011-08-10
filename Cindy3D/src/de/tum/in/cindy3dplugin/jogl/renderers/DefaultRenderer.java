@@ -154,44 +154,6 @@ public class DefaultRenderer extends JOGLRenderer {
 		
 		lightManager.setGLState(gl);
 		
-		/*
-		 * gl.glEnable(GL.GL_BLEND);
-		gl.glDepthMask(false);
-		drawTransparent(gl);
-		gl.glDepthMask(true);
-		
-		gl.glDisable(GL.GL_BLEND);
-		
-		drawOpaque(gl);
-		
-		gl.glEnable(GL.GL_BLEND);
-		gl.glDepthMask(false);
-		drawTransparent(gl);
-		gl.glDepthMask(true);
-		
-		gl.glColorMask(false, false, false, false);
-		drawOpaque(gl);
-		drawTransparent(gl);
-		gl.glColorMask(true, true, true, true);
-		
-		gl.glEnable(GL.GL_BLEND);
-		gl.glDepthMask(false);
-		drawTransparent(gl);
-		gl.glDepthMask(true);
-
-		drawOpaque(gl);
-		 * 
-		 */
-		
-//		gl.glEnable(GL2.GL_BLEND);
-//		gl.glDepthMask(false);
-//		renderPrimitives(jrs, false);
-//		gl.glDepthMask(true);
-//		
-		gl.glDisable(GL2.GL_BLEND);
-		
-		//renderPrimitives(jrs, true);
-		
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glDepthMask(false);
 		jrs.renderOpaque = false;
@@ -200,96 +162,14 @@ public class DefaultRenderer extends JOGLRenderer {
 		gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
 		
-		//gl.glColorMask(false, false, false, false);
 		jrs.renderOpaque = true;
 		renderPrimitives(jrs);
-//		gl.glEnable(GL2.GL_BLEND);
-//		renderPrimitives(jrs, false);
-//		gl.glDisable(GL2.GL_BLEND);
-		//gl.glColorMask(true, true, true, true);
-		
-//		gl.glColorMask(false, false, false, false);
-//		renderPrimitives(jrs, false);
-//		gl.glColorMask(true, true, true, true);
-		
 		
 		gl.glEnable(GL2.GL_BLEND);
-		//gl.glDepthMask(false);
 		jrs.renderOpaque = false;
 		renderPrimitives(jrs);
-		//gl.glDepthMask(true);
 		gl.glDisable(GL2.GL_BLEND);
-
-		//renderPrimitives(jrs, true);
-		
-//		renderPrimitives(jrs, true);
-//		renderPrimitives(jrs, false);
-
-		// gl.glFlush();
-		// drawable.swapBuffers();
 	}
-	
-	/*
-		gl.glColor3f(0, 1, 0);
-		
-		gl.glEnable(GL.GL_BLEND);
-		gl.glDepthMask(false);
-		drawTransparent(gl);
-		gl.glDepthMask(true);
-		
-		gl.glDisable(GL.GL_BLEND);
-		
-		drawOpaque(gl);
-		
-		gl.glEnable(GL.GL_BLEND);
-		gl.glDepthMask(false);
-		drawTransparent(gl);
-		gl.glDepthMask(true);
-		
-		gl.glColorMask(false, false, false, false);
-		drawOpaque(gl);
-		drawTransparent(gl);
-		gl.glColorMask(true, true, true, true);
-		
-		gl.glEnable(GL.GL_BLEND);
-		gl.glDepthMask(false);
-		drawTransparent(gl);
-		gl.glDepthMask(true);
-
-		drawOpaque(gl);
-
-//		gl.glDepthMask(false);
-//		gl.glEnable(GL.GL_BLEND);
-//		drawTransparent(gl);
-//		gl.glDepthMask(true);
-		
-//		gl.glDisable(GL.GL_BLEND);
-//		
-////		gl.glColorMask(false, false, false, false);
-//		drawOpaque(gl);
-////		gl.glColorMask(true, true, true, true);
-//		
-//		gl.glDepthMask(false);
-//		gl.glEnable(GL.GL_BLEND);
-//		drawTransparent(gl);
-//		gl.glDepthMask(true);
-//		
-//		gl.glDisable(GL.GL_BLEND);
-		
-		//drawOpaque(gl);
-
-//		program.bind(gl);		
-//		gl.glUniform1f(program.getUniformLocation(gl, "sphereRadius"), 0.5f);
-//		gl.glUniform3f(program.getUniformLocation(gl, "sphereCenter"), 0.0f, 0.0f, 0.0f);
-//		gl.glUniform3f(program.getUniformLocation(gl, "sphereColor"), 1.0f, 0.0f, 0.0f);
-//		program.unbind(gl);
-		
-		gl.glPopMatrix();
-		
-		gl.glFlush();
-
-
-	 */
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
