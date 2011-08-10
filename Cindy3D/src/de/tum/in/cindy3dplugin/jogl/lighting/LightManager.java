@@ -106,14 +106,15 @@ public class LightManager {
 		case POINT_LIGHT:
 			PointLight pointLight = (PointLight) lights[light];
 			if (info.hasPosition()) {
-				pointLight.setPosition(Util.toVector(info.getPosition()));
+				pointLight.setPosition(Util.doubleArrayToVector(info
+						.getPosition()));
 			}
 			break;
 		case DIRECTIONAL_LIGHT:
 			DirectionalLight directionalLight = (DirectionalLight) lights[light];
 			if (info.hasDirection()) {
-				directionalLight
-						.setDirection(Util.toVector(info.getDirection()));
+				directionalLight.setDirection(Util.doubleArrayToVector(info
+						.getDirection()));
 			}
 			break;
 		case SPOT_LIGHT:

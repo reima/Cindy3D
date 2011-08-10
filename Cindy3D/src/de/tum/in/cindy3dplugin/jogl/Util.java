@@ -83,6 +83,13 @@ public class Util {
 				(float) v.getZ() };
 	}
 	
+	public static Vector3D doubleArrayToVector(double[] vec) {
+		if (vec.length != 3) {
+			return null;
+		}
+		return new Vector3D(vec[0], vec[1], vec[2]);
+	}
+
 	public static void readShaderSource(ClassLoader context, URL url,
 			StringBuffer result) {
 		try {
@@ -121,7 +128,6 @@ public class Util {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	public static ShaderCode loadShader(int type, String name) {
 		StringBuffer buffer = new StringBuffer();
@@ -169,13 +175,6 @@ public class Util {
 		return program;
 	}
 
-	public static Vector3D toVector(double[] vec) {
-		if (vec.length != 3) {
-			return null;
-		}
-		return new Vector3D(vec[0], vec[1], vec[2]);
-	}
-	
 	public static void setShaderLightFillIn(String shaderLightFillIn) {
 		Util.shaderLightFillIn = shaderLightFillIn;
 	}
