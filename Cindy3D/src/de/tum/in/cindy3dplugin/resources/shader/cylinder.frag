@@ -1,15 +1,26 @@
+// Cylinder start position in view space
 uniform vec3 cylinderPoint;
+// Cylinder direction in view space
 uniform vec3 cylinderDirection;
+// Cylinder radius
 uniform float cylinderRadius;
+// Cylinder length indicator
 uniform float cylinderLength;
 
-varying vec3 pos;
+// Surface position in view space
+varying vec3 viewSpacePosition;
 
+// Include shading methods
 #pragma include _shading.frag
 
+// ----------------------------------------------------------------------------
+// Fragment shader for cylinder rendering
+// ----------------------------------------------------------------------------
 void main() {
-	vec3 dir = normalize(pos);
+  // Vector from eye point to surface position
+	vec3 dir = normalize(viewSpacePosition);
 	
+  // Compute intersection with infinitly long cylinder
 	vec3 AOxAB = cross(-cylinderPoint, cylinderDirection);
 	vec3 VxAB = cross(dir, cylinderDirection);
 	
@@ -33,6 +44,8 @@ void main() {
 		}
 	}
 	
+  // If infinitly long cylinder is hit, check if the possibly finite
+  // cylinder is hit too
 	vec3 pointOnCylinder;
 	if (hit == 1.0) {
 		pointOnCylinder = lambda*dir;
@@ -44,15 +57,20 @@ void main() {
 		}
 	}
 	
+  // If ray does not hit cylinder discard
 	if (hit == 0.0) {
 		discard;
 	}
 
+  // Compute normal
 	vec3 normal = normalize(cross(cross(cylinderDirection,
 						pointOnCylinder-cylinderPoint), cylinderDirection));
 
-	shade(normal, pointOnCylinder);
+  // Shade surface position
+	shade(pointOnCylinder, normal);
 
+  // Adjust depth value as the depth value of the bounding box differs
+  // from the actual depth value
 	vec4 projPoint = gl_ProjectionMatrix * vec4(pointOnCylinder, 1);
 	gl_FragDepth = (projPoint.z / projPoint.w + 1.0) / 2.0;
 }

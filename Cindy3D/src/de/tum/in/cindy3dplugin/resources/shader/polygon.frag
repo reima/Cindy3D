@@ -1,9 +1,14 @@
-varying vec3 pos;
+// Position in view space
+varying vec3 viewSpacePosition;
+// Normal at the view space position
 varying vec3 normal;
 
+// Include shading methods
 #pragma include _shading.frag
 
+// ----------------------------------------------------------------------------
+// Fragment shader for polygon rendering
+// ----------------------------------------------------------------------------
 void main() {
-	shade(normalize(normal),
-	      vec3(gl_ModelViewMatrix * vec4(pos, 1)));
+  shade(viewSpacePosition, normalize(normal));
 }

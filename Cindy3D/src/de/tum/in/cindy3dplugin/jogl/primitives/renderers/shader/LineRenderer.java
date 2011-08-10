@@ -26,10 +26,6 @@ public class LineRenderer extends LineRendererBase {
 	 */
 	private ShaderProgram program = null;
 	/**
-	 * Shader variable id for the oriented bounding box transformation matrix 
-	 */
-	private int transformLoc;
-	/**
 	 * Shader variable id for one end point of the line, ray or line segment
 	 */
 	private int originLoc;
@@ -71,8 +67,6 @@ public class LineRenderer extends LineRendererBase {
 			return false;
 		}
 
-		transformLoc = gl2.glGetUniformLocation(program.program(),
-				"cylinderTransform");
 		originLoc = gl2
 				.glGetUniformLocation(program.program(), "cylinderPoint");
 		directionLoc = gl2.glGetUniformLocation(program.program(),
@@ -153,9 +147,6 @@ public class LineRenderer extends LineRendererBase {
 		// positions, the size and orientation for the OBB is needed
 		RealMatrix cylinder = buildOBBTransform(endPoints, line.radius);
 
-		gl2.glUniformMatrix4fv(transformLoc, 1, true,
-				Util.matrixToFloatArray(cylinder), 0);
-
 		// Draw unit cube which is transformed into the OBB during vertex
 		// processing on the GPU
 		gl2.glUniform1f(lengthLoc, (float) cylinderLength);
@@ -164,6 +155,11 @@ public class LineRenderer extends LineRendererBase {
 				(float) p1.getZ());
 		gl2.glUniform3f(directionLoc, (float) direction.getX(),
 				(float) direction.getY(), (float) direction.getZ());
+		
+		gl2.glMatrixMode(GL2.GL_MODELVIEW);
+		gl2.glPushMatrix();
+		
+		gl2.glLoadTransposeMatrixf(Util.matrixToFloatArray(cylinder), 0);
 
 		// TODO: Stuff this into a vertex buffer
 		gl2.glBegin(GL2.GL_QUADS);
@@ -197,5 +193,7 @@ public class LineRenderer extends LineRendererBase {
 			gl2.glVertex3d(1, 1, -1);
 			gl2.glVertex3d(1, -1, -1);
 		gl2.glEnd();
+		
+		gl2.glPopMatrix();
 	}
 }

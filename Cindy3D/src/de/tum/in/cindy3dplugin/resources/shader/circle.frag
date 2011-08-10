@@ -1,21 +1,27 @@
+// Circle center in view space
 uniform vec3 circleCenter;
+// Circle radius
 uniform float circleRadiusSq;
-uniform vec3 circleNormal;
 
-varying vec3 pos;
+// View space position
+varying vec3 viewSpacePosition;
+// Normal at the view space position
 varying vec3 normal;
 
+// Include shading methods
 #pragma include _shading.frag
 
+// ----------------------------------------------------------------------------
+// Fragment shader for circle rendering
+// ----------------------------------------------------------------------------
 void main() {
-
-	gl_FragColor = vec4(pos,1);
-	//return;
-	
-  vec3 diff = pos - circleCenter;
+	// Compute distance from view space position to circle center
+  vec3 diff = viewSpacePosition - circleCenter;
+  
+  // If position is too far away from center and therefore outside the circle
   if (dot(diff, diff) > circleRadiusSq) {
     discard;
   } else {
-    shade(normalize(normal),pos);
+    shade(viewSpacePosition, normalize(normal));
   }
 }

@@ -28,10 +28,10 @@ public class JOGLViewerTest {
 		viewer.begin();
 //		materials(viewer);
 //		colorSpiral(viewer);
-		circles(viewer);
+//		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
-//		icosahedron(viewer);
+		icosahedron(viewer);
 //		enneper(viewer, true);
 //		lights(viewer);
 		
@@ -60,7 +60,7 @@ public class JOGLViewerTest {
 				LightType.DIRECTIONAL_LIGHT);
 
 		info.setDirection(new double[] { 0, 1, 0 });
-		info.setDiffuse(new Color(1.0f, 0.0f, 0.0f));
+		info.setDiffuse(new Color(1.0f, 1.0f, 1.0f));
 		info.setFrame(LightFrame.WORLD);
 		viewer.setLight(0, info);
 
@@ -160,17 +160,17 @@ public class JOGLViewerTest {
 	}
 	
 	public static void spheres(Cindy3DViewer viewer) {
-		AppearanceState appearance = new AppearanceState(Color.red, 60, 100.0, 1);
+		AppearanceState appearance = new AppearanceState(Color.red, 60, 1.0, 1);
 		
-		//viewer.addPoint(0, 0, 0, appearance);
+//		viewer.addPoint(0, 0, 0, appearance);
 		
 //		appearance.setColor(Color.green);
 //		appearance.setSize(50);
 //		appearance.setAlpha(0.1);
-//		viewer.addPoint(0, 0, 0, appearance);
+		viewer.addPoint(0, 0, 0, appearance);
 		
-		appearance.setColor(Color.red);
-		//viewer.addPoint(1, 0, 0, appearance);
+		appearance.setColor(Color.blue);
+		viewer.addPoint(2, 0, 0, appearance);
 		
 //		double size = 10;
 		int rings = 10;

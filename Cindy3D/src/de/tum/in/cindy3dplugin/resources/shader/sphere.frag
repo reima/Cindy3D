@@ -1,18 +1,26 @@
+// Sphere center in view space
 uniform vec3 sphereCenter;
+// Sphere radius
 uniform float sphereRadius;
+// Sphere mode
 uniform float sphereMode;
 
-varying vec3 pos;
+// Surface position in view space
+varying vec3 viewSpacePosition;
 
+// Include shading methods
 #pragma include _shading.frag
 
+// ----------------------------------------------------------------------------
+// Fragment shader for sphere rendering
+// ----------------------------------------------------------------------------
 void main() {
-  vec3 camSpaceCenter = vec3(gl_ModelViewMatrix * vec4(sphereCenter, 1));
+  // Vector from eye point to surface position
+  vec3 dir = normalize(viewSpacePosition);
 
-  vec3 dir = normalize(pos);
-
-  float b = dot(camSpaceCenter, dir);
-  float c = dot(camSpaceCenter, camSpaceCenter) - sphereRadius*sphereRadius;
+  // Compute intersection with sphere
+  float b = dot(sphereCenter, dir);
+  float c = dot(sphereCenter, sphereCenter) - sphereRadius*sphereRadius;
   float d = b*b - c;
   float lambda = 0.0;
   float hit = 0.0;
@@ -37,14 +45,21 @@ void main() {
     }
   }
   
+  // If view ray does not intersect with sphere discard
   if (hit == 0.0) {
     discard;
   }
 
-  vec3 pointOnSphere = lambda*dir;
-  vec3 normal = normalize(pointOnSphere - camSpaceCenter);
-  shade(normal, pointOnSphere);
+  // Compute point on sphere
+  vec3 pointOnSphere = lambda * dir;
+  // Compute normal
+  vec3 normal = normalize(pointOnSphere - sphereCenter);
+  
+  // Shade surface position
+  shade(pointOnSphere, normal);
 
+  // Adjust depth value as the depth value of the bounding quad differs
+  // from the actual depth value
   vec4 projPoint = gl_ProjectionMatrix * vec4(pointOnSphere, 1);
   gl_FragDepth = (projPoint.z / projPoint.w + 1.0) / 2.0;
 }

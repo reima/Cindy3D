@@ -1,9 +1,12 @@
-uniform mat4 cylinderTransform;
+// Surface position in view space
+varying vec3 viewSpacePosition;
 
-varying vec3 pos;
-
+// ----------------------------------------------------------------------------
+// Vertex shader for cylinder rendering
+// ----------------------------------------------------------------------------
 void main() {
-	vec4 transformed = cylinderTransform * gl_Vertex;
-	pos = vec3(transformed);
-	gl_Position = gl_ProjectionMatrix * transformed;
+  // Transform position into view space
+  viewSpacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
+  // Transform position into screen space
+  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 }

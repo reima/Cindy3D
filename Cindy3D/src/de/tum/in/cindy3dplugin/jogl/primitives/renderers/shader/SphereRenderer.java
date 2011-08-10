@@ -3,6 +3,8 @@ package de.tum.in.cindy3dplugin.jogl.primitives.renderers.shader;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.apache.commons.math.geometry.Vector3D;
+
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 
 import de.tum.in.cindy3dplugin.jogl.Util;
@@ -97,8 +99,12 @@ public class SphereRenderer extends PrimitiveRenderer<Sphere> {
 	@Override
 	protected void render(JOGLRenderState jrs, Sphere sphere) {
 		GL2 gl2 = jrs.gl.getGL2();
+		
+		Vector3D viewSpaceCenter = Util.transformPoint(
+				jrs.camera.getTransform(), sphere.getCenter());
+		
 		gl2.glUniform3fv(centerLoc, 1,
-				Util.vectorToFloatArray(sphere.getCenter()), 0);
+				Util.vectorToFloatArray(viewSpaceCenter), 0);
 		gl2.glUniform1f(radiusLoc, (float) sphere.getRadius());
 		
 		// gl2.glFlush();

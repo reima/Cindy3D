@@ -131,7 +131,7 @@ public class LightManager {
 	 * @return GLSL code
 	 */
 	public String getShaderFillIn() {
-		String str = "vec3 eye = -normalize(ecPoint);\n";
+		String str = "vec3 eye = -normalize(position);\n";
 		for (int i = 0; i < Cindy3DViewer.MAX_LIGHTS; ++i) {
 			if (lights[i] != null && lights[i].isEnabled()) {
 				str += lights[i].getShaderFillIn(i) + "\n";

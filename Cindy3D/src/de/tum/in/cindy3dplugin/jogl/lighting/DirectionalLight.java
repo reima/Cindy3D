@@ -58,7 +58,7 @@ public class DirectionalLight extends Light {
 	 */
 	@Override
 	public String getShaderFillIn(int light) {
-		return "directionalLight(" + light +", normal, eye, ecPoint);";
+		return "directionalLight(normal, eye, " + light + ");";
 	}
 
 	/* (non-Javadoc)

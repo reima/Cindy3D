@@ -60,7 +60,7 @@ public class PointLight extends Light {
 	 */
 	@Override
 	public String getShaderFillIn(int light) {
-		return "pointLight(" + light + ", normal, eye, ecPoint);";
+		return "pointLight(position, normal, eye, " + light + ");";
 	}
 
 	/*

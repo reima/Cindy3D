@@ -1,23 +1,24 @@
+// Sphere center in view space
 uniform vec3 sphereCenter;
+// Sphere radius
 uniform float sphereRadius;
 
-varying vec3 pos;
+// Surface point in view space
+varying vec3 viewSpacePosition;
 
+// ----------------------------------------------------------------------------
+// Vertex shader for sphere rendering
+// ----------------------------------------------------------------------------
 void main() {
-/*  vec3 right =
-    normalize(vec3(gl_ModelViewMatrix[0][0],
-                   gl_ModelViewMatrix[1][0],
-                   gl_ModelViewMatrix[2][0]));
-  vec3 up =
-    normalize(vec3(gl_ModelViewMatrix[0][1],
-                   gl_ModelViewMatrix[1][1],
-                   gl_ModelViewMatrix[2][1]));*/
-
-  vec3 camSpaceCenter = vec3(gl_ModelViewMatrix * vec4(sphereCenter, 1));
-  vec3 dir = normalize(-camSpaceCenter);
+  // Compute screen aligned coordinate system
+  vec3 dir = normalize(-sphereCenter);
   vec3 right = normalize(cross(dir, vec3(0, 1, 0)));
   vec3 up = normalize(cross(right, dir));
 
-  pos = camSpaceCenter + sphereRadius*(right * gl_Vertex.x + up * gl_Vertex.y + dir);
-  gl_Position = gl_ProjectionMatrix * vec4(pos, 1);
+  // Shift vertices of fullscreen quad
+  viewSpacePosition = sphereCenter +
+	sphereRadius*(right * gl_Vertex.x + up * gl_Vertex.y + dir);
+
+  // Transform position into screen space
+  gl_Position = gl_ProjectionMatrix * vec4(viewSpacePosition, 1);
 }
