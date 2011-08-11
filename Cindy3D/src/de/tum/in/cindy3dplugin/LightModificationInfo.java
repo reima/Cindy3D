@@ -62,6 +62,14 @@ public class LightModificationInfo {
 	 * Direction
 	 */
 	private double[] direction = null;
+	/**
+	 * Spot light cutoff angle
+	 */
+	private Double cutoffAngle = null;
+	/**
+	 * Spot light exponent
+	 */
+	private Double exponent = null;
 
 	/**
 	 * Light type
@@ -223,5 +231,43 @@ public class LightModificationInfo {
 	 */
 	public void setType(LightType type) {
 		this.type = type;
+	}
+
+	/**
+	 * @param cutoffangle
+	 *            new cutoff angle
+	 */
+	public void setCutoffAngle(Double cutoffangle) {
+		this.cutoffAngle = cutoffangle;
+	}
+	
+	/**
+	 * @return cutoff angle
+	 */
+	public Double getCutoffAngle() {
+		return cutoffAngle;
+	}
+	
+	/**
+	 * @param exponent
+	 *            new spot exponent
+	 */
+	public void setSpotExponent(Double exponent) {
+		this.exponent = exponent;
+	}
+	
+	/**
+	 * @return spot exponent
+	 */
+	public Double getSpotExponent() {
+		return exponent;
+	}
+
+	public boolean hasCutoffAngle() {
+		return cutoffAngle != null;
+	}
+	
+	public boolean hasSpotExponent() {
+		return exponent != null;
 	}
 }

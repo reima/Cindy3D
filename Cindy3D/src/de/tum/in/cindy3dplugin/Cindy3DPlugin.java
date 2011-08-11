@@ -874,7 +874,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			throw new IndexOutOfBoundsException("light index out of bounds");
+			throw new IndexOutOfBoundsException("light index out of bounds.");
 		}
 		cindy3d.setLight(
 				light,
@@ -897,12 +897,36 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			throw new IndexOutOfBoundsException("light index out of bounds");
+			throw new IndexOutOfBoundsException("light index out of bounds.");
 		}
 		cindy3d.setLight(
 				light,
 				getLightModificationInfoFromModifiers(
 						LightType.DIRECTIONAL_LIGHT, modifiers));
+	}
+	
+	/**
+	 * Sets parameters for a spot light.
+	 * 
+	 * @param light
+	 *            light index, between 0 (inclusive) and
+	 *            {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *            (exclusive)
+	 * 
+	 * @throws IndexOutOfBoundsException
+	 *             if light index is not between 0 (inclusive) and
+	 *             {@value de.tum.in.cindy3dplugin.Cindy3DViewer#MAX_LIGHTS}
+	 *             (exclusive)
+	 */
+	@CindyScript("spotlight3d")
+	public void spotlight3d(int light) {
+		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
+			throw new IndexOutOfBoundsException("light index out of bounds.");
+		}
+		cindy3d.setLight(
+				light,
+				getLightModificationInfoFromModifiers(LightType.SPOT_LIGHT,
+						modifiers));
 	}
 
 	/**
@@ -1026,6 +1050,18 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 			if (direction.length == 3) {
 				info.setDirection(direction);
 			}
+		}
+		
+		value = modifiers.get("cutoffangle");
+		if (value instanceof Double) {
+			Double cutoffangle = (Double) value;
+			info.setCutoffAngle(cutoffangle);
+		}
+		
+		value = modifiers.get("exponent");
+		if (value instanceof Double) {
+			Double exponent = (Double)value;
+			info.setSpotExponent(exponent);
 		}
 
 		value = modifiers.get("frame");

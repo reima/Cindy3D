@@ -70,17 +70,17 @@ public class LightManager {
 			lightSettingChanged = true;
 
 			switch (info.getType()) {
-			case POINT_LIGHT:
-				lights[light] = new PointLight();
-				break;
-			case DIRECTIONAL_LIGHT:
-				lights[light] = new DirectionalLight();
-				break;
-			case SPOT_LIGHT:
-				lights[light] = new SpotLight();
-				break;
-			default:
-				return;
+				case POINT_LIGHT:
+					lights[light] = new PointLight();
+					break;
+				case DIRECTIONAL_LIGHT:
+					lights[light] = new DirectionalLight();
+					break;
+				case SPOT_LIGHT:
+					lights[light] = new SpotLight();
+					break;
+				default:
+					return;
 			}
 		}
 
@@ -103,22 +103,37 @@ public class LightManager {
 		}
 
 		switch (info.getType()) {
-		case POINT_LIGHT:
-			PointLight pointLight = (PointLight) lights[light];
-			if (info.hasPosition()) {
-				pointLight.setPosition(Util.doubleArrayToVector(info
-						.getPosition()));
-			}
-			break;
-		case DIRECTIONAL_LIGHT:
-			DirectionalLight directionalLight = (DirectionalLight) lights[light];
-			if (info.hasDirection()) {
-				directionalLight.setDirection(Util.doubleArrayToVector(info
-						.getDirection()));
-			}
-			break;
-		case SPOT_LIGHT:
-			break;
+			case POINT_LIGHT:
+				PointLight pointLight = (PointLight) lights[light];
+				if (info.hasPosition()) {
+					pointLight.setPosition(Util.doubleArrayToVector(info
+							.getPosition()));
+				}
+				break;
+			case DIRECTIONAL_LIGHT:
+				DirectionalLight directionalLight = (DirectionalLight) lights[light];
+				if (info.hasDirection()) {
+					directionalLight.setDirection(Util.doubleArrayToVector(info
+							.getDirection()));
+				}
+				break;
+			case SPOT_LIGHT:
+				SpotLight spotLight = (SpotLight) lights[light];
+				if (info.hasPosition()) {
+					spotLight.setPosition(Util.doubleArrayToVector(info
+							.getPosition()));
+				}
+				if (info.hasDirection()) {
+					spotLight.setDirection(Util.doubleArrayToVector(info
+							.getDirection()));
+				}
+				if (info.hasCutoffAngle()) {
+					spotLight.setCutoffAngle(info.getCutoffAngle());
+				}
+				if (info.hasSpotExponent()) {
+					spotLight.setExponent(info.getSpotExponent());
+				}
+				break;
 		}
 	}
 

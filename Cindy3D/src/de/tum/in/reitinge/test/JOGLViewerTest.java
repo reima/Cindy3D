@@ -18,7 +18,7 @@ public class JOGLViewerTest {
 		
 		Hashtable<String, Object> hintsMap = new Hashtable<String,Object>();
 		
-		hintsMap.put("quality", 5.0);
+		hintsMap.put("quality", 4.0);
 
 		viewer.setRenderHints(hintsMap);
 		
@@ -31,9 +31,9 @@ public class JOGLViewerTest {
 //		circles(viewer);
 //		lines(viewer);
 //		spheres(viewer);
-		icosahedron(viewer);
+//		icosahedron(viewer);
 //		enneper(viewer, true);
-//		lights(viewer);
+		lights(viewer);
 		
 		viewer.end();
 	}
@@ -54,19 +54,30 @@ public class JOGLViewerTest {
 	
 	public static void lights(Cindy3DViewer viewer) {
 		AppearanceState appearance = new AppearanceState(Color.white, 60, 1.0, 1);
-		viewer.addSphere(0, 0, 0, 1, appearance);
+		viewer.addSphere(0, 0, 0, 3, appearance);
+		
+//		LightModificationInfo info = new LightModificationInfo(
+//				LightType.DIRECTIONAL_LIGHT);
+//
+//		info.setDirection(new double[] { 0, 1, 0 });
+//		info.setDiffuse(new Color(1.0f, 1.0f, 1.0f));
+//		info.setFrame(LightFrame.WORLD);
+//		viewer.setLight(0, info);
 		
 		LightModificationInfo info = new LightModificationInfo(
-				LightType.DIRECTIONAL_LIGHT);
+		LightType.SPOT_LIGHT);
 
-		info.setDirection(new double[] { 0, 1, 0 });
+		info.setPosition(new double[] {15,15,0});
+		info.setDirection(new double[] { -1, -1, 0 });
 		info.setDiffuse(new Color(1.0f, 1.0f, 1.0f));
+		info.setCutoffAngle(5.0);
+		info.setSpotExponent(0.0);
 		info.setFrame(LightFrame.WORLD);
 		viewer.setLight(0, info);
 
 		appearance.setColor(Color.green);
 		appearance.setAlpha(1.0);
-		viewer.addSphere(-1, 0, 0, 0.25, appearance);
+		viewer.addSphere(-3, 0, 0, 1.5, appearance);
 	}
 	
 	public static void enneper(Cindy3DViewer viewer, boolean dots) {
