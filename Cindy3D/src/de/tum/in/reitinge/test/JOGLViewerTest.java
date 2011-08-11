@@ -67,12 +67,12 @@ public class JOGLViewerTest {
 		LightModificationInfo info = new LightModificationInfo(
 		LightType.SPOT_LIGHT);
 
-		info.setPosition(new double[] {15,15,0});
-		info.setDirection(new double[] { -1, -1, 0 });
-		info.setDiffuse(new Color(1.0f, 1.0f, 1.0f));
-		info.setCutoffAngle(5.0);
-		info.setSpotExponent(0.0);
-		info.setFrame(LightFrame.WORLD);
+		info.setPosition(new double[] {0,0,0});
+		info.setDirection(new double[] { 0, 0, -1 });
+		info.setSpecular(Color.black);
+		info.setCutoffAngle(20.0);
+		info.setSpotExponent(2.0);
+		info.setFrame(LightFrame.CAMERA);
 		viewer.setLight(0, info);
 
 		appearance.setColor(Color.green);

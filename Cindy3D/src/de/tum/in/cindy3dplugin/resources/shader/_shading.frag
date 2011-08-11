@@ -1,8 +1,8 @@
-// Global ambient color for an surface point
+// Global ambient color for a surface point
 vec4 Ambient;
-// Global diffuse color for an surface point
+// Global diffuse color for a surface point
 vec4 Diffuse;
-// Global specular color for an surface point
+// Global specular color for a surface point
 vec4 Specular;
 
 // ----------------------------------------------------------------------------
@@ -112,15 +112,15 @@ void directionalLight(in vec3 normal, in vec3 eye, in int lightIdx) {
 // lightIdx     Light index needed to retrieve light properties
 // ----------------------------------------------------------------------------
 void spotLight(in vec3 position, in vec3 normal, in vec3 eye, in int lightIdx) {
-  float diffuseDot;       // normal . light direction
-   float specularDot;            // normal . light half vector
-   float specFactor;                // power factor
-   float spotDot;           // cosine of angle between spotlight
-   float spotAttenuation;   // spotlight attenuation factor
-   float attenuation;       // computed attenuation factor
-   float distance;                 // distance from surface to light source
-   vec3  lightDir;                // direction from surface to light position
-   vec3  halfVector;        // direction of maximum highlights
+  float diffuseDot;      // normal . light direction
+  float specularDot;     // normal . light half vector
+  float specFactor;      // power factor
+  float spotCosAngle;    // cosine of angle between spotlight
+  float spotAttenuation; // spotlight attenuation factor
+  float attenuation;     // computed attenuation factor
+  float distance;        // distance from surface to light source
+  vec3  lightDir;        // direction from surface to light position
+  vec3  halfVector;      // direction of maximum highlights
    
      // Invert normal for double sided lighting
   if (dot(normal, eye) < 0.0) {
@@ -140,13 +140,13 @@ void spotLight(in vec3 position, in vec3 normal, in vec3 eye, in int lightIdx) {
     gl_LightSource[lightIdx].quadraticAttenuation * distance * distance);
 
   // See if point on surface is inside cone of illumination
-  spotDot = dot(-lightDir, normalize(gl_LightSource[lightIdx].spotDirection));
+  spotCosAngle = dot(-lightDir, normalize(gl_LightSource[lightIdx].spotDirection));
 
-  if (spotDot < gl_LightSource[lightIdx].spotCosCutoff) {
-    // Light adds no constribution
+  if (spotCosAngle < gl_LightSource[lightIdx].spotCosCutoff) {
+    // Light adds no contribution
     spotAttenuation = 0.0;
   } else {
-    spotAttenuation = pow(spotDot, gl_LightSource[lightIdx].spotExponent);
+    spotAttenuation = pow(spotCosAngle, gl_LightSource[lightIdx].spotExponent);  
   }
 
   // Combine the spotlight and distance attenuation.
@@ -163,9 +163,11 @@ void spotLight(in vec3 position, in vec3 normal, in vec3 eye, in int lightIdx) {
   } else {
     specFactor = pow(specularDot, gl_FrontMaterial.shininess);
   }
-   Ambient  += attenuation * gl_LightSource[lightIdx].ambient;
-   Diffuse  += attenuation * gl_LightSource[lightIdx].diffuse * diffuseDot;
-   Specular += attenuation * gl_LightSource[lightIdx].specular * specFactor;
+  
+  // Add light received from this light source to global colors
+  Ambient  += attenuation * gl_LightSource[lightIdx].ambient;
+  Diffuse  += attenuation * gl_LightSource[lightIdx].diffuse * diffuseDot;
+  Specular += attenuation * gl_LightSource[lightIdx].specular * specFactor;
 }
 
 // ----------------------------------------------------------------------------
