@@ -8,8 +8,8 @@ import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
 /**
- * Represents a point light source. A point light is defined by its emitting position.
- * 
+ * Represents a point light source. A point light is defined by its emitting
+ * position.
  */
 public class PointLight extends Light {
 	/**
