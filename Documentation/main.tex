@@ -1,6 +1,7 @@
 \documentclass{scrartcl}
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{mathpazo}
+\usepackage[utf8]{inputenc}
 
 \title{Cindy3D Project Documentation}
 \author{Matthias Reitinger \and Jan Sommer}
@@ -16,13 +17,23 @@
 
 \section{Project overview}
 
-\begin{itemize}
-\item Context: what is Cinderella
-\item Motivation: why 3D plugin
-\item Goals: what we wanted to achieve
-\item Results: what we accomplished
-\item Outlook: what could still be done
-\end{itemize}
+\subsection{Cinderella \& CindyScript}
+
+\emph{Cinderella} is a dynamic geometry software created by Ulrich Kortenkamp and Jürgen Richter-Gebert. One of its key features is the embedded functional scripting language \emph{CindyScript}. It enables users of \emph{Cinderella} to interact with geometric constructions in a programmatic way. Among others, \emph{CindyScript} provides a rich set of methods for drawing two-dimensional geometry. However the display of three-dimensional objects is cumbersome, as one would have to fall back on the 2D drawing methods and implement algorithms like perspective projection and hidden surface removal by hand.
+
+The recent release of \emph{Cinderella 2.6} provides a new plugin interface. This allows programmers to write \emph{Java} libraries which expose \emph{CindyScript} methods that can in turn be called from inside \emph{Cinderella} constructions.
+
+\subsection{Cindy3D}
+
+In this context the \emph{Cindy3D} project was born. The need for 3D drawing functionality in \emph{Cinderella} was in fact one of the main reasons to create the new plugin interface. The first version of \emph{Cindy3D} was developed when the plugin interface was still in a preliminary stage.
+% What we wanted to achieve
+
+\subsection{Results}
+% What we accomplished
+
+\subsection{Future directions}
+
+There are some features we would have wanted in \emph{Cindy3D}, yet didn't make it into this release for various reasons (like limited time or constraints in \emph{Cinderella} at the time of development). We hope that these features can be implemented in further versions of \emph{Cindy3D}.
 
 \section{User documentation}
 
@@ -36,12 +47,14 @@
 \subsection{User guide}
 
 \begin{itemize}
+\item Understanding of \emph{CindyScript} is assumed
 \item Scene management (begin3d, end3d)
 \item Settings (renderhints...)
 \item Coordinate system
 \item Primitive types
 \item Appearance (attributes, stack)
 \item Examples
+\item Tutorial(s)?
 \end{itemize}
 
 \subsection{Command reference}
@@ -50,9 +63,18 @@ Link to HTML documentation or inline.
 
 \section{Developer documentation}
 
+\subsection{Technical overview}
+
+\begin{itemize}
+\item Java 6
+\item Used libraries: JOGL, apache-commons-math
+\item JAR packaging
+\end{itemize}
+
 \subsection{Design overview}
 
 Insert fancy diagram here.
+% Translation of calls from Cinderella to a library agnostic format (only types provided by Java or derivatives thereof)
 
 \subsection{Primitive rendering}
 
