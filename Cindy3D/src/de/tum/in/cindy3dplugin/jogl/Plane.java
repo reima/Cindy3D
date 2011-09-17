@@ -24,7 +24,8 @@ public class Plane {
 	 * 			coordinates of a point on plane
 	 */
 	public Plane(Vector3D normal, Vector3D position) {
-		this(normal, -Vector3D.dotProduct(normal, position));
+		this.normal = normal.normalize();
+		this.distance = -Vector3D.dotProduct(this.normal, position);
 	}
 	
 	/**
@@ -33,10 +34,10 @@ public class Plane {
 	 * @param normal
 	 * 			plane normal
 	 * @param distance
-	 * 			distance of plane from origin
+	 * 			signed distance of plane from origin
 	 */
 	public Plane(Vector3D normal, double distance) {
-		this.normal = normal;
+		this.normal = normal.normalize();
 		this.distance = distance;
 	}
 
@@ -44,11 +45,12 @@ public class Plane {
 	 * Computes the intersection between a ray and the plane.
 	 * 
 	 * @param rayOrigin
-	 * 			coordinates of the ray origin
+	 *            coordinates of the ray origin
 	 * @param rayDirection
-	 * 			ray direction as a vector
-	 * @return
-	 * 			distance from origin in given direction to intersection point
+	 *            ray direction
+	 * @return distance <em>d</em> such that <code>rayOrigin</code> + <em>d</em>
+	 *         *<code>rayDirection</code> is the intersection point with the
+	 *         plane, or {@link Double#MAX_VALUE} if there is no intersection
 	 */
 	public double intersectRay(Vector3D rayOrigin, Vector3D rayDirection) {
 		double denom = Vector3D.dotProduct(rayDirection, normal);
@@ -57,6 +59,33 @@ public class Plane {
 			return Double.MAX_VALUE;
 		}
 		double lambda = -(Vector3D.dotProduct(rayOrigin, normal) + distance)
+				/ denom;
+		return lambda;
+	}
+
+	/**
+	 * Computes the intersection between a ray and a shifted plane.
+	 * 
+	 * @param rayOrigin
+	 *            coordinates of the ray origin
+	 * @param rayDirection
+	 *            ray direction
+	 * @param shift
+	 *            distance to temporarily shift the plane along its normal
+	 *            before testing for an intersection
+	 * @return distance <em>d</em> such that <code>rayOrigin</code> + <em>d</em>
+	 *         *<code>rayDirection</code> is the intersection point with the
+	 *         shifted plane, or {@link Double#MAX_VALUE} if there is no
+	 *         intersection
+	 */
+	public double intersectRayWithShift(Vector3D rayOrigin,
+			Vector3D rayDirection, double shift) {
+		double denom = Vector3D.dotProduct(rayDirection, normal);
+		// Ray parallel to plane, so no intersection point is found
+		if (Math.abs(denom) < 10E-8) {
+			return Double.MAX_VALUE;
+		}
+		double lambda = -(Vector3D.dotProduct(rayOrigin, normal) + distance - shift)
 				/ denom;
 		return lambda;
 	}

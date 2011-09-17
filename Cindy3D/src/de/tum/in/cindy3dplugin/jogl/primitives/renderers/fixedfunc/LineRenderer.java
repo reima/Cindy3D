@@ -166,7 +166,7 @@ public class LineRenderer extends LineRendererBase {
 		Vector3D p2 = Util.transformPoint(modelView, line.getSecondPoint());
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.getCamera(), p1, p2,
-				line.getLineType());
+				line.getRadius(), line.getLineType());
 
 		// If line is not visible at all, bail out
 		if (endPoints.p1.isNaN()) {

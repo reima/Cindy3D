@@ -142,7 +142,7 @@ public class LineRenderer extends LineRendererBase {
 		direction = direction.normalize();
 
 		Endpoints endPoints = clipLineAtFrustum(jrs.getCamera(), p1, p2,
-				line.getLineType());
+				line.getRadius(), line.getLineType());
 
 		// If line is not visible at all, bail out
 		if (endPoints.p1.isNaN()) {

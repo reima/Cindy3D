@@ -64,15 +64,16 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 	 *            first point on line or ray starting point
 	 * @param p2
 	 *            second point on line or ray
+	 * @param radius
+	 *            radius of the cylinder representing the line
 	 * @param lineType
 	 *            line type
 	 * @return end points of the potentially visible segment of the line. If
 	 *         nothing is visible, both end points are NaN.
 	 */
 	protected static Endpoints clipLineAtFrustum(ModelViewerCamera camera,
-			Vector3D p1, Vector3D p2, LineType lineType) {
-		// Compute orientation of the cylinder and its length, assuming
-		// a line segment is about to be drawn
+			Vector3D p1, Vector3D p2, double radius, LineType lineType) {
+		// Compute direction for intersection tests
 		Vector3D direction = p2.subtract(p1).normalize();
 
 		Plane[] planes = camera.getClippingPlanes();
@@ -83,8 +84,12 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 			double min = Double.MAX_VALUE;
 			double max = -Double.MAX_VALUE;
 
+			// Intersect ray with frustum planes shifted by the line radius.
+			// In this way we can ensure that when we later draw a line segment
+			// as a cylinder with the given radius, that it is fully visible.
 			for (int i = 0; i < 6; ++i) {
-				double lambda = planes[i].intersectRay(p1, direction);
+				double lambda = planes[i].intersectRayWithShift(p1, direction,
+						radius);
 				if (lambda == Double.MAX_VALUE) {
 					continue;
 				}
@@ -97,7 +102,7 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 						continue;
 					}
 
-					if (planes[j].distance(p) > 0) {
+					if (planes[j].distance(p) > radius) {
 						inFrustum = false;
 						break;
 					}
