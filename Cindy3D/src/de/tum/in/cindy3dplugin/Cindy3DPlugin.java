@@ -137,18 +137,6 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	}
 
 	/**
-	 * Squares the given number.
-	 * 
-	 * @param x
-	 *            number to square
-	 * @return the square of x
-	 */
-	@CindyScript("square")
-	public double square(double x) {
-		return x * x;
-	}
-
-	/**
 	 * Prepares drawing of 3D objects.
 	 * 
 	 * Must be called before any 3D drawing function. TODO: List these functions
