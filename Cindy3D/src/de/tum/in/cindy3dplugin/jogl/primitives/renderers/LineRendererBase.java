@@ -31,7 +31,7 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 		public Vector3D p2;
 
 		/**
-		 * Constructs a new Endpoint class with the two given end points.
+		 * Constructs a new Endpoint instance with the two given end points.
 		 * 
 		 * @param p1
 		 *            first end point
@@ -45,10 +45,10 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 	}
 	
 	/**
-	 * Clips a given line or ray at the camera view frustum. As a line or rays
-	 * have an infinite length, they are clipped against the camera view
-	 * frustum, which results in a finite line segment representing the visible
-	 * parts of the line or ray.
+	 * Clips a given line or ray at the camera view frustum. As lines and rays
+	 * have infinite length, they are clipped against the camera view frustum,
+	 * which results in a finite line segment representing the visible part of
+	 * the line or ray.
 	 * <ol>
 	 * <li>A line is represented by two points <code>p1</code> and
 	 * <code>p2</code>.
@@ -59,14 +59,14 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 	 * </ol>
 	 * 
 	 * @param camera
-	 *            current camera setting containg the view frustum
+	 *            current camera containing the view frustum
 	 * @param p1
 	 *            first point on line or ray starting point
 	 * @param p2
 	 *            second point on line or ray
 	 * @param lineType
 	 *            line type
-	 * @return end points of the line segments reprenting the clipped geometry
+	 * @return end points of the line segments representing the clipped geometry
 	 */
 	protected static Endpoints clipLineAtFrustum(ModelViewerCamera camera,
 			Vector3D p1, Vector3D p2, LineType lineType) {
@@ -74,12 +74,11 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 		// Compute orientation of the cylinder and its length, assuming
 		// a line segment is about to be drawn
 		Vector3D direction = p2.subtract(p1).normalize();
-		// direction = direction.normalize();
 
 		Plane[] planes = camera.getClippingPlanes();
 
-		// In case, no line segment should be drawn, a ray or line is drawn
-		// So the intersection points with the view frustum are computed
+		// In case no line segment should be drawn, a ray or line is drawn.
+		// So the intersection points with the view frustum are computed.
 		if (lineType != LineType.SEGMENT) {
 			double min = Double.MAX_VALUE;
 			double max = Double.MIN_VALUE;
@@ -88,22 +87,21 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 				if (lambda == Double.MAX_VALUE) {
 					continue;
 				}
-				
+
 				Vector3D p = p1.add(lambda, direction);
-				
+
 				boolean inFrustum = true;
-				for (int j=0; j<6; ++j) {
+				for (int j = 0; j < 6; ++j) {
 					if (j == i) {
 						continue;
 					}
-					
+
 					if (planes[j].distance(p) > 0) {
 						inFrustum = false;
 						break;
 					}
-					
 				}
-				
+
 				if (inFrustum) {
 					min = Math.min(min, lambda);
 					max = Math.max(max, lambda);

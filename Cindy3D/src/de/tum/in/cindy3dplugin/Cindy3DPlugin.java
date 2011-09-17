@@ -188,7 +188,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	public void draw3d(ArrayList<Double> firstPoint,
 			ArrayList<Double> secondPoint) {
 		if (firstPoint.size() != 3) {
-			throw new IllegalArgumentException("first point sizo not 3");
+			throw new IllegalArgumentException("first point size not 3");
 		}
 		if (secondPoint.size() != 3) {
 			throw new IllegalArgumentException("second point size not 3");
