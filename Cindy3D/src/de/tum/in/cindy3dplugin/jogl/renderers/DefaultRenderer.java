@@ -198,7 +198,7 @@ public class DefaultRenderer extends JOGLRenderer {
 			if (!meshRenderer.reloadShaders(gl))
 				Util.getLogger().severe("Mesh renderer shader loading failed");
 			
-			lightManager.wurstMitBrot();
+			lightManager.resetLightSettingChanged();
 		}
 		
 		lightManager.setGLState(gl);

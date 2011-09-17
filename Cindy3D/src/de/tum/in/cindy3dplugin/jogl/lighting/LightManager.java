@@ -156,17 +156,22 @@ public class LightManager {
 	}
 
 	/**
-	 * @return <code>true</code> if at least one property of a light source has
-	 *         changed since the last reset, <code>false</code> otherwise
+	 * @return <code>true</code> if the number and/or types of enabled light
+	 *         sources has changed since the last call to
+	 *         {@link #resetLightSettingChanged()}, <code>false</code> otherwise
+	 * 
+	 * @see #resetLightSettingChanged()
 	 */
 	public boolean hasLightSettingChanged() {
 		return lightSettingChanged;
 	}
 
-	/*
-	 * TODO: Find method name
+	/**
+	 * Resets the internal flag that signals if the light setting has changed.
+	 * 
+	 * @see #hasLightSettingChanged()
 	 */
-	public void wurstMitBrot() {
+	public void resetLightSettingChanged() {
 		this.lightSettingChanged = false;
 	}
 
