@@ -1,0 +1,81 @@
+=================
+Command reference
+=================
+
+Object appearance
+-----------------
+
+Drawing
+-------
+
+Drawing points: ``draw3d(<point>)``
+===================================
+
+Description
+~~~~~~~~~~~
+
+Draws a point at the given position.
+
+Modifiers
+~~~~~~~~~
+
+This function can handle the following modifiers:
+
+========= ============================= =======================================
+Modifier  Parameter                     Effect
+========= ============================= =======================================
+size      ``<real>``                    sets the point size
+color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+shininess ``<real>``                    sets the shininess
+========= ============================= =======================================
+
+
+Drawing lines: ``draw3d(<point>,<point>)``
+===========================================
+
+Description
+~~~~~~~~~~~
+
+Draws an infinite line, ray or segment. The type of line to be drawn is
+specified by the "type" modifier. When no type is given, a segment is drawn by
+default. The two arguments are interpreted depending on the line type:
+
+=========  ==============  =============================================
+Line type  Point 1         Point 2
+=========  ==============  =============================================
+Segment    First endpoint  Second endpoint
+Ray        Ray origin      Arbitrary point on ray, different from origin
+Line       Point on line   Point on line, different from first point
+=========  ==============  =============================================
+
+Modifiers
+~~~~~~~~~
+
+This function can handle the following modifiers:
+
+========= ============================= =======================================
+Modifier  Parameter                     Effect
+========= ============================= =======================================
+type      ``<string>``                  specifies the line type (values
+                                        ``"segment"``, ``"ray"``, and ``"line"``
+                                        allowed)
+size      ``<real>``                    sets the line size
+color     ``[<real1>,<real2>,<real3>]`` sets the line color to an RGB value
+shininess ``<real>``                    sets the shininess
+========= ============================= =======================================
+
+Example
+~~~~~~~
+
+The following example illustrates drawing different line types::
+
+  // draws a red segment, between (0,0,0) and (1,0,0)
+  draw3d([0,0,0],[1,0,0],color->[1,0,0]);
+  // draws a green segment, between (0,0,0) and (0,1,0)
+  draw3d([0,0,0],[0,1,0],type->"segment",color->[0,1,0]);
+  // draw a blue ray starting at (0,0,0), extending along the positive z axis
+  draw3d([0,0,0],[0,0,1],type->"ray",color->[0,0,1]);
+  // draw a yellow line passing through (1,1,1) and (2,1,1)
+  draw3d([1,1,1],[2,1,1],type->"line",color->[1,1,0]);
+
+[screenshot]
