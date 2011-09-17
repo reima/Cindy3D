@@ -1,0 +1,130 @@
+=================
+Command Reference
+=================
+
+Elementary Drawing Functions
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The operators described in this section are used to draw the basic geometric shapes.
+
+Drawing points and lines: ``draw3d(<expr>)``
+--------------------------------------------
+
+Description
++++++++++++
+
+The ``draw3d(<expr>)`` function is a multifunctional operator. Depending on what is passed to it as ``<expr>``, different kinds of geometry objects will be drawn.
+There are two possibilites to use the ``draw3d(<expr>)`` command.
+
+================================= ===========================================================================================
+ Code                              Result 
+================================= ===========================================================================================
+``draw([x,y,z])``                  Draws a point with x-coordinate ``x``, y-coordinate ``y`` and z-coordinate ``z``
+``draw([x1,y1,z1], [x2,y2,z2])``   Draws a line segment, ray or line defined by the points ``(x1,y1,z1)`` and ``(x2,y2,z2)``
+================================= ===========================================================================================
+
+Drawing a line segment, ray or line
++++++++++++++++++++++++++++++++++++
+If the ``draw(<expr>)`` command is called with two parameters each representing a point, it depends on the additional modifier ``type``, how the points are interpreted.
+If ``draw(<expr>)`` is called with two parameters and the ``type`` modifier is not specified, a line segment is added as default.
+
+
+========= ==================================================================================
+ type      Interpretation
+========= ==================================================================================
+ segment   A line segment is added to the scene, where the two specified points define the two endpoints of the line segment.
+ ray       A ray is added to the scene, where the first point is interpreted as the starting position of the ray, which is pointing into the direction of the second point.
+ line      A infinitly long line is added to the scene. The two specified points lie on the line as so define its orientation.
+========= ==================================================================================
+
+Modifiers
++++++++++
+
+========== ============== ==================================================================================
+ Modifier   Parameter      Effect
+========== ============== ==================================================================================
+ type       ``<string>``   Values ``segment``, ``ray`` and ``line`` are accepted. The default value is ``segment``.
+========== ============== ==================================================================================
+
+Drawing connected points: ``connect3d(<list>)``
+-----------------------------------------------
+
+Description
++++++++++++
+
+This operator takes a list of points as input and connects them. As a result, a certain set of line segments is added to the scene.
+Each element in the ``<list>`` parameter represents a single point, which is represented by its x-, y- and z-coordinate and is syntactically defined by ``[x,y,z]``.
+
+Modifiers
++++++++++
+
+Drawing a polygon: ``drawpoly3d(<list>)``
+-----------------------------------------
+
+Description
++++++++++++
+
+This operator takes a list of points as input and adds the border of the polygon described by the list of points to the scene.
+Each element in the ``<list>`` parameter represents a single point, which is represented by its x-, y- and z-coordinate and is syntactically defined by ``[x,y,z]``.
+
+Modifiers
++++++++++
+
+Filling a polygon: ``fillpoly3d(<expr>)``
+-----------------------------------------
+
+Description
++++++++++++
+
+The ``fillpoly3d(<expr>)`` function is a multifunctional operator. Depending on what is passed to it as ``<expr>``, different kinds of filled polygons will be added to the scene.
+There are two possibilites to use the ``fillpoly3d(<expr>)`` command.
+
+========================= ================================================================================================================
+ Code                      Result 
+========================= ================================================================================================================
+``draw(<list>)``           Adds a filled polygon to the scene. The polygon is defined by a list of points.
+``draw(<list>, <list>)``   Adds a filled polygon to the scene. The polygon is defined by the first parameter, which is a list of points. Additionally, normals are defined for each polygon vertex. So the number of elements in both list must match.
+========================= ================================================================================================================
+
+So in general, this operator takes a list of points as input and adds a filled polygon to the scene. The polygon border is described by the list of points.
+Each element in the first ``<list>`` parameter represents a single point, which is represented by its x-, y- and z-coordinate and is syntactically defined by ``[x,y,z]``.
+Additionally, a normal can be specified for each polygon vertex. These normals also have the form ``[nx,ny,nz]``.
+
+
+Modifiers
++++++++++
+
+Filling a circle: ``filcircle3d(<point>, <point>, <double>)``
+-------------------------------------------------------------
+
+* begin3d
+* end3d
+- draw3d
+- connect3d
+- drawpoly3d
+- fillpoly3d
+* fillcircle3d
+* mesh3d
+* drawsphere3d
+* gsave3d
+* grestore3d
+* color3d
+* pointcolor3d
+* linecolor3d
+* surfacecolor3d
+* alpha3d
+* surfacealpha3d
+* shininess3d
+* pointshininess3d
+* lineshininess3d
+* surfaceshininess3d
+* size3d
+* pointsize3d
+* linesize3d
+* background3d
+* depthrange3d
+* renderhints3d
+* disablelight3d
+* pointlight3d
+* directionallight3d
+* spotlight3d
