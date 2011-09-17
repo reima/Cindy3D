@@ -47,8 +47,8 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 	/**
 	 * Clips a given line or ray at the camera view frustum. As lines and rays
 	 * have infinite length, they are clipped against the camera view frustum,
-	 * which results in a finite line segment representing the visible part of
-	 * the line or ray.
+	 * which results in a finite line segment representing the potentially
+	 * visible part of the line or ray.
 	 * <ol>
 	 * <li>A line is represented by two points <code>p1</code> and
 	 * <code>p2</code>.
@@ -66,11 +66,11 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 	 *            second point on line or ray
 	 * @param lineType
 	 *            line type
-	 * @return end points of the line segments representing the clipped geometry
+	 * @return end points of the potentially visible segment of the line. If
+	 *         nothing is visible, both end points are NaN.
 	 */
 	protected static Endpoints clipLineAtFrustum(ModelViewerCamera camera,
 			Vector3D p1, Vector3D p2, LineType lineType) {
-
 		// Compute orientation of the cylinder and its length, assuming
 		// a line segment is about to be drawn
 		Vector3D direction = p2.subtract(p1).normalize();
@@ -81,7 +81,8 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 		// So the intersection points with the view frustum are computed.
 		if (lineType != LineType.SEGMENT) {
 			double min = Double.MAX_VALUE;
-			double max = Double.MIN_VALUE;
+			double max = -Double.MAX_VALUE;
+
 			for (int i = 0; i < 6; ++i) {
 				double lambda = planes[i].intersectRay(p1, direction);
 				if (lambda == Double.MAX_VALUE) {
@@ -108,15 +109,19 @@ public abstract class LineRendererBase extends PrimitiveRenderer<Line> {
 				}
 			}
 
-			// For each line or ray, the second point is to be shifted to
-			// infinity. As we can only see the ray/line until it leaves
-			// the view frustum, the point is shifted to the
-			// ray/line-frustum intersection, with maximum distance to p1
+			// The ray or line doesn't intersect the camera frustum at all, so
+			// nothing is visible. Signal this by setting both end points to
+			// NaN.
+			if (min == Double.MAX_VALUE) {
+				p1 = p2 = Vector3D.NaN;
+			}
+
+			// Set second end point to frustum intersection with the maximum
+			// signed distance to p1.
 			p2 = new Vector3D(1, p1, max, direction);
 			if (lineType == LineType.LINE) {
-				// In case we want to draw a line, the first point should
-				// be shifted to infinity as well, here, it is shifted to
-				// the minimum intersection point
+				// In case we want to draw a line, set the first end point to
+				// the frustrum intersection with minimim signed distance to p2.
 				p1 = new Vector3D(1, p1, min, direction);
 			}
 		}

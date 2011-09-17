@@ -168,13 +168,17 @@ public class LineRenderer extends LineRendererBase {
 		Endpoints endPoints = clipLineAtFrustum(jrs.getCamera(), p1, p2,
 				line.getLineType());
 
+		// If line is not visible at all, bail out
+		if (endPoints.p1.isNaN()) {
+			return;
+		}
+
 		double totalLength = Vector3D.distance(endPoints.p1, endPoints.p2);
 		int boxes = (int) (Math.ceil(totalLength / LINE_LENGTH));
 		double boxLength = totalLength / boxes;
 
 		// After shifting the end points of the ray/line to the maximal visible
 		// positions, the size and orientation for the OBB is needed
-
 		Vector3D direction = endPoints.p2.subtract(endPoints.p1).normalize()
 				.scalarMultiply(boxLength);
 		endPoints.p2 = endPoints.p1.add(direction);

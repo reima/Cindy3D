@@ -144,6 +144,11 @@ public class LineRenderer extends LineRendererBase {
 		Endpoints endPoints = clipLineAtFrustum(jrs.getCamera(), p1, p2,
 				line.getLineType());
 
+		// If line is not visible at all, bail out
+		if (endPoints.p1.isNaN()) {
+			return;
+		}
+
 		// After shifting the end points of the ray/line to the maximal visible
 		// positions, the size and orientation for the OBB is needed
 		RealMatrix cylinder = buildOBBTransform(endPoints, line.getRadius());
