@@ -179,7 +179,7 @@ public class MeshBuffer {
 	}
 
 	/**
-	 * Explicitely releases the buffers on the GPU.
+	 * Explicitly releases the buffers on the GPU.
 	 * 
 	 * @param gl
 	 *            GL handle

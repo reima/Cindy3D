@@ -264,7 +264,12 @@ public class Mesh extends Primitive {
 		for (int row = 0; row < rowMax; ++row) {
 			for (int column = 0; column < columnMax; ++column) {
 				/*
-				 * v1----v2 | / | |f1 / | | / f2| | / | v3----v4
+				 *    v1----v2
+				 *    |    / |
+				 *    |f1 /  |
+				 *    |  / f2|
+				 *    | /    |
+				 *    v3----v4
 				 */
 				int rowPlus1 = (row + 1) % rowCount;
 				int columnPlus1 = (column + 1) % columnCount;

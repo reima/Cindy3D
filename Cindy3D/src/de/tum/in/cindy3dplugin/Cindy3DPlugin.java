@@ -862,7 +862,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("pointlight3d")
 	public void pointlight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			throw new IndexOutOfBoundsException("light index out of bounds.");
+			throw new IndexOutOfBoundsException("light index out of bounds");
 		}
 		cindy3d.setLight(
 				light,
@@ -885,7 +885,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("directionallight3d")
 	public void directionallight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			throw new IndexOutOfBoundsException("light index out of bounds.");
+			throw new IndexOutOfBoundsException("light index out of bounds");
 		}
 		cindy3d.setLight(
 				light,
@@ -909,7 +909,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	@CindyScript("spotlight3d")
 	public void spotlight3d(int light) {
 		if (light < 0 || light >= Cindy3DViewer.MAX_LIGHTS) {
-			throw new IndexOutOfBoundsException("light index out of bounds.");
+			throw new IndexOutOfBoundsException("light index out of bounds");
 		}
 		cindy3d.setLight(
 				light,
