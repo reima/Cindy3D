@@ -8,8 +8,8 @@ import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
 /**
- * Represents a directional light source. A directional light is solely defined
- * by a direction pointing in the opposite direction as the light rays.
+ * Represents a directional light source. A directional light is defined
+ * by a direction from which the light rays originate.
  */
 public class DirectionalLight extends Light {
 	/**
@@ -22,8 +22,7 @@ public class DirectionalLight extends Light {
 	 * Sets the direction of the directional light.
 	 * 
 	 * @param direction
-	 *            new direction. Light ray direction is the opposition of
-	 *            <code>direction</code>.
+	 *            new direction
 	 */
 	public void setDirection(Vector3D direction) {
 		this.direction = direction;

@@ -38,7 +38,7 @@ import de.tum.in.cindy3dplugin.jogl.renderers.JOGLRenderer;
 import de.tum.in.cindy3dplugin.jogl.renderers.SupersampledRenderer;
 
 /**
- * JOGL implementation of <code>Cindy3DViewer</code>.
+ * JOGL implementation of {@link Cindy3DViewer}.
  */
 public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 		MouseMotionListener, MouseWheelListener {

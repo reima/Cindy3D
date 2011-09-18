@@ -8,7 +8,7 @@ import de.tum.in.cindy3dplugin.LightModificationInfo.LightFrame;
 import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
 
 /**
- * Represents a spot light source. A splot light is defined by the emitting
+ * Represents a spot light source. A spot light is defined by the emitting
  * position, the light direction and a falloff angle.
  */
 public class SpotLight extends Light {
