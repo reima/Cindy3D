@@ -13,10 +13,10 @@ import de.tum.in.cindy3dplugin.LightModificationInfo.LightType;
  */
 public class DirectionalLight extends Light {
 	/**
-	 * Opposite light direction. Default direction is (0, 1, 0), so the light
-	 * comes from above.
+	 * Light direction. Default direction is (0, -1, 0), so the light comes from
+	 * above.
 	 */
-	private Vector3D direction = new Vector3D(0, 1, 0);
+	private Vector3D direction = new Vector3D(0, -1, 0);
 
 	/**
 	 * Sets the direction of the directional light.
@@ -42,9 +42,12 @@ public class DirectionalLight extends Light {
 			gl.glLoadIdentity();
 		}
 		
-		gl.glLightfv(light, GL2.GL_POSITION,
-				new float[]{(float) direction.getX(), (float) direction.getY(),
-				(float) direction.getZ(), 0.0f}, 0);
+		gl.glLightfv(
+				light,
+				GL2.GL_POSITION,
+				new float[] { (float) -direction.getX(),
+						(float) -direction.getY(), (float) -direction.getZ(),
+						0.0f }, 0);
 		
 		if (frame == LightFrame.CAMERA) {
 			gl.glPopMatrix();

@@ -21,9 +21,9 @@ public class SpotLight extends Light {
 	 */
 	private Vector3D direction = new Vector3D(0, -1, 0);
 	/**
-	 * Spot light cut off angle. Initial value is 180°
+	 * Spot light cut off angle in degrees. Initial value is 45.
 	 */
-	private double cutoff = 180;
+	private double cutoff = 45;
 	/**
 	 * Spot light attenuation exponent. Initial value is 0.
 	 */
@@ -54,13 +54,10 @@ public class SpotLight extends Light {
 	 * clamped and adjusted.
 	 * 
 	 * @param cutoffAngle
-	 *            new cutoff angle
+	 *            new cutoff angle in degrees
 	 */
 	public void setCutoffAngle(double cutoffAngle) {
-		cutoff = Math.max(0.0, Math.min(cutoffAngle, 180));
-		if (cutoff > 90) {
-			cutoff = 180;
-		}
+		cutoff = Math.max(0.0, Math.min(cutoffAngle, 90));
 	}
 	
 	/**

@@ -441,9 +441,9 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 	}
 
 	/**
-	 * supported hints:
+	 * Supported hints:
 	 * - quality, range [0,8]
-	 * - renderMode, "fixedfunction" or "programmable"
+	 * - renderMode, "simple" or "raycasted"
 	 * - samplingRate, range [1,oo[
 	 * 
 	 * quality selects from a fixed set of render hints, which can be modified
@@ -466,26 +466,26 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			requestedRenderHints = qualityHints[quality];
 		}
 		
-		value = hints.get("screenerror");
+		value = hints.get("screenError");
 		if (value instanceof Double) {
 			requestedRenderHints.setAllowedScreenSpaceError((Double)value);
 		}
 
-		value = hints.get("rendermode");
+		value = hints.get("renderMode");
 		if (value instanceof String) {
 			String renderMode = (String) value;
-			if (renderMode.equalsIgnoreCase("fixedfunction")) {
+			if (renderMode.equalsIgnoreCase("simple")) {
 				requestedRenderHints.setSamplingRate(1);
 				requestedRenderHints
 						.setRenderMode(RenderMode.FIXED_FUNCTION_PIPELINE);
-			} else if (renderMode.equalsIgnoreCase("programmable")) {
+			} else if (renderMode.equalsIgnoreCase("raycasted")) {
 				requestedRenderHints.setSamplingRate(1);
 				requestedRenderHints
 						.setRenderMode(RenderMode.PROGRAMMABLE_PIPELINE);
 			}
 		}
 
-		value = hints.get("samplingrate");
+		value = hints.get("samplingRate");
 		if (value instanceof Double) {
 			requestedRenderHints.setSamplingRate(((Double) value).intValue());
 		}
