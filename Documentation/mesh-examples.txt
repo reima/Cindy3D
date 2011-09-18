@@ -1,0 +1,63 @@
+// Flag
+begin3d();
+grid =
+  apply(0..4, row, u = row/5*2*pi;
+    apply(0..8, col, v = col/9*2*pi;
+      [col, row, sin(v)]
+    )
+  );
+vertices = flatten(grid, levels->1);
+forall(grid, row, connect3d(row));
+forall(transpose(grid), col, connect3d(col));
+forall(vertices, vertex, draw3d(vertex, size->2));
+mesh3d(5, 9, vertices);
+end3d()
+
+
+// Cylinder
+begin3d();
+grid =
+  apply(0..4, row, u = row/5*2*pi;
+    apply(0..8, col, v = col/9*2*pi;
+      [sin(v), row, cos(v)]
+    )
+  );
+vertices = flatten(grid, levels->1);
+forall(grid, row, drawpoly3d(row));
+forall(transpose(grid), col, connect3d(col));
+forall(vertices, vertex, draw3d(vertex, size->2));
+mesh3d(5, 9, vertices, topology->"closerows", alpha->0.8);
+end3d()
+
+
+// Cylinder 2
+begin3d();
+grid =
+  apply(0..4, row, u = row/5*2*pi;
+    apply(0..8, col, v = col/9*2*pi;
+      [col, sin(u), cos(u)]
+    )
+  );
+vertices = flatten(grid, levels->1);
+forall(grid, row, connect3d(row));
+forall(transpose(grid), col, drawpoly3d(col));
+forall(vertices, vertex, draw3d(vertex, size->2));
+mesh3d(5, 9, vertices, topology->"closecolumns", alpha->0.8);
+end3d()
+
+
+// Torus
+begin3d();
+grid =
+  apply(0..4, row, u = row/5*2*pi;
+    apply(0..8, col, v = col/9*2*pi;
+      [(2+0.5*cos(u))*cos(v), 0.5*sin(u), (2+0.5*cos(u))*sin(v)]
+    )
+  );
+vertices = flatten(grid, levels->1);
+forall(grid, row, drawpoly3d(row));
+forall(transpose(grid), col, drawpoly3d(col));
+forall(vertices, vertex, draw3d(vertex, size->2));
+mesh3d(5, 9, vertices, topology->"closeboth", alpha->0.8);
+end3d()
+
