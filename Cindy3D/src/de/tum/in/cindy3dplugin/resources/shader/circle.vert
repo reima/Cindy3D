@@ -1,3 +1,5 @@
+#version 110
+
 // View space position
 varying vec3 viewSpacePosition;
 // Normal at the view space position

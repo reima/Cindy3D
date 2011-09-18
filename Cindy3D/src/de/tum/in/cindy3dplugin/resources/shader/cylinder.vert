@@ -1,3 +1,5 @@
+#version 110
+
 // Surface position in view space
 varying vec3 viewSpacePosition;
 

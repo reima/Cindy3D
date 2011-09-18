@@ -1,3 +1,5 @@
+#version 110
+
 // Sphere center in view space
 uniform vec3 sphereCenter;
 // Sphere radius

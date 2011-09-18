@@ -1,3 +1,5 @@
+#version 110
+
 // Cylinder start position in view space
 uniform vec3 cylinderPoint;
 // Cylinder direction in view space

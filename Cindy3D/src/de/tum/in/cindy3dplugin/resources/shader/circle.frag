@@ -1,3 +1,5 @@
+#version 110
+
 // Circle center in view space
 uniform vec3 circleCenter;
 // Circle radius
