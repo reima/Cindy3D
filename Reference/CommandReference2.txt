@@ -5,125 +5,154 @@ Command reference
 Object appearance
 -----------------
 
-Saving the current appearance states: ``gsave3d()``
+Saving the default appearance: ``gsave3d()``
+============================================
+
+Description
+~~~~~~~~~~~
+
+Saves the current default appearance by pushing it onto the appearance stack.
+
+Restoring the default appearance: ``grestore3d()``
+==================================================
+
+Description
+~~~~~~~~~~~
+
+Restores the default appearance which was last saved on the appearance stack.
+
+Set default color: ``color3d(<colorvec>)``
+==========================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default color for all types of objects.
+
+``<colorvec>``
+  the default color to set
+
+Set default point color: ``pointcolor3d(<colorvec>)``
+=====================================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default color for points.
+
+``<colorvec>``
+  the default point color to set
+
+Set default line color: ``linecolor3d(<colorvec>)``
 ====================================================
 
 Description
 ~~~~~~~~~~~
 
-Saves the current appearance state by pushing it onto a appearance state stack,
-so that the states can be restored afterwards.
+Sets the default color for lines.
 
-Restoring the appearance states: ``grestore3d()``
-==================================================
+``<colorvec>``
+  the default line color to set
 
-Description
-~~~~~~~~~~~
-
-Restores the appearance states from the top of the appearance state stack and
-pops it.
-
-Changing the color: ``color3d([<real1>,<real2>,<real3>])``
-===========================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the color state to a new RGB value. All kinds of geometric objects are
-effected. This means, the point, line and surface color is changed.
-
-Changing the point color ``pointcolor3d([<real1>,<real2>,<real3>]``
-====================================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the point color state to a new RGB value. Line and surface color stay
-unchanged.
-
-Changing the line color ``linecolor3d([<real1>,<real2>,<real3>]``
-==================================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the line color state to a new RGB value. Point and surface color stay
-unchanged.
-
-Changing the surface color ``surfacecolor3d([<real1>,<real2>,<real3>]``
-========================================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the surface color state to a new RGB value. Point and line color stay
-unchanged.
-
-Changing the alpha value: ``alpha3d(<real>)`` or ``surfacealpha3d(<real>)``
-============================================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the alpha value state. As only surfaces have an alpha value, points
-and lines are never effected.
-
-Changing the shininess: ``shininess3d([<real>])``
-==================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the shininess state. All kinds of geometric objects are
-effected. This means, the point, line and surface shininess is changed.
-
-Changing the point shininess ``pointshininess3d([<real1>]``
-============================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the point shininess. Line and surface shininess stay unchanged.
-
-Changing the line shininess ``lineshininess3d([<real>]``
+Set default surface color: ``surfacecolor3d(<colorvec>)``
 =========================================================
 
 Description
 ~~~~~~~~~~~
 
-Changes the line shininess. Point and surface shininess stay unchanged.
+Sets the default surface color.
 
-Changing the surface shininess ``surfaceshininess3d([<real>]``
-===============================================================
+``<colorvec>``
+  the default surface color to set
 
-Description
-~~~~~~~~~~~
-
-Changes the surface shininess. Point and line shininess stay unchanged.
-
-Changing the size: ``size3d(<real>)``
-======================================
+Set default opacity: ``alpha3d(<real>)`` or ``surfacealpha3d(<real>)``
+======================================================================
 
 Description
 ~~~~~~~~~~~
 
-Changes the size state. This effects the point and the line size.
+Sets the default opacity value for surfaces.
 
-Changing the point size: ``pointsize3d(<real>)``
-=================================================
+``<real>``
+  the default opacity value to set, range [0,1]
+
+Set default shininess: ``shininess3d(<real>)``
+================================================
 
 Description
 ~~~~~~~~~~~
 
-Changes the point size state. The line size stays unchanged.
+Sets the default shininess factor for all types of objects.
 
-Changing the line size: ``linesize3d(<real>)``
+``<real>``
+  the default shininess factor to set
+
+Set default point shininess: ``pointshininess3d(<real>)``
+===========================================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default shininess factor for points.
+
+``<real>``
+  the default point shininess factor to set
+
+Set default line shininess: ``lineshininess3d(<real>)``
+=======================================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default shininess factor for lines.
+
+``<real>``
+  the default line shininess factor to set
+
+Set default surface shininess: ``surfaceshininess3d(<real>)``
+=============================================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default shininess factor for surfaces.
+
+``<real>``
+  the default surface shininess factor to set
+
+Set default size: ``size3d(<real>)``
+====================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default size for points and lines.
+
+``<real>``
+  the default point and line size to set
+
+Set default point size: ``pointsize3d(<real>)``
 ===============================================
 
 Description
 ~~~~~~~~~~~
 
-Changes the line size state. The point size stays unchanged.
+Sets the default size for points.
+
+``<real>``
+  the default point size to set
+
+Set default line size: ``linesize3d(<real>)``
+=============================================
+
+Description
+~~~~~~~~~~~
+
+Sets the default size for lines.
+
+``<real>``
+  the default line size to set
+
 
 Drawing
 -------
@@ -134,7 +163,10 @@ Drawing points: ``draw3d(<point>)``
 Description
 ~~~~~~~~~~~
 
-Draws a point at the given position.
+Draws a point.
+
+``<point>``
+  the position of the point
 
 Modifiers
 ~~~~~~~~~
@@ -150,8 +182,8 @@ shininess ``<real>``                    sets the shininess
 ========= ============================= =======================================
 
 
-Drawing lines: ``draw3d(<point>,<point>)``
-===========================================
+Drawing lines: ``draw3d(<point1>,<point2>)``
+============================================
 
 Description
 ~~~~~~~~~~~
@@ -160,13 +192,13 @@ Draws an infinite line, ray or segment. The type of line to be drawn is
 specified by the "type" modifier. When no type is given, a segment is drawn by
 default. The two arguments are interpreted depending on the line type:
 
-=========  ==============  =============================================
-Line type  Point 1         Point 2
-=========  ==============  =============================================
-Segment    First endpoint  Second endpoint
-Ray        Ray origin      Arbitrary point on ray, different from origin
-Line       Point on line   Point on line, different from first point
-=========  ==============  =============================================
+=========  ===============  =============================================
+Line type  ``<point1>``     ``<point2>``
+=========  ===============  =============================================
+Segment    First end point  Second end point
+Ray        Ray origin       Arbitrary point on ray, different from origin
+Line       Point on line    Point on line, different from first point
+=========  ===============  =============================================
 
 Modifiers
 ~~~~~~~~~
@@ -200,143 +232,169 @@ The following example illustrates drawing different line types::
 
 [screenshot]
 
-Drawing line strips: ``connect3d(<list>)``
-===========================================
+Connecting points: ``connect3d(<list>)``
+========================================
 
 Description
 ~~~~~~~~~~~
 
-Draws line segments connecting the points in the list. So each list element has
-type ``<point>``. For a list of ``n`` points, ``n-1`` line segments are drawn.
+Draws line segments connecting a sequence of points.
+
+``<list>``
+  the list of points to connect. For a list of *n* points, *n*-1 line segments
+  are drawn.
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 ========= ============================= =======================================
 Modifier  Parameter                     Effect
 ========= ============================= =======================================
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+size      ``<real>``                    sets the line size
+color     ``[<real1>,<real2>,<real3>]`` sets the line color to an RGB value
 shininess ``<real>``                    sets the shininess
 ========= ============================= =======================================
 
 Drawing a polygon outline: ``drawpoly3d(<list>)``
-==================================================
-
-Description
-~~~~~~~~~~~
-
-Draws the outline of a polygon whose vertex positions are given by a list of
-points. So each list element has type ``<point>``.
-
-Modifiers
-~~~~~~~~~
-
-The function can handle the following modifiers:
-
-========= ============================= =======================================
-Modifier  Parameter                     Effect
-========= ============================= =======================================
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
-shininess ``<real>``                    sets the shininess
-========= ============================= =======================================
-
-Drawing a filled polygon: ``fillpoly3d(<list>)``
 =================================================
 
 Description
 ~~~~~~~~~~~
 
-Draws a filled polygon whose vertex positions are given by a list of points.
-So each list elment has type ``<point>``.
+Draws the outline of a polygon.
+
+``<list>``
+  the vertices (corner points) defining the polygon
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 ========= ============================= =======================================
 Modifier  Parameter                     Effect
 ========= ============================= =======================================
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
-shininess ``<real>``                    sets the 
-alpha     ``<real>``                    sets alpha value / transparency
+size      ``<real>``                    sets the line size
+color     ``[<real1>,<real2>,<real3>]`` sets the line color to an RGB value
+shininess ``<real>``                    sets the shininess
 ========= ============================= =======================================
 
-Drawing a customized filled polygon: ``fillpoly3d(<list1>,<list2>)``
-====================================================================
+Drawing a filled polygon: ``fillpoly3d(<list>)``
+================================================
 
 Description
 ~~~~~~~~~~~
 
-Draws a filled polygon whose vertex positions are given by the first parameter,
-which is a list of points of type ``<point>``. Additionally, an individual
-normal for each normal is specified by the second argument, which is a list of
-of type ``<point>`` as well.
+Draws a filled polygon.
+
+``<list>``
+  the vertices (corner points) defining the polygon
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 ========= ============================= =======================================
 Modifier  Parameter                     Effect
 ========= ============================= =======================================
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+size      ``<real>``                    sets the surface size
+color     ``[<real1>,<real2>,<real3>]`` sets the surface color to an RGB value
 shininess ``<real>``                    sets the shininess
-alpha     ``<real>``                    sets the alpha value / transparency
+alpha     ``<real>``                    sets the opacity
 ========= ============================= =======================================
 
-Drawing a filled circle: ``fillcircle3d(<point1>, <point2>, <real>)``
-=====================================================================
+Drawing a filled polygon with custom normals: ``fillpoly3d(<list1>,<list2>)``
+=============================================================================
 
 Description
 ~~~~~~~~~~~
 
-Draws a filled circle which is specified by its center position, the first
-parameter, and the normal of the plane containing the circle, which is given
-by the second parameter. The extend of the circle is its radius.
+Draws a filled polygon with user-defined normals.
+
+``<list1>``
+  the vertices (corner points) defining the polygon
+
+``<list2>``
+  the normal vectors of the polygon's vertices. The lengths of ``<list1>`` and
+  ``<list2>`` must match.
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 ========= ============================= =======================================
 Modifier  Parameter                     Effect
 ========= ============================= =======================================
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+size      ``<real>``                    sets the surface size
+color     ``[<real1>,<real2>,<real3>]`` sets the surface color to an RGB value
 shininess ``<real>``                    sets the shininess
-apha      ``<real>``                    sets the alpha value / transparency
+alpha     ``<real>``                    sets the opacity
 ========= ============================= =======================================
 
-Drawing a sphere: ``drawsphere3d(<point>, <real>)``
-===================================================
+Drawing a filled circle: ``fillcircle3d(<point1>,<point2>,<real>)``
+===================================================================
 
 Description
 ~~~~~~~~~~~
 
-Draws a sphere specified by its center and its radius.
+Draws a filled circle.
+
+``<point1>``
+  the center of the circle
+
+``<point2>``
+  the normal vector of the circle
+
+``<real>``
+  the radius of the circle
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 ========= ============================= =======================================
 Modifier  Parameter                     Effect
 ========= ============================= =======================================
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+size      ``<real>``                    sets the surface size
+color     ``[<real1>,<real2>,<real3>]`` sets the surface color to an RGB value
 shininess ``<real>``                    sets the shininess
-alpha     ``<real>``                    sets the alpha value / transparency
+alpha     ``<real>``                    sets the opacity
 ========= ============================= =======================================
+
+Drawing a sphere: ``drawsphere3d(<point>,<real>)``
+==================================================
+
+Description
+~~~~~~~~~~~
+
+Draws a sphere.
+
+``<point>``
+  the center of the sphere
+
+``<real>``
+  the radius of the sphere
+
+Modifiers
+~~~~~~~~~
+
+This function can handle the following modifiers:
+
+========= ============================= =======================================
+Modifier  Parameter                     Effect
+========= ============================= =======================================
+size      ``<real>``                    sets the surface size
+color     ``[<real1>,<real2>,<real3>]`` sets the surface color to an RGB value
+shininess ``<real>``                    sets the shininess
+alpha     ``<real>``                    sets the opacity
+========= ============================= =======================================
+
+.. _mesh3d(<int1>,<int2>,<list>):
 
 Drawing a mesh: ``mesh3d(<int1>,<int2>,<list>)``
 ================================================
@@ -344,323 +402,354 @@ Drawing a mesh: ``mesh3d(<int1>,<int2>,<list>)``
 Description
 ~~~~~~~~~~~
 
-Draws a triangulated mesh. The topology of the mesh is given by a regular grid.
-The grid size is specified by its number of rows ``r``, the first parameter,
-and its number of columns ``c``, the second parameter. So in total, the grid
-consists of ``r*c`` points of type ``<point>``.
+Draws a grid-based mesh. The vertices are organized in a regular grid of *m*
+rows and *n* columns. Neighbouring vertices in a row or column are connected by
+edges. Quadliteral faces are formed by combining the edges of each grid cell.
+To simplify the rendering of meshes, each quadliteral face is split along one of
+its diagonals into two triangles.
 
-The way the mesh normals are computed is specified by the "normaltype"
-modifier. When no normal type is given, per face normals are computed.
+The behaviour at the borders of the surface can be specified by the "topology"
+modifier. When this modifier is not present, an open topology is assumed.
 
-============  =================================================================
-Normal type    Description
-============  =================================================================
-Per face       Each surface position is assigned the normal of the face the
-               point lies on. As a result, each face is shaded uniformly and
-               adjacent faces may be connected by a hard edge.
-Per vertex     Each surface position is assigned a normal that is retrieved by
-               all adjacent face normals. The result is a smooth transition
-               between difference faces.
-============  =================================================================
+============= =================================================================
+Topology      Description
+============= =================================================================
+Open          No additional edges or faces, resulting in a total total of
+              :math:`(m-1)\times(n-1)` quadliteral faces. The surface has two
+              sides and one border.
+Close rows    Additional edges are introduced connecting the first and last
+              vertex of each row. Also corresponding faces are generated,
+              resulting in a total of :math:`(m-1)\times n` quadliteral faces.
+              The surface has two sides and two borders.
+Close columns Additional edges are introduced connecting the first and last
+              vertex of each column. Also corresponding faces are generated,
+              resulting in a total of :math:`m\times(n-1)` quadliteral faces.
+              The surface has two sides and two borders.
+Close both    Additional edges are introduced connecting the first and last
+              vertex of each row as well as the first and last vertex of each
+              column. Also corresponding faces are generated, resulting in a
+              total of :math:`m \times n` quadliteral faces. The surface has two
+              sides and no border.
+============= =================================================================
 
-Additionally, the topology of the border vertices of the grid can be adjusted
-by the "topology" modifier. If no topolgy is specified, the regular grid is
-assumed.
+The way surface normals are computed is specified by the "normaltype" modifier.
+When this modifier is not present, per face normals are computed.
 
-=============  ================================================================
-Topology        Description
-=============  ================================================================
-Open            A regular grid topolgy.
-Close rows      The regular grid topology is extended by connecting the
-                leftmost vertices of the grid with the rightmost vertices.
-Close colums    The regular grid topology is extended by connecting the
-                upmost vertices of the grid with the lowermost vertices.
-Close both      As a combination of "Close rows" and "Close colums", vertices
-                of opposed borders of the grid are connected. The result is a
-                fully closed surface topology.
-=============  ================================================================
+============ ==================================================================
+Normal type  Description
+============ ==================================================================
+Per face     The normal at each surface point is the normal of the triangular
+             face it belongs to. This can result in shading discontinuities
+             along face edges, revealing the underlying grid structure.
+Per vertex   The normal at each grid vertex is the average normal of the
+             adjacent faces. For all other surface points the normal is computed
+             by taking the three normals of the grid vertices forming the
+             triangular face the point belongs to, and doing a linear
+             combination of them with the barycentric coordinates of the point
+             as coefficients. This results in smooth shading, hiding the
+             underlying grid structure to a certain degree.
+============ ==================================================================
+
+``<int1>``
+  the number of grid rows, *m*
+
+``<int2>``
+  the number of grid columns, *n*
+
+``<list>``
+  the vertices of the grid, in row-major order. The length of this list must
+  equal :math:`m \times n`.
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 =========== ============================= =====================================
 Modifier    Parameter                     Effect
 =========== ============================= =====================================
 normaltype  ``<string>``                  specifies the normal type (values 
-                                          ``"perface"`` and ``"pervertex"``
+                                          ``"perFace"`` and ``"perVertex"``
+                                          allowed)
 topology    ``<string>``                  specifies the grid topology (values
-                                          ``"open"``, ``"closerows"``,
-                                          ``"closecolumns"`` and
-                                          ``"closeboth"``
-size        ``<real>``                    sets the point size
-color       ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+                                          ``"open"``, ``"closeRows"``,
+                                          ``"closeColumns"``, and
+                                          ``"closeBoth"`` allowed)
+size        ``<real>``                    sets the surface size
+color       ``[<real1>,<real2>,<real3>]`` sets the surface color to an RGB value
 shininess   ``<real>``                    sets the shininess
-alpha       ``<real>``                    sets the alpha value / transparency
+alpha       ``<real>``                    sets the opacity
 =========== ============================= =====================================
 
 Example
 ~~~~~~~
 
-Drawing a customized mesh: ``mesh3d(<int1>,<int2>,<list1>,<list2>)``
-=====================================================================
+Drawing a mesh with custom normals: ``mesh3d(<int1>,<int2>,<list1>,<list2>)``
+=============================================================================
 
 Description
 ~~~~~~~~~~~
 
-Draws a triangulated mesh. The topology of the mesh is given by a regular grid.
-The grid size is specified by its number of rows ``r``, the first parameter,
-and its number of columns ``c``, the second parameter. So in total, the grid
-consists of ``r*c`` points of type ``<point>``.
+Draws a grid-based mesh with user-defined normals. For a description of how the
+grid is formed, refer to `mesh3d(<int1>,<int2>,<list>)`_.
 
-The mesh is created with per vertex normals, where the normals are given as a
-list of ``<point>`` as the last parameter.
+``<int1>``
+  the number of grid rows, *m*
 
-Additionally, the topology of the border vertices of the grid can be adjusted
-by the "topology" modifier. If no topolgy is specified, the regular grid is
-assumed.
+``<int2>``
+  the number of grid columns, *n*
 
-=============  ================================================================
-Topology        Description
-=============  ================================================================
-Open            A regular grid topolgy.
-Close rows      The regular grid topology is extended by connecting the
-                leftmost vertices of the grid with the rightmost vertices.
-Close colums    The regular grid topology is extended by connecting the
-                upmost vertices of the grid with the lowermost vertices.
-Close both      As a combination of "Close rows" and "Close colums", vertices
-                of opposed borders of the grid are connected. The result is a
-                fully closed surface topology.
-=============  ================================================================
+``<list1>``
+  the vertices of the grid, in row-major order. The length of this list must
+  equal :math:`m \times n`.
+
+``<list2>``
+  the normals for each vertex, in row-major order. The length of this list must
+  equal :math:`m \times n`.
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
 ========= ============================= =======================================
 Modifier  Parameter                     Effect
 ========= ============================= =======================================
 topology  ``<string>``                  specifies the grid topology (values
-                                        ``"open"``, ``"closerows"``,
-                                        ``"closecolumns"`` and
-                                        ``"closeboth"``
-size      ``<real>``                    sets the point size
-color     ``[<real1>,<real2>,<real3>]`` sets the point color to an RGB value
+                                        ``"open"``, ``"closeRows"``,
+                                        ``"closeColumns"``, and ``"closeBoth"``
+                                        allowed)
+size      ``<real>``                    sets the surface size
+color     ``[<real1>,<real2>,<real3>]`` sets the surface color to an RGB value
 shininess ``<real>``                    sets the shininess
-alpha     ``<real>``                    sets the alpha value / transparency
+alpha     ``<real>``                    sets the opacity
 ========= ============================= =======================================
 
 Example
 ~~~~~~~
 
 Lighting and scene appearance
-------------------------------
+-----------------------------
 
-Changing the background color: ``background3d([<real1>,<real2>,<real3>])``
-===========================================================================
-
-Description
-~~~~~~~~~~~
-
-Changes the scene background color to a new RGB value.
-
-Changing the visible depth range: ``depthrange3d(<real1>, <real2>)``
-=====================================================================
+Set background color: ``background3d(<colorvec>)``
+======================================================
 
 Description
 ~~~~~~~~~~~
 
-Changes the minimal and maximal value for the visible depth values.
-All objects that lie behind the maximal value or in front of the
-minimal value are clipped.
+Sets the scene background color to an RGB value.
 
-Changing the rendering quality: ``renderhints3d()``
-====================================================
+``<colorvec>``
+  the scene background color to set
+
+Set visible depth range: ``depthrange3d(<real1>,<real2>)``
+==========================================================
 
 Description
 ~~~~~~~~~~~
 
-This function is solely working by applying modifiers that influence
-the rendering quality. There are three ways to influence the rendering quality.
-As a remark, the modifier's values are only a requested quality. If the
-requested quality is applied or if the application has to fall back onto a
-lower quality level depends on the system and the available resources.
+Sets the minimum and maximum camera depth. The camera depth of a point is its
+distance to the camera plane (the plane through the camera and orthogonal to the
+viewing direction). All objects or parts thereof which don't fall into the
+current camera depth range are not visible.
 
-The "rendermode" modifier specifies the rendering quality of the objects. In
-the lower quality "fixedfunction", all objects are rendered as simple
-triangulatd primitives. In the more sophisticated rendering mode
-"programmable", objects are rendered as continuous surfaces using ray casting.
+Set rendering hints: ``renderhints3d()``
+========================================
 
-Additionally, the quality of the image can be defined by the modifier 
-"samplingrate". The sampling rate defines the number of samples that are made
-for each pixel. The final pixel information results from averaging the samples.
-So the higher the requested sampling rate is, the less aliasing artifacts are
-visible.
+Description
+~~~~~~~~~~~
 
-The modifier "quality" provides fixed, predefined quality levels. The quality
-level 0 has the worst quality but needs the least resources. The opposed
-quality level is 8, which provides a very good quality at the cost of high
-resource requirements. The predefined qualities are a reasonable way to set the
-rendering quality without bothering evaluating the single quality parameters.
+Sets hints for various aspects of the rendering process. The rendering hints are
+specified by the following four modifiers:
 
-The last is the "screenerror" modifier, which effects the used level of detail
-algorithm. If objects become to small in the final output image to see all
-details, an less complex proxy geometry can be used to represent the object.
-In this way, resources and rendering time is saved. By replacing the original
-object with a proxy geometry, an approximation and therefore an error is made.
-When rendering both object and proxy geometry onto an image, the error between
-both models can be measured in pixels, where the error depends on the object's
-distance from the point of view. The modifier's value indicates the maximal
-error in pixels that is acceptable. An screen space error of one pixel leads to
-a perfect, not noticable transition between original model and proxy geometry.
+* The "quality" modifier allows to select from a fixed set of predefined quality
+  levels. Quality level 0 is the worst quality but needs the least resources.
+  The highest quality level is 8, which provides a very good quality at the cost
+  of high resource requirements. The predefined quality levels are a simple way
+  to influence the overall rendering quality without having to specify seperate
+  rendering hints. When the requested quality level is not supported (e.g. due
+  to hardware limitations or resource constraints), *Cindy3D* might fall back to
+  a lower level.
+
+* .. _render mode:
+
+  The "renderMode" modifier specifies how the objects are rendered. When it is
+  "simple", all objects are rendered as triangle meshes. In this modethe shading
+  is done per vertex, resulting in shading artifacts. When the render mode is 
+  set to "raycasted", points, lines, and spheres are rendered as continuous
+  surfaces using ray casting. Also the shading is done per pixel. The
+  "raycasted" render mode produces higher quality results, but might be slower
+  depending on the graphics hardware.
+
+* The "screenError" modifier sets the allowed screen space error for the level
+  of detail algorithm. In the "simple" `render mode`_, points, lines, and
+  spheres are approximated by triangle meshes. As an optimization, small or far
+  away objects are represented by meshes with fewer triangles to reduce
+  rendering time. This is called "level of detail". *Cindy3D* uses a fixed
+  number of triangle meshes with different triangle counts for each primitive
+  type. To determine which of these meshes to draw for a specific primitive,
+  each mesh is virtually projected onto the screen and the maximum triangle size
+  in pixels is measured. The smallest mesh for which the maximum projected
+  triangle size is below the "screenError" is then used for rendering the
+  primitive. This means that lower values of "screenError" result in higher
+  quality, at the cost of rendering time.
+
+  This modifier has no effect when used in conjunction with the "raycasted"
+  `render mode`_.
+
+* The "samplingRate" modifier influences the smoothness of object silhouettes.
+  The sampling rate defines the number of samples that are taken for each pixel
+  of the output image. The final pixel color is an average of all its samples.
+  The higher the sampling rate, the smoother the object silhouettes appear, at
+  the cost of increased memory and time consumption. When the requested sampling
+  rate is not supported (e.g. due to hardware limitations or resource
+  constraints), *Cindy3D* might fall back to a lower sampling rate.
 
 Modifiers
 ~~~~~~~~~
 
 The function can handle the following modifiers:
 
-============= ================ ================================================
-Modifier       Parameter        Effect
-============= ================ ================================================
-quality        ``<int>``        Predefined quality levels to avoid manually
-                                setting the rendering mode and the sampling
-                                rate (Values 0 to 8).
-rendermode     ``<string>``     Specifies the models used for object rendering
-                                (Values ``"fixedfunction"`` and
-                                ``"programmable"``).
-samplingrate   ``<int>``        Number of samples taken per pixel (Integer
-                                values starting at 1).
-screenerror    ``<real>``       Specifies maximal screenspace error in pixels.
-                                (Continuous values starting at 0).
-============= ================ ================================================
+============= ============ ====================================================
+Modifier      Parameter    Effect
+============= ============ ====================================================
+quality       ``<int>``    selects one of the predefined quality levels (values
+                           0,1,...,8 allowed)
+renderMode    ``<string>`` sets the rendering mode (values ``"simple"`` and
+                           ``"raycasted"`` allowed)
+samplingRate  ``<int>``    sets the number of samples taken per pixel (integer
+                           values from 1)
+screenError   ``<real>``   specifies maximum allowed screen space error in
+                           pixels (must be larger than 0)
+============= ============ ====================================================
 
-Setting up a point light: ``pointlight3d(<int>)``
-==================================================
+Set up a point light: ``pointlight3d(<int>)``
+=============================================
 
 Description
 ~~~~~~~~~~~
 
-Converts the light with the specified index into a point light or changes the
-point light parameters of an already existing point light. The light index must
-lie between 0 and the maximal supported light number (excluded).
+Creates or modifies a point light source. If the light source at the given index
+is already a point light, overrides the properties specified by the modifiers
+and enables the light. Otherwise, replaces the light source at the given index
+by a new point light with the properties from the modifiers. In absence of a
+modifier, its default value is used.
 
-The point light parameters are defined by modifiers. If the light with index
-``i`` already was a point light, all newly set modifiers are adopted.
-If the light with index ``i`` was not a point light or not active, a new point
-light with the specified parameters is constructed.
+``<int>``
+  light source index. Must be in range [0,7].
 
 Modifiers
 ~~~~~~~~~
 
 The function can handle the following modifiers:
 
-=========  ==============================  ====================================
-Modifier    Parameter                       Effect
-=========  ==============================  ====================================
-ambient     ``[<real1>,<real2>,<real3>]``   Sets the ambient light color as a
-                                            RGB value
-diffuse     ``[<real1>,<real2>,<real3>]``   Sets the diffuse light color as a
-                                            RGB value
-specular    ``[<real1>,<real2>,<real3>]``   Sets the diffuse light color as a
-                                            RGB value
-position    ``<point>``                     Sets the light source position.
-frame       ``<string>``                    Specifies if the light position is
-                                            relative to the camera or relativ
-                                            to the the world coordinate system
-                                            (Values ``"camera"`` and
-                                            ``"world"``).
-=========  ==============================  ====================================
+======== ============================= ========================================
+Modifier Parameter                     Effect
+======== ============================= ========================================
+ambient  ``[<real1>,<real2>,<real3>]`` sets the ambient light color to an RGB
+                                       value (default: [0,0,0])
+diffuse  ``[<real1>,<real2>,<real3>]`` sets the diffuse light color to an RGB
+                                       value (default: [1,1,1])
+specular ``[<real1>,<real2>,<real3>]`` sets the specular light color to an RGB
+                                       value (default: [1,1,1])
+position ``<point>``                   sets the light position
+                                       (default: [0,0,0])
+frame    ``<string>``                  specifies whether the position is
+                                       relative to the camera frame or absolute
+                                       (values ``"camera"`` and ``"world"``
+                                       allowed, default: ``"camera"``)
+======== ============================= ========================================
 
-Setting up a directional light: ``directionalligh3d(<int>)``
-=============================================================
+Set up a directional light: ``directionalligh3d(<int>)``
+========================================================
 
 Description
 ~~~~~~~~~~~
 
-Converts the light with the specified index into a directional light or changes
-the directional light parameters of an already existing directional light. The
-light index must lie between 0 and the maximal supported light number
-(excluded).
+Creates or modifies a directional light source. If the light source at the given
+index is already a directional light, overrides the properties specified by the
+modifiers and enables the light. Otherwise, replaces the light source at the
+given index by a new directional light with the properties from the modifiers.
+In absence of a modifier, its default value is used.
 
-The directional light parameters are defined by modifiers. If the light with
-index ``i`` already was a directional light, all newly set modifiers are
-adopted. If the light with index ``i`` was not a directional light or not
-active, a new directional light with the specified parameters is constructed.
+``<int>``
+  light source index. Must be in range [0,7].
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
-=========  ==============================  ====================================
-Modifier    Parameter                       Effect
-=========  ==============================  ====================================
-ambient     ``[<real1>,<real2>,<real3>]``   Sets the ambient light color as a
-                                            RGB value
-diffuse     ``[<real1>,<real2>,<real3>]``   Sets the diffuse light color as a
-                                            RGB value
-specular    ``[<real1>,<real2>,<real3>]``   Sets the diffuse light color as a
-                                            RGB value
-direction   ``<point>``                     Sets the light direction.
-frame       ``<string>``                    Specifies if the light position is
-                                            relative to the camera or relativ
-                                            to the the world coordinate system
-                                            (Values ``"camera"`` and
-                                            ``"world"``).
-=========  ==============================  ====================================
+========= ============================= =======================================
+Modifier  Parameter                     Effect
+========= ============================= =======================================
+ambient   ``[<real1>,<real2>,<real3>]`` sets the ambient light color to an RGB
+                                        value (default: [0,0,0])
+diffuse   ``[<real1>,<real2>,<real3>]`` sets the diffuse light color to an RGB
+                                        value (default: [1,1,1])
+specular  ``[<real1>,<real2>,<real3>]`` sets the specular light color to an RGB
+                                        value (default: [1,1,1])
+direction ``<point>``                   sets the light direction (default:
+                                        [0,-1,0])
+frame     ``<string>``                  specifies whether the direction is
+                                        relative to the camera frame or
+                                        absolute (values ``"camera"`` and
+                                        ``"world"`` allowed, default:
+                                        ``"camera"``)
+========= ============================= =======================================
 
-Setting up a spot light: ``spotlight3d(<int>)``
-================================================
+Set up a spot light: ``spotlight3d(<int>)``
+===========================================
 
 Description
 ~~~~~~~~~~~
 
-Converts the light with the specified index into a spot light or changes the
-spot light parameters of an already existing spot light. The light index must
-lie between 0 and the maximal supported light number (excluded).
+Creates or modifies a spot light source. If the light source at the given index
+is already a spot light, overrides the properties specified by the modifiers and
+enables the light. Otherwise, replaces the light source at the given index by a
+new directional light with the properties from the modifiers. In absence of a
+modifier, its default value is used.
 
-The spot light parameters are defined by modifiers. If the light with index
-``i`` already was a spot light, all newly set modifiers are adopted. If the
-light with index ``i`` was not a spot light or not active, a new spot light
-with the specified parameters is constructed.
+``<int>``
+  light source index. Must be in range [0,7].
 
 Modifiers
 ~~~~~~~~~
 
-The function can handle the following modifiers:
+This function can handle the following modifiers:
 
-=========== ==============================  ====================================
-Modifier    Parameter                       Effect
-=========== ==============================  ====================================
-ambient     ``[<real1>,<real2>,<real3>]``   Sets the ambient light color as a
-                                            RGB value
-diffuse     ``[<real1>,<real2>,<real3>]``   Sets the diffuse light color as a
-                                            RGB value
-specular    ``[<real1>,<real2>,<real3>]``   Sets the diffuse light color as a
-                                            RGB value
-position    ``<point>``                     Sets the light source position.
-direction   ``<point>``                     Sets the light main direction.
-cutoffangle ``<real>``                      Sets the cutoff angle of the light
-                                            cone (Values between 0 and 90
-                                            excluded).
-exponent    ``<real>``                      Specifies the exponent defining the
-                                            light attenuation inside the light
-                                            cone (Continuous values starting at
-                                            0).
-frame       ``<string>``                    Specifies if the light position is
-                                            relative to the camera or relativ
-                                            to the the world coordinate system
-                                            (Values ``"camera"`` and
-                                            ``"world"``).
-=========== ==============================  ====================================
+=========== ============================= =====================================
+Modifier    Parameter                     Effect
+=========== ============================= =====================================
+ambient     ``[<real1>,<real2>,<real3>]`` sets the ambient light color to an RGB
+                                          value (default: [0,0,0])
+diffuse     ``[<real1>,<real2>,<real3>]`` sets the diffuse light color to an RGB
+                                          value (default: [1,1,1])
+specular    ``[<real1>,<real2>,<real3>]`` sets the specular light color to an
+                                          RGB value (default: [1,1,1])
+position    ``<point>``                   sets the light position (default:
+                                          [0,0,0])
+direction   ``<point>``                   sets the light direction (default:
+                                          [0,-1,0])
+cutoffAngle ``<real>``                    sets the cutoff angle in degrees of
+                                          the spot cone (values in [0,90]
+                                          allowed, default: 45)
+exponent    ``<real>``                    sets the attenuation exponent (values
+                                          in [0,128] allowed, default: 0)
+frame       ``<string>``                  specifies whether position and
+                                          direction are relative to the camera
+                                          frame or absolute (values ``"camera"``
+                                          and ``"world"`` allowed, default:
+                                          ``"camera"``)
+=========== ============================= =====================================
 
-Disabling a light source: ``disablelight3d(<int>)``
-====================================================
+Disable a light source: ``disablelight3d(<int>)``
+=================================================
 
 Description
 ~~~~~~~~~~~
 
-Disables the light with the specified index. The index must lie between 0
-and the maximal number of supported light sources (excluded).
+Disables the light at the given index.
+
+``<int>``
+  light source index. Must be in range [0,7].
