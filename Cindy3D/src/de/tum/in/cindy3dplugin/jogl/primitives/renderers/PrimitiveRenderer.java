@@ -88,9 +88,13 @@ public abstract class PrimitiveRenderer<T extends Primitive> {
 
 		preRender(jrs);
 		for (T primitive : c) {
-			if (primitive.isOpaque() == jrs.renderOpaque()) {
-				primitive.getMaterial().setGLState(jrs.getGLHandle());
-				render(jrs, primitive);
+			try {
+				if (primitive.isOpaque() == jrs.renderOpaque()) {
+					primitive.getMaterial().setGLState(jrs.getGLHandle());
+					render(jrs, primitive);
+				}
+			} catch (Exception e) {
+
 			}
 		}
 		postRender(jrs);
