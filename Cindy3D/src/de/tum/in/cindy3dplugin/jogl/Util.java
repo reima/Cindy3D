@@ -275,10 +275,16 @@ public class Util {
 			return null;
 		}
 
-		if (!program.add(vertexShader)) {
+		if (!program.add(gl2, vertexShader, ps)) {
+			Util.getLogger().info(
+					"Attach log for '" + vertexShaderFileName + "': "
+							+ baos.toString());
 			return null;
 		}
-		if (!program.add(fragmentShader)) {
+		if (!program.add(gl2, fragmentShader, ps)) {
+			Util.getLogger().info(
+					"Attach log for '" + fragmentShaderFileName + "': "
+							+ baos.toString());
 			return null;
 		}
 		if (!program.link(gl2, ps)) {
