@@ -759,9 +759,9 @@ position    ``<point>``                   sets the light position (default:
                                           [0,0,0])
 direction   ``<point>``                   sets the light direction (default:
                                           [0,-1,0])
-cutoffAngle ``<real>``                    sets the cutoff angle in degrees of
-                                          the spot cone (values in [0,90]
-                                          allowed, default: 45)
+cutoffAngle ``<real>``                    sets the cutoff angle of the spot cone
+                                          (in radians, values in [0,pi/2]
+                                          allowed, default: pi/4)
 exponent    ``<real>``                    sets the attenuation exponent (values
                                           in [0,128] allowed, default: 0)
 frame       ``<string>``                  specifies whether position and

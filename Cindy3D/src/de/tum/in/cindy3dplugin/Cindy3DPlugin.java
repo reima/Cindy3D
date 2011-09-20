@@ -1087,7 +1087,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		value = modifiers.get("cutoffangle");
 		if (value instanceof Double) {
 			Double cutoffangle = (Double) value;
-			info.setCutoffAngle(cutoffangle);
+			info.setCutoffAngle(Math.toDegrees(cutoffangle));
 		}
 		
 		value = modifiers.get("exponent");

@@ -63,7 +63,7 @@ public class LightModificationInfo {
 	 */
 	private double[] direction = null;
 	/**
-	 * Spot light cutoff angle
+	 * Spot light cutoff angle, in degrees
 	 */
 	private Double cutoffAngle = null;
 	/**
@@ -87,7 +87,7 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @return true if the ambient color is set
+	 * @return <code>true</code> iff the ambient color is set
 	 */
 	public boolean hasAmbient() {
 		return ambient != null;
@@ -109,7 +109,7 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @return true if the diffuse color is set
+	 * @return <code>true</code> iff the diffuse color is set
 	 */
 	public boolean hasDiffuse() {
 		return diffuse != null;
@@ -131,7 +131,7 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @return true if the specular color is set
+	 * @return <code>true</code> iff the specular color is set
 	 */
 	public boolean hasSpecular() {
 		return specular != null;
@@ -153,7 +153,7 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @return true if the frame of reference is set
+	 * @return <code>true</code> iff the frame of reference is set
 	 */
 	public boolean hasFrame() {
 		return frame != null;
@@ -175,7 +175,7 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @return true if the position is set
+	 * @return <code>true</code> iff the position is set
 	 */
 	public boolean hasPosition() {
 		return position != null;
@@ -197,7 +197,7 @@ public class LightModificationInfo {
 	}
 
 	/**
-	 * @return true if the direction is set
+	 * @return <code>true</code> iff the direction is set
 	 */
 	public boolean hasDirection() {
 		return direction != null;
@@ -234,28 +234,34 @@ public class LightModificationInfo {
 	}
 
 	/**
+	 * @return <code>true</code> iff the cutoff angle is set
+	 */
+	public boolean hasCutoffAngle() {
+		return cutoffAngle != null;
+	}
+
+	/**
+	 * @return cutoff angle, in degrees
+	 */
+	public Double getCutoffAngle() {
+		return cutoffAngle;
+	}
+
+	/**
 	 * @param cutoffangle
-	 *            new cutoff angle
+	 *            new cutoff angle, in degrees
 	 */
 	public void setCutoffAngle(Double cutoffangle) {
 		this.cutoffAngle = cutoffangle;
 	}
 	
 	/**
-	 * @return cutoff angle
+	 * @return <code>true</code> iff the spot exponent is set
 	 */
-	public Double getCutoffAngle() {
-		return cutoffAngle;
+	public boolean hasSpotExponent() {
+		return exponent != null;
 	}
-	
-	/**
-	 * @param exponent
-	 *            new spot exponent
-	 */
-	public void setSpotExponent(Double exponent) {
-		this.exponent = exponent;
-	}
-	
+
 	/**
 	 * @return spot exponent
 	 */
@@ -263,11 +269,11 @@ public class LightModificationInfo {
 		return exponent;
 	}
 
-	public boolean hasCutoffAngle() {
-		return cutoffAngle != null;
-	}
-	
-	public boolean hasSpotExponent() {
-		return exponent != null;
+	/**
+	 * @param exponent
+	 *            new spot exponent
+	 */
+	public void setSpotExponent(Double exponent) {
+		this.exponent = exponent;
 	}
 }
