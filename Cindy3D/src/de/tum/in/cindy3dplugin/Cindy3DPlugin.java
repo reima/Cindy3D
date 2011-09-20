@@ -944,6 +944,22 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		cindy3d.setCamera(eye.get(0), eye.get(1), eye.get(2), lookat.get(0),
 				lookat.get(1), lookat.get(2), up.get(0), up.get(1), up.get(2));
 	}
+	
+	/**
+	 * Sets the camera's field of view.
+	 * 
+	 * @param fieldOfView
+	 *            the field of view to set
+	 * @throws IllegalArgumentException
+	 *             if the field of view is not between 0 and 180 (exclusive)
+	 */
+	@CindyScript("fieldofview3d")
+	public void fieldofview3d(double fieldOfView) {
+		if (fieldOfView <= 0 || fieldOfView >= Math.PI) {
+			throw new IllegalArgumentException("field of view out of range");
+		}
+		cindy3d.setFieldOfView(fieldOfView);
+	}
 
 	/**
 	 * Creates a Color object from an array of RGB components.

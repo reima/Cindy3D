@@ -501,4 +501,13 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 		camera.lookAt(new Vector3D(eyeX, eyeY, eyeZ), new Vector3D(lookAtX,
 				lookAtY, lookAtZ), new Vector3D(upX, upY, upZ));
 	}
+
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setFieldOfView(double)
+	 */
+	@Override
+	public void setFieldOfView(double fieldOfView) {
+		camera.setPerspective(fieldOfView, canvas.getWidth(),
+				canvas.getHeight(), camera.getZNear(), camera.getZFar());
+	}
 }
