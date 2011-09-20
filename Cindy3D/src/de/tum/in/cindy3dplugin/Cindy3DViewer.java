@@ -335,7 +335,7 @@ public interface Cindy3DViewer {
 	 * Sets the camera's field of view.
 	 * 
 	 * @param fieldOfView
-	 *            the field of view to set
+	 *            the field of view to set, in degrees
 	 */
 	void setFieldOfView(double fieldOfView);
 }

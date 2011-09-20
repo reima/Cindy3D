@@ -949,7 +949,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 	 * Sets the camera's field of view.
 	 * 
 	 * @param fieldOfView
-	 *            the field of view to set
+	 *            the field of view to set, in radians
 	 * @throws IllegalArgumentException
 	 *             if the field of view is not between 0 and 180 (exclusive)
 	 */
@@ -958,7 +958,7 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 		if (fieldOfView <= 0 || fieldOfView >= Math.PI) {
 			throw new IllegalArgumentException("field of view out of range");
 		}
-		cindy3d.setFieldOfView(fieldOfView);
+		cindy3d.setFieldOfView(Math.toDegrees(fieldOfView));
 	}
 
 	/**
