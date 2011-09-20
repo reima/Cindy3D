@@ -335,18 +335,18 @@ shininess ``<real>``                    sets the shininess
 alpha     ``<real>``                    sets the opacity
 ========= ============================= =======================================
 
-Drawing a filled circle: ``fillcircle3d(<point1>,<point2>,<real>)``
-===================================================================
+Drawing a filled circle: ``fillcircle3d(<point>,<vec>,<real>)``
+===============================================================
 
 Description
 ~~~~~~~~~~~
 
 Draws a filled circle.
 
-``<point1>``
+``<point>``
   the center of the circle
 
-``<point2>``
+``<vec>``
   the normal vector of the circle
 
 ``<real>``
@@ -568,7 +568,7 @@ Description
 Sets the field of view of the camera.
 
 ``<real>``
-  horizontal field of view of the camera. Must be in range ]0,pi[
+  horizontal field of view of the camera. Must be in range :math:`]0,\pi[`
 
 Set visible depth range: ``depthrange3d(<real1>,<real2>)``
 ==========================================================
@@ -642,7 +642,7 @@ The function can handle the following modifiers:
 Modifier      Parameter    Effect
 ============= ============ ====================================================
 quality       ``<int>``    selects one of the predefined quality levels (values
-                           0,1,...,8 allowed)
+                           in [0,8] allowed)
 renderMode    ``<string>`` sets the rendering mode (values ``"simple"`` and
                            ``"raycasted"`` allowed)
 samplingRate  ``<int>``    sets the number of samples taken per pixel (integer
@@ -717,7 +717,7 @@ diffuse   ``[<real1>,<real2>,<real3>]`` sets the diffuse light color to an RGB
                                         value (default: [1,1,1])
 specular  ``[<real1>,<real2>,<real3>]`` sets the specular light color to an RGB
                                         value (default: [1,1,1])
-direction ``<point>``                   sets the light direction (default:
+direction ``<vec>``                     sets the light direction (default:
                                         [0,-1,0])
 frame     ``<string>``                  specifies whether the direction is
                                         relative to the camera frame or
@@ -757,11 +757,12 @@ specular    ``[<real1>,<real2>,<real3>]`` sets the specular light color to an
                                           RGB value (default: [1,1,1])
 position    ``<point>``                   sets the light position (default:
                                           [0,0,0])
-direction   ``<point>``                   sets the light direction (default:
+direction   ``<vec>``                     sets the light direction (default:
                                           [0,-1,0])
 cutoffAngle ``<real>``                    sets the cutoff angle of the spot cone
-                                          (in radians, values in [0,pi/2]
-                                          allowed, default: pi/4)
+                                          (in radians, values in
+                                          :math:`[0,\frac\pi2]` allowed, default:
+                                          :math:`\frac\pi4`)
 exponent    ``<real>``                    sets the attenuation exponent (values
                                           in [0,128] allowed, default: 0)
 frame       ``<string>``                  specifies whether position and
