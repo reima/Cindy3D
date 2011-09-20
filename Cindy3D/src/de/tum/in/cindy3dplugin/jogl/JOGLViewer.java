@@ -490,4 +490,15 @@ public class JOGLViewer extends MouseAdapter implements Cindy3DViewer,
 			requestedRenderHints.setSamplingRate(((Double) value).intValue());
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see de.tum.in.cindy3dplugin.Cindy3DViewer#setCamera(double, double, double, double, double, double, double, double, double)
+	 */
+	@Override
+	public void setCamera(double eyeX, double eyeY, double eyeZ,
+			double lookAtX, double lookAtY, double lookAtZ, double upX,
+			double upY, double upZ) {
+		camera.lookAt(new Vector3D(eyeX, eyeY, eyeZ), new Vector3D(lookAtX,
+				lookAtY, lookAtZ), new Vector3D(upX, upY, upZ));
+	}
 }

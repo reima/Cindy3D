@@ -305,4 +305,29 @@ public interface Cindy3DViewer {
 	 *            Render hints
 	 */
 	void setRenderHints(Hashtable<String, Object> hints);
+
+	/**
+	 * Positions the camera.
+	 * 
+	 * @param eyeX
+	 *            x coordinate of eye point
+	 * @param eyeY
+	 *            y coordinate of eye point
+	 * @param eyeZ
+	 *            z coordinate of eye point
+	 * @param lookAtX
+	 *            x coordinate of look at point
+	 * @param lookAtY
+	 *            y coordinate of look at point
+	 * @param lookAtZ
+	 *            z coordinate of look at point
+	 * @param upX
+	 *            x coordinate of up vector
+	 * @param upY
+	 *            y coordinate of up vector
+	 * @param upZ
+	 *            z coordinate of up vector
+	 */
+	void setCamera(double eyeX, double eyeY, double eyeZ, double lookAtX,
+			double lookAtY, double lookAtZ, double upX, double upY, double upZ);
 }

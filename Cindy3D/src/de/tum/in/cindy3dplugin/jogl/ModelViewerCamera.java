@@ -1,7 +1,6 @@
 package de.tum.in.cindy3dplugin.jogl;
 
 import org.apache.commons.math.geometry.Rotation;
-import org.apache.commons.math.geometry.RotationOrder;
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.commons.math.linear.LUDecompositionImpl;
 import org.apache.commons.math.linear.MatrixUtils;
@@ -11,7 +10,7 @@ import org.apache.commons.math.linear.RealVector;
 /**
  * Camera entity.
  * 
- * The <code>ModelViewerCamera</code> is a camera orbiting around a look-at
+ * The <code>ModelViewerCamera</code> is a camera orbiting around a look at
  * point. It provides methods for placing the camera, adjusting the perspective
  * projection properties, and the retrieval of homogeneous matrices for
  * rendering.
@@ -21,27 +20,19 @@ public class ModelViewerCamera {
 	 * Rotation angle per moved pixel (in radians)
 	 */
 	private static final double ROTATE_SENSITIVITY = 0.01;
-	/**
-	 * Panning distance per moved pixel
-	 */
-	private static final double PAN_SENSITIVITY = 0.05;
 	
 	/**
 	 * Camera orientation
 	 */
-	private Rotation rotation;
+	private Rotation orientation;
 	/**
 	 * Camera position
 	 */
 	private Vector3D position;
 	/**
-	 * Look at vector
+	 * Look at position
 	 */
 	private Vector3D lookAt;
-	/**
-	 * Up vector
-	 */
-	private Vector3D up;
 	/**
 	 * View transformation matrix
 	 */
@@ -93,7 +84,7 @@ public class ModelViewerCamera {
 	public ModelViewerCamera() {
 		transform = MatrixUtils.createRealMatrix(4, 4);
 		perspectiveTransform = MatrixUtils.createRealMatrix(4, 4);
-		rotation = Rotation.IDENTITY;
+		orientation = Rotation.IDENTITY;
 		
 		lookAt(Vector3D.PLUS_K, Vector3D.ZERO, Vector3D.PLUS_J);
 		setPerspective(45.0, 640, 480, 0.1, 100.0);
@@ -115,28 +106,20 @@ public class ModelViewerCamera {
 		
 		buildClippingPlanes();
 	}
-	
+
 	/**
 	 * Calculates the view transformation matrix from the camera parameters.
 	 */
 	private void updateTransform() {
-		// Lookat
-		Vector3D forward = lookAt.subtract(position);
-		Rotation lookAtRotation = new Rotation(up, forward, Vector3D.PLUS_J,
-				Vector3D.MINUS_K);
-		RealMatrix lookAtMatrix = MatrixUtils.createRealIdentityMatrix(4);
-		lookAtMatrix.setSubMatrix(lookAtRotation.getMatrix(), 0, 0);
-		lookAtMatrix.setColumn(
-				3,
-				new double[] { -position.getX(), -position.getY(),
-						-position.getZ(), 1 });
-		
-		// Model rotation
-		RealMatrix modelRotationMatrix = MatrixUtils
+		// Look at
+		RealMatrix lookAtRotationMatrix = MatrixUtils.createRealIdentityMatrix(4);
+		lookAtRotationMatrix.setSubMatrix(orientation.getMatrix(), 0, 0);
+		RealMatrix lookAtTranslationMatrix = MatrixUtils
 				.createRealIdentityMatrix(4);
-		modelRotationMatrix.setSubMatrix(rotation.getMatrix(), 0, 0);
-		
-		transform = lookAtMatrix.multiply(modelRotationMatrix);
+		lookAtTranslationMatrix.setColumn(3, new double[] { -position.getX(),
+				-position.getY(), -position.getZ(), 1 });
+
+		transform = lookAtRotationMatrix.multiply(lookAtTranslationMatrix);
 	}
 	
 	/**
@@ -197,8 +180,10 @@ public class ModelViewerCamera {
 	 */
 	public void lookAt(Vector3D position, Vector3D lookAt, Vector3D up) {
 		this.position = position;
-		this.up = up;
 		this.lookAt = lookAt;
+		this.orientation = new Rotation(lookAt.subtract(position), up,
+				Vector3D.MINUS_K, Vector3D.PLUS_J);
+
 		updateTransform();
 	}
 
@@ -263,16 +248,16 @@ public class ModelViewerCamera {
 	/**
 	 * @return camera orientation
 	 */
-	public Rotation getRotation() {
-		return rotation;
+	public Rotation getOrientation() {
+		return orientation;
 	}
 
 	/**
-	 * @param rotation
+	 * @param orientation
 	 *            new camera orientation
 	 */
-	public void setRotation(Rotation rotation) {
-		this.rotation = rotation;
+	public void setOrientation(Rotation orientation) {
+		this.orientation = orientation;
 		updateTransform();
 	}
 
@@ -284,44 +269,31 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * @param position
-	 *            new camera position
-	 */
-	public void setPosition(Vector3D position) {
-		this.position = position;
-		updateTransform();
-	}
-
-	/**
-	 * @return look at vector
+	 * @return look at position
 	 */
 	public Vector3D getLookAt() {
 		return lookAt;
 	}
 
 	/**
-	 * @param lookAt
-	 *            new look at vector
-	 */
-	public void setLookAt(Vector3D lookAt) {
-		this.lookAt = lookAt;
-		updateTransform();
-	}
-
-	/**
 	 * @return up vector
 	 */
 	public Vector3D getUp() {
-		return up;
+		return orientation.applyInverseTo(Vector3D.PLUS_J);
 	}
 
 	/**
-	 * @param up
-	 *            new up vector
+	 * @return forward vector
 	 */
-	public void setUp(Vector3D up) {
-		this.up = up;
-		updateTransform();
+	public Vector3D getForward() {
+		return orientation.applyInverseTo(Vector3D.MINUS_K);
+	}
+	
+	/**
+	 * @return right vector
+	 */
+	public Vector3D getRight() {
+		return orientation.applyInverseTo(Vector3D.PLUS_I);
 	}
 	
 	/**
@@ -353,7 +325,7 @@ public class ModelViewerCamera {
 	}
 
 	/**
-	 * Rotates the camera around the look-at point due to mouse movement.
+	 * Rotates the camera around the look at point due to mouse movement.
 	 * 
 	 * @param dx
 	 *            x component of mouse movement delta
@@ -361,8 +333,13 @@ public class ModelViewerCamera {
 	 *            y component of mouse movement delta
 	 */
 	public void mouseRotate(double dx, double dy) {
-		rotation = new Rotation(RotationOrder.XYZ, dy * ROTATE_SENSITIVITY, dx
-				* ROTATE_SENSITIVITY, 0).applyTo(rotation);
+		Rotation rotation = new Rotation(getUp(), -dx * ROTATE_SENSITIVITY)
+				.applyTo(new Rotation(getRight(), -dy * ROTATE_SENSITIVITY));
+		System.out.println("1. l_c = " + orientation.applyTo(lookAt.subtract(position)));
+		System.out.println("2. l_c = " + Util.transformPoint(transform, lookAt));
+		System.out.println(rotation.getAxis());
+		position = rotation.applyTo(position.subtract(lookAt)).add(lookAt);
+		orientation = orientation.applyTo(rotation.revert());
 
 		updateTransform();
 	}
@@ -376,14 +353,12 @@ public class ModelViewerCamera {
 	 *            y component of mouse movement delta
 	 */
 	public void mousePan(double dx, double dy) {
-		Vector3D forward = lookAt.subtract(position).normalize();
-		Vector3D right = Vector3D.crossProduct(forward, up).normalize();
+		Vector3D movement = Vector3D.ZERO.add(dx, getRight()).add(-dy, getUp());
+		
+		double factor = getWorldSpaceError(1, -Util.transformPoint(transform, lookAt).getZ());
 
-		Vector3D movement = new Vector3D(0, 0, 0).add(-dx * PAN_SENSITIVITY,
-				right).add(dy * PAN_SENSITIVITY, up);
-
-		position = position.add(movement);
-		lookAt = lookAt.add(movement);
+		position = position.add(factor*aspectRatio, movement);
+		lookAt = lookAt.add(factor*aspectRatio, movement);
 
 		updateTransform();
 	}
@@ -403,7 +378,8 @@ public class ModelViewerCamera {
 		} else {
 			newPosition = lookAt.add(1.0/1.1, lookAtToPosition);
 		}
-		setPosition(newPosition);
+		this.position = newPosition;
+		updateTransform();
 	}
 
 	/**

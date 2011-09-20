@@ -916,6 +916,34 @@ public class Cindy3DPlugin extends CindyScriptPlugin {
 				getLightModificationInfoFromModifiers(LightType.SPOT_LIGHT,
 						modifiers));
 	}
+	
+	/**
+	 * Positions the camera.
+	 * 
+	 * @param eye
+	 *            position of the camera
+	 * @param lookat
+	 *            point the camera is looking at
+	 * @param up
+	 *            up direction of the camera
+	 * @throws IllegalArgumentException
+	 *             if the length any argument is not 3
+	 */
+	@CindyScript("lookat3d")
+	public void lookat3d(ArrayList<Double> eye, ArrayList<Double> lookat,
+			ArrayList<Double> up) {
+		if (eye.size() != 3) {
+			throw new IllegalArgumentException("eye vector size not 3");
+		}
+		if (lookat.size() != 3) {
+			throw new IllegalArgumentException("lookat vector size not 3");
+		}
+		if (up.size() != 3) {
+			throw new IllegalArgumentException("up vector size not 3");
+		}
+		cindy3d.setCamera(eye.get(0), eye.get(1), eye.get(2), lookat.get(0),
+				lookat.get(1), lookat.get(2), up.get(0), up.get(1), up.get(2));
+	}
 
 	/**
 	 * Creates a Color object from an array of RGB components.
