@@ -542,6 +542,34 @@ Sets the scene background color to an RGB value.
 ``<colorvec>``
   the scene background color to set
 
+Position the camera: ``lookat3d(<point1>,<point2>,<vec>)``
+==========================================================
+
+Description
+~~~~~~~~~~~
+
+Sets the position, look at point and up vector of the camera.
+
+``<point1>``
+  the position of the camera
+
+``<point2>``
+  the look at point of the camera
+
+``<vec>``
+  the up vector of the camera
+
+Set field of view: ``fieldofview3d(<real>)``
+============================================
+
+Description
+~~~~~~~~~~~
+
+Sets the field of view of the camera.
+
+``<real>``
+  horizontal field of view of the camera. Must be in range ]0,pi[
+
 Set visible depth range: ``depthrange3d(<real1>,<real2>)``
 ==========================================================
 
@@ -660,8 +688,8 @@ frame    ``<string>``                  specifies whether the position is
                                        allowed, default: ``"camera"``)
 ======== ============================= ========================================
 
-Set up a directional light: ``directionalligh3d(<int>)``
-========================================================
+Set up a directional light: ``directionallight3d(<int>)``
+=========================================================
 
 Description
 ~~~~~~~~~~~
