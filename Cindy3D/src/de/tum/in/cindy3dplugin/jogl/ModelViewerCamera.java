@@ -335,9 +335,6 @@ public class ModelViewerCamera {
 	public void mouseRotate(double dx, double dy) {
 		Rotation rotation = new Rotation(getUp(), -dx * ROTATE_SENSITIVITY)
 				.applyTo(new Rotation(getRight(), -dy * ROTATE_SENSITIVITY));
-		System.out.println("1. l_c = " + orientation.applyTo(lookAt.subtract(position)));
-		System.out.println("2. l_c = " + Util.transformPoint(transform, lookAt));
-		System.out.println(rotation.getAxis());
 		position = rotation.applyTo(position.subtract(lookAt)).add(lookAt);
 		orientation = orientation.applyTo(rotation.revert());
 
