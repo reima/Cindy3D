@@ -1,7 +1,8 @@
-\documentclass{scrartcl}
+\documentclass{scrreprt}
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{mathpazo}
 \usepackage[utf8]{inputenc}
+\usepackage[Bjornstrup]{fncychap}
 
 \title{Cindy3D Project Documentation}
 \author{Matthias Reitinger \and Jan Sommer}
@@ -15,15 +16,15 @@
 
 \newpage
 
-\section{Project overview}
+\chapter{Project overview}
 
-\subsection{Cinderella \& CindyScript}
+\section{Cinderella \& CindyScript}
 
 \emph{Cinderella} is a dynamic geometry software created by Ulrich Kortenkamp and Jürgen Richter-Gebert. One of its key features is the embedded functional scripting language \emph{CindyScript}. It enables users of \emph{Cinderella} to interact with geometric constructions in a programmatic way. Among others, \emph{CindyScript} provides a rich set of methods for drawing two-dimensional geometry. However the display of three-dimensional objects is cumbersome, as one would have to fall back on the 2D drawing methods and implement algorithms like perspective projection and hidden surface removal by hand.
 
 The recent release of \emph{Cinderella 2.6} provides a new plugin interface. This allows programmers to write \emph{Java} libraries which expose \emph{CindyScript} methods that can in turn be called from inside \emph{Cinderella} constructions.
 
-\subsection{Cindy3D}
+\section{Cindy3D}
 
 In this context the \emph{Cindy3D} project was born. The need for 3D drawing 
 functionality in \emph{Cinderella} was in fact one of the main reasons to 
@@ -32,7 +33,7 @@ developed when the plugin interface was still in a preliminary stage.
 
 The main goals for \emph{Cindy3D} were as follows:
 \begin{itemize}
-\item Free placement of geometric primitives: points, segments, 
+\item Free placement of geometric primitives in 3D space: points, segments, 
 lines, rays, polygons, circles, spheres, and quad meshes
 \item Control over material parameters: color, shininess, transparency
 \item Customization of scene parameters: background, lights and camera
@@ -44,25 +45,29 @@ lines, rays, polygons, circles, spheres, and quad meshes
 	\item Function names similar to the existing 2D drawing functions
 	\item Sensible default parameters
 	\end{itemize}
+\item Support for all major platforms on which \emph{Cinderella} runs: 
+Windows, Mac OS X, Linux
+\item Leverage hardware acceleration with GPUs (graphics processing units) 
+where possible
 \end{itemize}
 
-\subsection{Results}
-% What we accomplished
+\section{Results}
+We were able to meet all the main goals as stated in the previous section.
 
-\subsection{Future directions}
+\section{Future directions}
 
 There are some features we would have wanted in \emph{Cindy3D}, yet didn't make it into this release for various reasons (like limited time or constraints in \emph{Cinderella} at the time of development). We hope that these features can be implemented in further versions of \emph{Cindy3D}.
 
-\section{User documentation}
+\chapter{User documentation}
 
-\subsection{Installation}
+\section{Installation}
 
 \begin{itemize}
 \item Minimum system requirements (OpenGL version...)
 \item Install guide (with screenshots?)
 \end{itemize}
 
-\subsection{User guide}
+\section{User guide}
 
 \begin{itemize}
 \item Understanding of \emph{CindyScript} is assumed
@@ -75,13 +80,14 @@ There are some features we would have wanted in \emph{Cindy3D}, yet didn't make 
 \item Tutorial(s)?
 \end{itemize}
 
-\subsection{Command reference}
+\section{Command reference}
 
 Link to HTML documentation or inline.
 
-\section{Developer documentation}
 
-\subsection{Technical overview}
+\chapter{Developer documentation}
+
+\section{Technical overview}
 
 \begin{itemize}
 \item Java 6
@@ -89,19 +95,19 @@ Link to HTML documentation or inline.
 \item JAR packaging
 \end{itemize}
 
-\subsection{Design overview}
+\section{Design overview}
 
 Insert fancy diagram here.
 % Translation of calls from Cinderella to a library agnostic format (only types provided by Java or derivatives thereof)
 
-\subsection{Rendering}
+\section{Rendering}
 
 \begin{itemize}
 \item Explain raytraced rendering with proxy geometry
 \item Explain LOD
 \end{itemize}
 
-\subsection{JavaDoc}
+\section{JavaDoc}
 
 Link to generated JavaDoc.
 
