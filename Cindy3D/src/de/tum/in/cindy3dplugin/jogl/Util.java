@@ -26,7 +26,6 @@ import org.apache.commons.math.linear.RealMatrix;
 import com.jogamp.common.GlueGenVersion;
 import com.jogamp.common.jvm.JNILibLoaderBase;
 import com.jogamp.common.jvm.JNILibLoaderBase.LoaderAction;
-import com.jogamp.gluegen.runtime.NativeLibLoader;
 import com.jogamp.opengl.JoglVersion;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
@@ -312,7 +311,6 @@ public class Util {
 	 */
 	public static void setupGluegenClassLoading() {
 		// Try to get JAR path
-
 		String jarPath = null;
 
 		URL jarURL = null;
@@ -339,11 +337,7 @@ public class Util {
 		final String basePath = jarFile.getParent();
 		Util.getLogger().info("Base path: " + basePath);
 
-		// Prevent gluegen from trying to load native library via
-		// System.loadLibrary("gluegen-rt").
-		NativeLibLoader.disableLoading();
-
-		// Instead, (try to) load it ourselves from JAR directory
+		// Try to load native library from JAR directory
 		String path = basePath + File.separator
 				+ System.mapLibraryName("gluegen-rt");
 		System.load(path);
@@ -413,7 +407,6 @@ public class Util {
 					logger.addHandler(fh);
 				}
 			}
-			// log.setLevel(Level.ALL);
 			logger.info("Log started");
 
 			final String nl = System.getProperty("line.separator");
